@@ -1,0 +1,34 @@
+<project basedir="." default="info" name="flexjson">
+
+    <property name="builddir" value="${basedir}/classes"/>
+    <property name="srcdir" value="${basedir}/src"/>
+    <property name="libdir" value="${basedir}/lib"/>
+
+    <target name="info">
+        <echo message="Build file for the Flexjson project."/>
+        <echo message="Run the all target to build the project."/>
+    </target>
+
+    <target name="clean">
+        <delete dir="${builddir}"/>
+    </target>
+
+    <target name="build" depends="clean" description="Builds the class files.">
+        <mkdir dir="${builddir}"/>
+        <javac debug="true" destdir="${builddir}" srcdir="${srcdir}">
+            <classpath>
+                <fileset dir="${libdir}" includes="**/*.jar"/>
+            </classpath>
+        </javac>
+    </target>
+
+    <target name="package" description="Create the jar file for distribution.">
+        <delete file="flexjson.jar" failonerror="false"/>
+        <jar destfile="flexjson.jar">
+            <fileset dir="${builddir}" includes="**/*.class"/>
+        </jar>
+    </target>
+
+    <target name="all" description="Builds the project from source and creates the jar." depends="build, package"/>
+
+</project>
