@@ -4,6 +4,8 @@
     <property name="srcdir" value="${basedir}/src"/>
     <property name="libdir" value="${basedir}/lib"/>
 
+    <echo message="Hello ${ant.home}"/>
+
     <target name="info">
         <echo message="Build file for the Flexjson project."/>
         <echo message="Run the all target to build the project."/>
@@ -29,6 +31,22 @@
         </jar>
     </target>
 
-    <target name="all" description="Builds the project from source and creates the jar." depends="build, package"/>
+    <target name="test" description="Run all the unit tests" depends="build,package">
+        <mkdir dir="${basedir}/junit"/>
+        <junit>
+          <classpath>
+              <pathelement location="${libdir}/junit4.1/junit-4.1.jar"/>
+              <pathelement location="flexjson.jar"/>
+          </classpath>
+          <formatter type="plain" usefile="true" />
+          <batchtest todir="${basedir}/junit">
+              <fileset dir="${srcdir}">
+                  <include name="**/test/*Test*"/>
+              </fileset>
+          </batchtest>
+        </junit>
+    </target>
+
+    <target name="all" description="Builds the project from source and creates the jar." depends="build, package, test"/>
 
 </project>
