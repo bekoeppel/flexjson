@@ -27,7 +27,14 @@
     <target name="package" description="Create the jar file for distribution.">
         <delete file="flexjson.jar" failonerror="false"/>
         <jar destfile="flexjson.jar">
-            <fileset dir="${builddir}" includes="**/*.class"/>
+            <fileset dir="${builddir}">
+                <include name="**/*.class"/>
+                <exclude name="**/test/*.class"/>
+            </fileset>
+        </jar>
+        <delete file="flexjson_test.jar" failonerror="false"/>
+        <jar destfile="flexjson_test.jar">
+            <fileset dir="${builddir}" includes="**/test/*.class"/>
         </jar>
     </target>
 
@@ -47,6 +54,16 @@
         </junit>
     </target>
 
+    <target name="javadoc" description="Create the javadoc for this project.">
+        <mkdir dir="${basedir}/docs/javadoc"/>
+        <javadoc destdir="${basedir}/docs/javadoc" use="true" windowtitle="Flexjson API">
+            <packageset dir="${srcdir}" defaultexcludes="yes">
+                <include name="flexjson/**"/>
+                <exclude name="flexjson/test/**"/>
+            </packageset>
+        </javadoc>
+    </target>
+
     <target name="release" description="Create the release package" depends="build,package">
         <mkdir dir="${basedir}/release"/>
         <zip destfile="${basedir}/release/flexjson.zip">
@@ -56,6 +73,6 @@
         </zip>
     </target>
 
-    <target name="all" description="Builds the project from source and creates the jar." depends="build, package, test"/>
+    <target name="all" description="Builds the project from source and creates the jar." depends="build, package, test, javadoc"/>
 
 </project>

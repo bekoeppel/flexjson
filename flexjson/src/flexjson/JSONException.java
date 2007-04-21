@@ -15,6 +15,12 @@
  */
 package flexjson;
 
+/**
+ * This is a general purpose exception throw whenever {@link flexjson.JSONSerializer}
+ * encounters an error.  All exceptions coming from the JSONSerializer will be of
+ * this type.  It can be used to wrap other types of exceptions that happen during
+ * that process.
+ */
 public class JSONException extends RuntimeException {
 
     public JSONException(String message) {

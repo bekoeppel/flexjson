@@ -27,6 +27,123 @@ import java.lang.reflect.Array;
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
 
+/**
+ * JSONSerializer is the main class for performing serialization of Java objects
+ * to JSON.  JSONSerializer by default performs a shallow serialization.  While
+ * this might seem strange there is a method to this madness.  Shallow serialization
+ * allows the developer to control what is serialized out of the object graph.
+ * This helps with performance, but more importantly makes good OO possible, fixes
+ * the circular reference problem, and doesn't require boiler plate translation code.
+ * You don't have to change your object model to make JSON work so it reduces your
+ * work load, and keeps you
+ * <a href="http://en.wikipedia.org/wiki/Don't_repeat_yourself">DRY</a>.
+ *
+ * Let's go through a simple example:
+ *
+ * <pre>
+ *    JSONSerializer serializer = new JSONSerializer();
+ *    return serializer.serialize( person );
+ *
+ * </pre>
+ *
+ * What this statement does is output the json from the instance of person.  So
+ * the JSON we might see for this could look like:
+ *
+ * <pre>
+ *    { "class": "com.mysite.Person",
+ *      "firstname": "Charlie",
+ *      "lastname": "Rose",
+ *      "age", 23
+ *      "birthplace": "Big Sky, Montanna"
+ *    }
+ *
+ * </pre>
+ *
+ * In this case it's look like it's pretty standard stuff.  But, let's say
+ * Person had many hobbies (i.e. Person.hobbies is a java.util.List).  In
+ * this case if we executed the code above we'd still get the same output.
+ * This is a very important feature of flexjson, and that is any instance
+ * variable that is a Collection, Map, or Object reference won't be serialized
+ * by default.  This is what gives flexjson the shallow serialization.
+ *
+ * How would we include the <em>hobbies</em> field?  Using the {@link flexjson.JSONSerializer#include}
+ * method allows us to include these fields in the serialization process.  Here is
+ * how we'd do that:
+ *
+ * <pre>
+ *    return new JSONSerializer().include("hobbies").serialize( person );
+ *
+ * </pre>
+ *
+ * That would produce output like:
+ *
+ * <pre>
+ *    { "class": "com.mysite.Person",
+ *      "firstname": "Charlie",
+ *      "lastname": "Rose",
+ *      "age", 23
+ *      "birthplace": "Big Sky, Montanna",
+ *      "hobbies", [
+ *          "poker",
+ *          "snowboarding",
+ *          "kite surfing",
+ *          "bull riding"
+ *      ]
+ *    }
+ *
+ * </pre>
+ *
+ * If the <em>hobbies</em> field contained objects, say Hobby instances, then a
+ * shallow copy of those objects would be performed.  Let's go further and say
+ * <em>hobbies</em> had a List of all the people who enjoyed this hobby.
+ * This would create a circular reference between Person and Hobby.  Since the
+ * shallow copy is being performed on Hobby JSONSerialize won't serialize the people
+ * field when serializing Hobby instances thus breaking the chain of circular references.
+ *
+ * But, for the sake of argument and illustration let's say we wanted to send the
+ * <em>people</em> field in Hobby.  We can do the following:
+ *
+ * <pre>
+ *    return new JSONSerializer().include("hobbies.people").serialize( person );
+ *
+ * </pre>
+ *
+ * JSONSerializer is smart enough to know that you want <em>hobbies</em> field included and
+ * the <em>people</em> field inside hobbies' instances too.  The dot notation allows you
+ * do traverse the object graph specifying instance fields.  But, remember a shallow copy
+ * will stop the code from getting into an infinte loop.
+ *
+ * You can also use the exclude method to exclude fields that would be included.  Say
+ * we have a User object.  It would be a serious security risk if we sent the password
+ * over the network.  We can use the exclude method to prevent the password field from
+ * being sent.
+ *
+ * <pre>
+ *   return new JSONSerialize().exclude("password").serialize(user);
+ *
+ * </pre>
+ *
+ * JSONSerializer will also pay attention to any method or field annotated by
+ * {@link flexjson.JSON}.  You can include and exclude fields permenantly using the
+ * annotation.  This is good like in the case of User.password which should never
+ * ever be sent through JSON.  However, fields like <em>hobbies</em> or
+ * <em>favoriteMovies</em> depends on the situation so it's best NOT to annotate
+ * those fields, and use the {@link flexjson.JSONSerializer#include} method.
+ *
+ * In a shallow copy only these types of instance fields will be sent:
+ * <strong>String</strong>, <strong>Date</strong>, <strong>Number</strong>,
+ * <strong>Boolean</strong>, <strong>Character</strong>, <strong>Enum</strong>, and
+ * <strong>null</strong>.  All types will be excluded by default.  Fields marked
+ * static or transient are not serialized.
+ *
+ * JSONSerializer is safe to use the serialize() methods from two seperate
+ * threads.  It is NOT safe to use combination of {@link flexjson.JSONSerializer#include(String[])}
+ * and {@link flexjson.JSONSerializer#exclude(String[])} from multiple threads at the same time.
+ * It is also NOT safe to use {@link flexjson.JSONSerializer#serialize(String, Object)} and
+ * include/exclude from multiple threads.  The reason for not making them more thread safe is
+ * to boost performance.  Typical use case won't call for two threads to modify the
+ * JSONSerializer at the same type it's trying to serialize.
+ */
 public class JSONSerializer {
 
     public final static char[] HEX = "0123456789ABCDEF".toCharArray();
@@ -34,41 +151,108 @@ public class JSONSerializer {
     Map excludeFields = new HashMap();
     Map includeFields = new HashMap();
 
+    /**
+     * Create a serializer instance.  It's unconfigured in terms of fields
+     * it should include or exclude.
+     */
     public JSONSerializer() {
     }
 
+    /**
+     * This performs a shallow serialization of target instance.  It wraps
+     * the resulting JSON in a javascript object that contains a single field
+     * named rootName.  This is great to use in conjunction with other libraries
+     * like EXTJS whose data models require them to be wrapped in a JSON object.
+     * 
+     * @param rootName the name of the field to assign the resulting JSON.
+     * @param target the instance to serialize to JSON.
+     * @return the JSON object with one field named rootName and the value being the JSON of target.
+     */
     public String serialize( String rootName, Object target ) {
         return new ObjectVisitor().visit( rootName, target );
     }
 
+    /**
+     * This performs a shallow serialization of the target instance.
+     * @param target the instance to serialize to JSON
+     * @return the JSON representing the target instance.
+     */
     public String serialize( Object target ) {
         return new ObjectVisitor().visit( target );
     }
 
+    /**
+     * This takes in a dot expression representing fields
+     * to exclude when serialize method is called.  You
+     * can hand it one or more fields.  Example are: "password",
+     * "bankaccounts.number", "people.socialsecurity", or
+     * "people.medicalHistory".  In exclude method dot notations
+     * will only exclude the final field (i.e. rightmost field).
+     * All the fields to the left of the last field will be included.
+     * In order to exclude the medicalHistory field we have to
+     * include the people field since people would've been excluded
+     * anyway since it's a Collection of Person objects.
+     *
+     * @param fields one or more field expressions to exclude.
+     * @return this instance for method chaining.
+     */
     public JSONSerializer exclude( String... fields ) {
         addFieldsTo(excludeFields, fields);
         return this;
     }
 
+    /**
+     * This takes in a dot expression representing fields to
+     * include when serialize method is called.  You can hand
+     * it one or more fields.  Examples are: "hobbies",
+     * "hobbies.people", "people.emails", or "character.inventory".
+     * When using dot notation each field between the dots will
+     * be included in the serialization process.
+     *
+     * @param fields one or more field expressions to include.
+     * @return this instance for method chaining.
+     */
     public JSONSerializer include( String... fields ) {
         addFieldsTo(includeFields, fields );
         return this;
     }
 
+    /**
+     * Return the fields included in serialization.  These fields will be in dot notation.
+     *
+     * @return A List of dot notation fields included in serialization.
+     */
     public List getIncludes() {
         return renderFields( includeFields );
     }
 
+    /**
+     * Return the fields excluded from serialization.  These fields will be in dot notation.
+     *
+     * @return A List of dot notation fields excluded from serialization.
+     */
     public List getExcludes() {
         return renderFields( excludeFields );
     }
 
+    /**
+     * Sets the fields included in serialization.  These fields must be in dot notation.
+     * This is just here so that JSONSerializer can be treated like a bean so it will
+     * integrate with Spring or other frameworks.  <strong>This is not ment to be used
+     * in code use include method for that.</strong>
+     */
     public void setIncludes( List fields ) {
         for( Object field : fields ) {
             addFieldsTo( includeFields, field.toString() );
         }
     }
 
+    /**
+     * Sets the fields excluded in serialization.  These fields must be in dot notation.
+     * This is just here so that JSONSerializer can be treated like a bean so it will
+     * integrate with Spring or other frameworks.  <strong>This is not ment to be used
+     * in code use exclude method for that.</strong>
+     */
     public void setExcludes( List fields ) {
         for( Object field : fields ) {
             addFieldsTo( excludeFields, field.toString() );
