@@ -19,19 +19,15 @@ import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
 public class MockPhone {
-    private String name;
+    private PhoneNumberType type;
     private String areaCode;
     private String exchange;
     private String number;
 
     private static final Pattern PHONE_PATTERN = Pattern.compile("\\(?(\\d{3})\\)?[\\s-](\\d{3})[\\s-](\\d{4})");
 
-    public String getAreaCode() {
-        return areaCode;
-    }
-
-    public MockPhone(String name, String number) {
-        this.name = name;
+    public MockPhone( PhoneNumberType aType, String number) {
+        this.type = aType;
         Matcher matcher = PHONE_PATTERN.matcher( number );
         if( matcher.matches() ) {
             this.areaCode = matcher.group(1);
@@ -42,12 +38,16 @@ public class MockPhone {
         }
     }
 
-    public String getName() {
-        return name;
+    public String getAreaCode() {
+        return areaCode;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public PhoneNumberType getType() {
+        return type;
+    }
+
+    public void setType(PhoneNumberType type) {
+        this.type = type;
     }
 
     public void setAreaCode(String areaCode) {

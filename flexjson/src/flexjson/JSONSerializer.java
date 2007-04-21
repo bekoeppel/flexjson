@@ -148,8 +148,14 @@ public class JSONSerializer {
                 array(((Iterable) object).iterator(), includes, excludes );
             else if( object instanceof Date )
                 date( (Date)object );
+            else if( object instanceof Enum )
+                enumerate( (Enum)object );
             else
                 bean(object, includes, excludes );
+        }
+
+        private void enumerate(Enum value) {
+            string( value.name() );
         }
 
         private void map(Map map, Map includes, Map excludes) {

@@ -34,8 +34,8 @@ public class JSONSerializerTest extends TestCase {
     public void setUp() {
         MockAddress home = new MockAddress("4132 Pluto Drive", "Atlanta", "Ga", new MockZipcode("33913") );
         MockAddress work = new MockAddress("44 Planetary St.", "Neptune", "Milkiway", new MockZipcode("30328-0764") );
-        MockPhone pagerPhone = new MockPhone("pager", "404 555-1234");
-        MockPhone cellPhone = new MockPhone("cell", "770 777 5432");
+        MockPhone pagerPhone = new MockPhone( PhoneNumberType.PAGER, "404 555-1234");
+        MockPhone cellPhone = new MockPhone( PhoneNumberType.MOBILE, "770 777 5432");
 
         Calendar cal = Calendar.getInstance();
         cal.set(1976, 3, 21, 8, 11);
@@ -127,6 +127,8 @@ public class JSONSerializerTest extends TestCase {
         assertFalse( json2.contains( MockZipcode.class.getName() ) );
         assertFalse( json2.contains( MockPhone.class.getName() ) );
         assertFalse( json2.contains("hobbies") );
+        assertFalse( json2.contains("type") );
+        assertFalse( json2.contains("\"PAGER\"") );
 
         serializer.include("hobbies").exclude("phones.areaCode", "phones.exchange", "phones.number" );
 
@@ -145,6 +147,8 @@ public class JSONSerializerTest extends TestCase {
         assertFalse( json3.contains("areaCode") );
         assertFalse( json3.contains("exchange") );
         assertFalse( json3.contains("number") );
+        assertTrue( json3.contains("type") );
+        assertTrue( json3.contains("\"PAGER\"") );
 
         assertTrue( json3.startsWith("{") );
         assertTrue( json3.endsWith("}") );
