@@ -185,7 +185,7 @@
     {
         "class": "Person",
         "name": "William Shakespeare",
-        "birthday": new Date(-12802392000000),
+        "birthday": -12802392000000,
         "nickname": "Bill"
     }
 
@@ -222,7 +222,7 @@
     {
         "class": "Person",
         "name": "William Shakespeare",
-        "birthday": new Date( -12802392000000 ),
+        "birthday": -12802392000000,
         "nickname": "Bill"
         "phoneNumbers": [
             {
@@ -304,14 +304,14 @@
             {
                 "class": "Person",
                 "name": "Warren Buffet",
-                "birthday": new Date( -1241467200000 ),
+                "birthday": -1241467200000,
                 "nickname": "Oracle of Omaha",
                 "phonNumbers" : [ ... ],
             },
             {
                 "class": "Person",
                 "name": "Steven Jobs",
-                "birthday": new Date( -468702000000 ),
+                "birthday": -468702000000,
                 "nickname": "Steve",
                 "phonNumbers" : [ ... ],
             }
@@ -386,6 +386,31 @@
     }
 
     </blockquote>
+
+    <p>
+        In 1.2 there was a new feature added to perform a deep serialization of the object using the deepSerialize()
+        method.  As with serialize() method deepSerialize() method will use includes, excludes, and annotations to
+        figure out what you want sent.  However, includes are generally redundant except in the case where you want
+        override an excluding annotation on a field.  Deep serialization will not serialize cycles in your graph so
+        if you have a bi directional relationship say parent has a child and child has a parent.  The back reference
+        from child to parent won't be included in the JSON output.  This is the same for shallow serialization as
+        well.  Here is a quick example:
+    </p>
+
+    <blockquote class="java">
+        public String doSomething( Object arg1, ... ) {
+
+            Person p = ...load a person...;
+
+            return new JSONSerializer().deepSerialize(p); // send the entire graph starting at person
+        }
+    </blockquote>
+
+    <p>
+        Deep serialization should be used sparingly, and reserved for only cases where you really understand
+        what is being serialized.  Deep serialization can send a lot more data that you anticipated if you
+        use it frivolously.
+    </p>
 
     <p>
         Finally, JSONSerializer instances can be reused to serialize many objects of the same type.  Once you 

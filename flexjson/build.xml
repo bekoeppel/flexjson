@@ -66,10 +66,17 @@
 
     <target name="release" description="Create the release package" depends="build,package">
         <mkdir dir="${basedir}/release"/>
-        <zip destfile="${basedir}/release/flexjson.zip">
+        <zip destfile="${basedir}/release/src.zip">
+            <fileset dir="${srcdir}" includes="**/*.java"/>
+        </zip>
+        <zip destfile="${basedir}/release/flexjson_1.2.zip">
             <fileset dir="${basedir}" includes="flexjson*.jar"/>
-            <fileset dir="${basedir}" includes="LICENSE-2.0.txt"/>
+            <fileset dir="${basedir}">
+                <include name="LICENSE-2.0.txt"/>
+                <include name="changelog.html"/>
+            </fileset>
             <fileset dir="${basedir}" includes="docs/**/*"/>
+            <fileset dir="${basedir}/release" includes="src.zip"/>
         </zip>
     </target>
 
