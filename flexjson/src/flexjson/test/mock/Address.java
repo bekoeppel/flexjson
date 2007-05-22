@@ -13,18 +13,19 @@
  * implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-package flexjson.test;
+package flexjson.test.mock;
 
-public class MockAddress {
+public class Address {
+    private Person person;
     private String street;
     private String city;
     private String state;
-    private MockZipcode zipcode;
+    private Zipcode zipcode;
 
-    public MockAddress() {
+    public Address() {
     }
 
-    public MockAddress(String street, String city, String state, MockZipcode zipcode) {
+    public Address(String street, String city, String state, Zipcode zipcode) {
         this.street = street;
         this.city = city;
         this.state = state;
@@ -55,11 +56,20 @@ public class MockAddress {
         this.state = state;
     }
 
-    public MockZipcode getZipcode() {
+    public Zipcode getZipcode() {
         return zipcode;
     }
 
-    public void setZipcode(MockZipcode zipcode) {
+    public void setZipcode(Zipcode zipcode) {
         this.zipcode = zipcode;
+    }
+
+
+    public void setPerson(Person person) {
+        this.person = person;
+    }
+
+    public Person getPerson() {
+        return person;
     }
 }

@@ -13,12 +13,12 @@
  * implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-package flexjson.test;
+package flexjson.test.mock;
 
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
-public class MockPhone {
+public class Phone {
     private PhoneNumberType type;
     private String areaCode;
     private String exchange;
@@ -26,7 +26,7 @@ public class MockPhone {
 
     private static final Pattern PHONE_PATTERN = Pattern.compile("\\(?(\\d{3})\\)?[\\s-](\\d{3})[\\s-](\\d{4})");
 
-    public MockPhone( PhoneNumberType aType, String number) {
+    public Phone( PhoneNumberType aType, String number) {
         this.type = aType;
         Matcher matcher = PHONE_PATTERN.matcher( number );
         if( matcher.matches() ) {

@@ -169,16 +169,49 @@ public class JSONSerializer {
      * @return the JSON object with one field named rootName and the value being the JSON of target.
      */
     public String serialize( String rootName, Object target ) {
-        return new ObjectVisitor().visit( rootName, target );
+        return new ShallowVisitor().visit( rootName, target );
     }
 
     /**
      * This performs a shallow serialization of the target instance.
+     *
      * @param target the instance to serialize to JSON
      * @return the JSON representing the target instance.
      */
     public String serialize( Object target ) {
-        return new ObjectVisitor().visit( target );
+        return new ShallowVisitor().visit( target );
+    }
+
+    /**
+     * This performs a deep serialization of the target instance.  It will include
+     * all collections, maps, and arrays by default so includes are ignored except
+     * if you want to include something being excluded by an annotation.  Excludes
+     * are honored.  However, cycles in the target's graph are NOT followed.  This
+     * means some members won't be included in the JSON if they would create a cycle.
+     * Rather than throwing an exception the cycle creating members are simply not
+     * followed.
+     *
+     * @param target the instance to serialize to JSON.
+     * @return the JSON representing the target instance deep serialization.
+     */
+    public String deepSerialize( Object target ) {
+        return new DeepVisitor().visit( target );
+    }
+
+    /**
+     * This performs a deep serialization of target instance.  It wraps
+     * the resulting JSON in a javascript object that contains a single field
+     * named rootName.  This is great to use in conjunction with other libraries
+     * like EXTJS whose data models require them to be wrapped in a JSON object.
+     * See {@link flexjson.JSONSerializer#deepSerialize(Object)} for more
+     * in depth explaination.
+     *
+     * @param rootName the name of the field to assign the resulting JSON.
+     * @param target the instance to serialize to JSON.
+     * @return the JSON object with one field named rootName and the value being the JSON of target.
+     */
+    public String deepSerialize( String rootName, Object target ) {
+        return new DeepVisitor().visit( rootName, target );
     }
 
     /**
@@ -240,6 +273,8 @@ public class JSONSerializer {
      * This is just here so that JSONSerializer can be treated like a bean so it will
      * integrate with Spring or other frameworks.  <strong>This is not ment to be used
      * in code use include method for that.</strong>
+     * @param fields the list of fields to be included for serialization.  The fields arg should be a
+     * list of strings in dot notation.
      */
     public void setIncludes( List fields ) {
         for( Object field : fields ) {
@@ -252,6 +287,8 @@ public class JSONSerializer {
      * This is just here so that JSONSerializer can be treated like a bean so it will
      * integrate with Spring or other frameworks.  <strong>This is not ment to be used
      * in code use exclude method for that.</strong>
+     * @param fields the list of fields to be excluded for serialization.  The fields arg should be a 
+     * list of strings in dot notation.
      */
     public void setExcludes( List fields ) {
         for( Object field : fields ) {
@@ -290,11 +327,10 @@ public class JSONSerializer {
         return fields;
     }
 
-    private class ObjectVisitor {
+    private abstract class ObjectVisitor {
+        protected StringBuilder builder;
 
-        private StringBuilder builder;
-
-        public ObjectVisitor() {
+        protected ObjectVisitor() {
             builder = new StringBuilder();
         }
 
@@ -330,7 +366,7 @@ public class JSONSerializer {
                 array( object, includes, excludes );
             else if (object instanceof Iterable)
                 array(((Iterable) object).iterator(), includes, excludes );
-            else if( object instanceof Date )
+            else if( object instanceof Date)
                 date( (Date)object );
             else if( object instanceof Enum )
                 enumerate( (Enum)object );
@@ -398,40 +434,100 @@ public class JSONSerializer {
         }
 
         private void date(Date date) {
-            builder.append( "new Date( " );
+            // builder.append( "new Date( " );
             builder.append( date.getTime() );
-            builder.append( ")" );
+            // builder.append( ")" );
         }
 
-        private void bean(Object object, Map includes, Map excludes) {
-            add('{');
-            try {
-                BeanInfo info = Introspector.getBeanInfo(object.getClass());
-                PropertyDescriptor[] props = info.getPropertyDescriptors();
-                boolean firstField = true;
-                for (PropertyDescriptor prop : props) {
-                    String name = prop.getName();
-                    Method accessor = prop.getReadMethod();
-                    if (accessor != null && isIncluded( prop, includes, excludes ) ) {
-                        Object value = accessor.invoke(object, (Object[]) null);
-                        firstField = addComma(firstField);
-                        add(name, value, includes, excludes);
+        private ChainedSet visits = new ChainedSet( Collections.EMPTY_SET );
+
+        @SuppressWarnings({"unchecked"})
+        protected void bean(Object object, Map includes, Map excludes) {
+            if( !visits.contains( object ) ) {
+                visits = new ChainedSet( visits );
+                visits.add( object );
+                add('{');
+                try {
+                    BeanInfo info = Introspector.getBeanInfo(object.getClass());
+                    PropertyDescriptor[] props = info.getPropertyDescriptors();
+                    boolean firstField = true;
+                    for (PropertyDescriptor prop : props) {
+                        String name = prop.getName();
+                        Method accessor = prop.getReadMethod();
+                        if (accessor != null && isIncluded( prop, includes, excludes ) ) {
+                            Object value = accessor.invoke(object, (Object[]) null);
+                            if( !visits.contains( value ) ) {
+                                firstField = addComma(firstField);
+                                add(name, value, includes, excludes);
+                            }
+                        }
                     }
-                }
-                Field[] ff = object.getClass().getDeclaredFields();
-                for (Field field : ff) {
-                    if (isValidField(field)) {
-                        firstField = addComma(firstField);
-                        add(field.getName(), field.get(object), includes, excludes);
+                    Field[] ff = object.getClass().getDeclaredFields();
+                    for (Field field : ff) {
+                        if (isValidField(field)) {
+                            if( !visits.contains( field.get(object) ) ) {
+                                firstField = addComma(firstField);
+                                add(field.getName(), field.get(object), includes, excludes);
+                            }
+                        }
                     }
+                } catch( Exception e ) {
+                    throw new JSONException( e );
                 }
-            } catch( Exception e ) {
-                throw new JSONException( e );
+                add('}');
+                visits = (ChainedSet) visits.getParent();
             }
-            add('}');
         }
 
-        private boolean isIncluded(PropertyDescriptor prop, Map includes, Map excludes ) {
+        protected abstract boolean isIncluded( PropertyDescriptor prop, Map includes, Map excludes );
+
+        protected boolean isValidField(Field field) {
+            return !Modifier.isStatic( field.getModifiers() ) && Modifier.isPublic( field.getModifiers() ) && !Modifier.isTransient( field.getModifiers() );
+        }
+
+        protected boolean addComma(boolean firstField) {
+            if ( !firstField ) {
+                add(',');
+            } else {
+                firstField = false;
+            }
+            return firstField;
+        }
+
+        protected void add( char c ) {
+            builder.append( c );
+        }
+
+        protected void add( Object value ) {
+            builder.append( value );
+        }
+
+        protected void add(Object key, Object value, Map includes, Map excludes) {
+            builder.append("\"");
+            builder.append( key );
+            builder.append( "\"" );
+            builder.append( ": " );
+
+            Map nextIncludes = includes.containsKey( key ) && includes.get( key ) != null ? (Map)includes.get( key ) : Collections.EMPTY_MAP;
+            Map nextExcludes = excludes.containsKey( key ) && excludes.get( key ) != null ? (Map)excludes.get( key ) : Collections.EMPTY_MAP;
+
+            json( value, nextIncludes, nextExcludes );
+        }
+
+        private void unicode(char c) {
+            add("\\u");
+            int n = c;
+            for (int i = 0; i < 4; ++i) {
+                int digit = (n & 0xf000) >> 12;
+                add(JSONSerializer.HEX[digit]);
+                n <<= 4;
+            }
+        }
+    }
+
+    private class ShallowVisitor extends ObjectVisitor {
+
+        protected boolean isIncluded(PropertyDescriptor prop, Map includes, Map excludes ) {
             if( includes.containsKey( prop.getName() ) ) {
                 return true;
             }
@@ -453,48 +549,29 @@ public class JSONSerializer {
             Class propType = prop.getPropertyType();
             return !(propType.isArray() || Iterable.class.isAssignableFrom(propType) || Map.class.isAssignableFrom(propType));
         }
+    }
 
-        private boolean isValidField(Field field) {
-            return !Modifier.isStatic( field.getModifiers() ) && Modifier.isPublic( field.getModifiers() ) && !Modifier.isTransient( field.getModifiers() );
-        }
+    private class DeepVisitor extends ObjectVisitor {
 
-        private boolean addComma(boolean firstField) {
-            if ( !firstField ) {
-                add(',');
-            } else {
-                firstField = false;
+        protected boolean isIncluded( PropertyDescriptor prop, Map includes, Map excludes ) {
+            if( includes.containsKey( prop.getName() ) ) {
+                return true;
             }
-            return firstField;
-        }
 
-        private void add( char c ) {
-            builder.append( c );
-        }
-
-        private void add( Object value ) {
-            builder.append( value );
-        }
-
-        private void add(Object key, Object value, Map includes, Map excludes) {
-            builder.append("\"");
-            builder.append( key );
-            builder.append( "\"" );
-            builder.append( ": " );
-
-            Map nextIncludes = includes.containsKey( key ) && includes.get( key ) != null ? (Map)includes.get( key ) : Collections.EMPTY_MAP;
-            Map nextExcludes = excludes.containsKey( key ) && excludes.get( key ) != null ? (Map)excludes.get( key ) : Collections.EMPTY_MAP;
-
-            json( value, nextIncludes, nextExcludes );
-        }
-
-        private void unicode(char c) {
-            add("\\u");
-            int n = c;
-            for (int i = 0; i < 4; ++i) {
-                int digit = (n & 0xf000) >> 12;
-                add(HEX[digit]);
-                n <<= 4;
+            if( excludes.containsKey( prop.getName() ) ) {
+                // This is sort of unique, and up for some interpretation to best behavior.
+                // Right now it assumes if you specifiy a nested exclude that means you want to
+                // include the parent object because if you don't then this exclude is meaningless.
+                // EX: .exclude( "parent.name" ) means that the field named parent has to be included
+                // in order for you to exclude the name field.
+                return excludes.get( prop.getName() ) != null;
             }
+
+            Method accessor = prop.getReadMethod();
+            if( accessor.isAnnotationPresent( JSON.class ) ) {
+                return accessor.getAnnotation(JSON.class).include();
+            }
+            return true;
         }
     }
 }

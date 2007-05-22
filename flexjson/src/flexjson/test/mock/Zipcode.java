@@ -13,38 +13,24 @@
  * implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-package flexjson.test;
+package flexjson.test.mock;
 
-import java.util.List;
-import java.util.ArrayList;
+public class Zipcode {
+    private String zipcode;
 
-public class MockNetwork {
-    String name;
-    List people;
+    public Zipcode() {
+    }
 
-
-    public MockNetwork(String name, MockPerson... peeps ) {
-        this.name = name;
-        people = new ArrayList();
-        for( MockPerson person : peeps ) {
-            people.add( person );
-        }
+    public Zipcode(String zipcode) {
+        this.zipcode = zipcode;
     }
 
 
-    public String getName() {
-        return name;
+    public String getZipcode() {
+        return zipcode;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public List getPeople() {
-        return people;
-    }
-
-    public void setPeople(List people) {
-        this.people = people;
+    public void setZipcode(String zipcode) {
+        this.zipcode = zipcode;
     }
 }

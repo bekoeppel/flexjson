@@ -13,7 +13,7 @@
  * implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-package flexjson.test;
+package flexjson.test.mock;
 
 import flexjson.JSON;
 
@@ -21,25 +21,25 @@ import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
 
-public class MockPerson {
+public class Person {
 
     private String firstname;
     private String lastname;
     private Date birthdate;
-    private MockAddress home;
-    private MockAddress work;
+    private Address home;
+    private Address work;
     private List phones = new ArrayList();
     private List hobbies = new ArrayList();
 
-    public MockPerson() {
+    public Person() {
     }
 
-    public MockPerson(String firstname, String lastname, Date birthdate, MockAddress home, MockAddress work) {
+    public Person(String firstname, String lastname, Date birthdate, Address home, Address work) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.birthdate = birthdate;
-        this.home = home;
-        this.work = work;
+        setHome( home );
+        setWork( work );
     }
 
     public String getFirstname() {
@@ -66,20 +66,22 @@ public class MockPerson {
         this.birthdate = birthdate;
     }
 
-    public MockAddress getHome() {
+    public Address getHome() {
         return home;
     }
 
-    public void setHome(MockAddress home) {
+    public void setHome(Address home) {
         this.home = home;
+        this.home.setPerson( this );
     }
 
-    public MockAddress getWork() {
+    public Address getWork() {
         return work;
     }
 
-    public void setWork(MockAddress work) {
+    public void setWork(Address work) {
         this.work = work;
+        this.work.setPerson( this );
     }
 
     public List getPhones() {
