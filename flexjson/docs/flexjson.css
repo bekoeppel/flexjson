@@ -1,0 +1,114 @@
+body {
+    background-color: #1B4057;
+    font-family: Helvetica,Arial,Geneva,sans-serif;
+    line-height: 1.5em;
+    /*font-size: 62.5%;*/
+}
+
+.doc {
+    width: 85%;
+    margin: auto;
+}
+
+.content {
+    background-color: white;
+    padding: 1em;
+    overflow: visible;
+}
+
+.json {
+    white-space: pre;
+    border: 1px solid #999;
+    background-color: #ddd;
+    font-family: monospace;
+    overflow: auto;
+}
+
+.java {
+    white-space: pre;
+    border: 1px solid #999;
+    background-color: #ddd;
+    font-family: monospace;
+    overflow: auto;
+}
+
+b.rtop, b.rbottom {
+    display:block;
+}
+
+b.rtop b, b.rbottom b {
+   display:block;
+   height: 1px;
+   overflow: hidden;
+}
+
+b.r1 {
+   margin: 0 5px
+}
+
+b.r2 {
+   margin: 0 3px
+}
+b.r3 {
+   margin: 0 2px
+}
+
+b.rtop b.r4, b.rbottom b.r4 {
+   margin: 0 1px;
+   height: 2px;
+}
+
+b.r1, b.r2, b.r3, b.r4 {
+    background-color: white;
+}
+
+b.rtop b.r1, b.rtop b.r2, b.rtop b.r3, b.rtop b.r4 {
+    background-color: #499DD8;
+}
+
+.flexjsonTitle {
+    background-color: #499DD8;
+    color: white;
+    padding: 0.5em;
+    margin: 0px;
+    text-transform: uppercase;
+}
+
+.menu {
+    background-color: #FF8F20;
+    color: white;
+}
+
+.menu ul {
+    list-style-type: none;
+    padding: 4px 0;
+    margin: 0;
+}
+
+.menu li {
+    padding: 0 0.5em;
+    display: inline;
+}
+
+.menu a {
+    text-decoration: none;
+    font-weight: bold;
+    padding: 0px 2px;
+    color: white;
+}
+
+.menu a:hover {
+    padding: 8px 2px;
+    background-color: #499DD8;
+}
+
+.author {
+    text-align: right;
+}
+
+.quote {
+    background:transparent url(quotes.gif) no-repeat scroll 0pt 5px;
+    padding-left:35px;
+    margin-left: 9em;
+    margin-right: 9em;
+}

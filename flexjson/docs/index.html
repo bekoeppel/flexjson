@@ -4,112 +4,7 @@
 <head xmlns="http://www.w3.org/1999/xhtml">
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
     <title>JSON Serialization Usage</title>
-    <style type="text/css">
-        body {
-            background-color: #1B4057;
-            font-family: Helvetica,Arial,Geneva,sans-serif;
-            line-height: 1.5em;
-            /*font-size: 62.5%;*/
-        }
-
-        .doc {
-            width: 85%;
-            margin: auto;
-        }
-
-        .content {
-            background-color: white;
-            padding: 1em;
-            overflow: visible;
-        }
-
-        .json {
-            white-space: pre;
-            border: 1px solid #999;
-            background-color: #ddd;
-            font-family: monospace;
-            overflow: auto;
-        }
-
-        .java {
-            white-space: pre;
-            border: 1px solid #999;
-            background-color: #ddd;
-            font-family: monospace;
-            overflow: auto;
-        }
-
-        b.rtop, b.rbottom {
-            display:block;
-        }
-
-        b.rtop b, b.rbottom b {
-           display:block;
-           height: 1px;
-           overflow: hidden;
-        }
-
-        b.r1 {
-           margin: 0 5px
-        }
-
-        b.r2 {
-           margin: 0 3px
-        }
-        b.r3 {
-           margin: 0 2px
-        }
-
-        b.rtop b.r4, b.rbottom b.r4 {
-           margin: 0 1px;
-           height: 2px;
-        }
-
-        b.r1, b.r2, b.r3, b.r4 {
-            background-color: white;
-        }
-
-        b.rtop b.r1, b.rtop b.r2, b.rtop b.r3, b.rtop b.r4 {
-            background-color: #499DD8;
-        }
-
-        .flexjsonTitle {
-            background-color: #499DD8;
-            color: white;
-            padding: 0.5em;
-            margin: 0px;
-            text-transform: uppercase;
-        }
-
-        .menu {
-            background-color: #FF8F20;
-            color: white;
-        }
-
-        .menu ul {
-            list-style-type: none;
-            padding: 4px 0;
-            margin: 0;
-        }
-
-        .menu li {
-            padding: 0 0.5em;
-            display: inline;
-        }
-
-        .menu a {
-            text-decoration: none;
-            font-weight: bold;
-            padding: 0px 2px;
-            color: white;
-        }
-
-        .menu a:hover {
-            padding: 8px 2px;
-            background-color: #499DD8;
-        }
-
-    </style>
+    <link rel='stylesheet' type='text/css' href='flexjson.css'/>
 </head>
 <body>
 
@@ -128,6 +23,9 @@
             <li><a href="https://sourceforge.net/project/showfiles.php?group_id=194042">Download</a></li>
             <li><a href="https://sourceforge.net/forum/forum.php?forum_id=686321">Forums</a></li>
             <li><a href="javadoc/index.html">Javadoc</a></li>
+            <li><a href="testimonials.html">Testimonials</a></li>
+            <li><a href="http://wrongnotes.blogspot.com/">Blog</a></li>
+            <li><a href="changelog.html">Change Log</a></li>
         </ul>
     </div>
 
@@ -192,12 +90,14 @@
     </blockquote>
 
     <p>
-        Looks pretty much like you'd expect.  However, our Person object contains more fields that name, birthday,
+        Looks pretty much like you'd expect.  However, our Person object contains more fields than name, birthday,
         and nickname so what happened to phoneNumbers, and addresses?  By default Flexjson serializes the immediate
-        fields of that object.  It's just a shallow representation of the object.  <em>All collections and other
-        object references are not serialized by default</em>.  Or said another way any one to one, many to one, one to many,
-        many to many relationships are not serizialized by default.  But, let's say we did want to serialize the
-        phoneNumbers then we could do the following:
+        fields of that object.  It's just a shallow representation of the object.  <em>All collections are not serialized
+        by default</em>.  Or said another way any one to many, and many to many relationships are not serizialized by
+        default.  Object references are serialized by default.  That being many to one and one to one relationships will
+        be serialized by default.  This is consistent with other libraries like hibernate and JPA which will eagerly
+        load these relationships by default.  But, let's say we wanted to include the phoneNumbers field in our output
+        then we could do the following:
     </p>
 
     <blockquote class="java">

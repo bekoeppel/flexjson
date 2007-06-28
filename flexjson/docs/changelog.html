@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+    <title>Flexjson: Change Log</title>
+</head>
+<body>
+    <h1>Flexjson Change Log</h1>
+    <h2>Version 1.3</h2>
+    <h3>June 24, 2007</h3>
+    <ul>
+        <li>Enhancements
+            <ul>
+                <li>
+                    Added prettyPrint() method so that output can be pretty printed for development.
+                </li>
+            </ul>
+        </li>
+        <li>Bug Fixes
+            <ul>
+                <li>
+                    Declared fields in base classes weren't being serialized.  Flexjson will traverse up the heirarchy
+                    and serialize any public non-static, non-transient field it encounters.
+                </li>
+                <li>
+                    Documentation was incorrect about serializing many-to-one and one-to-one relationships.  They are
+                    automatically serialized by default.
+                </li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>Version 1.2</h2>
+    <h3>May 22, 2007</h3>
+    <ul>
+        <li>Enhancements
+            <ul>
+                <li>
+                    Added deepSerialize method to serialize a Java object recursively.  Includes, excludes, and
+                    annotations are honored.  However, using includes really only matters if you are overiding
+                    an annotation that is excluding a field by default.  Cycles in the graph are ignored.
+                </li>
+            </ul>
+        </li>
+        <li>Bug Fixes
+            <ul>
+                <li>
+                    Made Flexjson output conform to JSON standard.  The serialization of dates is not standardized by
+                    the JSON spec.  However, you cannot use the new keyword in the JSON output according to the spec.
+                    So the JSON Flexjson was emitting in the previous was not JSON compliant because it would write out
+                    <code>new Date( ... )</code>.  It has been changed to send the time as the number of milliseconds
+                    since midnight, January 1, 1970 UTC.
+                </li>
+                <li>
+                    Cycles in the graph produced a StackOverflowException.  Objects that had circular references
+                    would produce StackOverflowException.  While you could workaround this issue using excludes or
+                    annotations the code was now fixed to prevent the stack overflows by default and not serialize
+                    cycles.  Any cycle in the graph will be ignored.
+                </li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>Version 1.1</h2>
+    <h3>April 21, 2007</h3>
+    <ul>
+        <li>
+            Enhancements
+            <ul>
+                <li>Added support for enumerated types</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>Version 1.0</h2>
+    <h3>April 18, 2007</h3>
+    <ul>
+        <li>Inital Release</li>
+    </ul>
+</body>
+</html>
