@@ -296,6 +296,27 @@ public class JSONSerializer {
         }
     }
 
+    /**
+     * This will do a serialize the target and pretty print the output so it's easier to read.
+     *
+     * @param target of the serialization.
+     * @return the serialized representation of the target in pretty print form.
+     */
+    public String prettyPrint( Object target ) {
+        return new ShallowVisitor( true ).visit( target );
+    }
+
+    /**
+     * This will do a serialize with root name and pretty print the output so it's easier to read.
+     *
+     * @param rootName the name of the field to assign the resulting JSON.
+     * @param target of the serialization.
+     * @return the serialized representation of the target in pretty print form.
+     */
+    public String prettyPrint( String rootName, Object target ) {
+        return new ShallowVisitor( true ).visit( rootName, target );
+    }
+
     private void addFieldsTo(Map root, String... fields) {
         for (String field : fields) {
             Map current = root;
@@ -329,9 +350,17 @@ public class JSONSerializer {
 
     private abstract class ObjectVisitor {
         protected StringBuilder builder;
+        protected boolean prettyPrint = false;
+        private int amount = 0;
+        private boolean insideArray = false;
 
         protected ObjectVisitor() {
             builder = new StringBuilder();
+        }
+
+        public ObjectVisitor(boolean prettyPrint) {
+            this();
+            this.prettyPrint = prettyPrint;
         }
 
         public String visit( Object target ) {
@@ -340,11 +369,11 @@ public class JSONSerializer {
         }
 
         public String visit( String rootName, Object target ) {
-            add( '{' );
+            beginObject();
             string(rootName);
             add(':');
             json( target, includeFields, excludeFields );
-            add( '}' );
+            endObject();
             return builder.toString();
         }
 
@@ -379,33 +408,49 @@ public class JSONSerializer {
         }
 
         private void map(Map map, Map includes, Map excludes) {
-            add('{');
+            beginObject();
             Iterator it = map.keySet().iterator();
+            boolean firstField = true;
             while (it.hasNext()) {
                 Object key = it.next();
-                add( key, map.get(key), includes, excludes );
-                if (it.hasNext()) add(',');
+                int len = builder.length();
+                add( key, map.get(key), includes, excludes, firstField );
+                if( len < builder.length() ) {
+                    firstField = false;
+                }
             }
-            add('}');
+            endObject();
         }
 
         private void array(Iterator it, Map includes, Map excludes) {
-            add('[');
+            beginArray();
             while (it.hasNext()) {
-                json( it.next(), includes, excludes );
-                if (it.hasNext()) add(',');
+                if( prettyPrint ) {
+                    addNewline();
+                }
+                addArrayElement( it.next(), includes, excludes, it.hasNext() );
             }
-            add(']');
+            endArray();
         }
 
         private void array(Object object, Map includes, Map excludes) {
-            add('[');
+            beginArray();
             int length = Array.getLength(object);
             for (int i = 0; i < length; ++i) {
-                json( Array.get(object, i), includes, excludes );
-                if (i < length - 1) add(',');
+                if( prettyPrint ) {
+                    addNewline();
+                }
+                addArrayElement( Array.get(object, i), includes, excludes, i < length - 1 );
             }
-            add(']');
+            endArray();
+        }
+
+        private void addArrayElement(Object object, Map includes, Map excludes, boolean isLast ) {
+            int len = builder.length();
+            json( object, includes, excludes );
+            if( len < builder.length() ) { // make sure we at least added an element.
+                if ( isLast ) add(',');
+            }
         }
 
         private void bool(Boolean b) {
@@ -446,7 +491,7 @@ public class JSONSerializer {
             if( !visits.contains( object ) ) {
                 visits = new ChainedSet( visits );
                 visits.add( object );
-                add('{');
+                beginObject();
                 try {
                     BeanInfo info = Introspector.getBeanInfo(object.getClass());
                     PropertyDescriptor[] props = info.getPropertyDescriptors();
@@ -457,24 +502,26 @@ public class JSONSerializer {
                         if (accessor != null && isIncluded( prop, includes, excludes ) ) {
                             Object value = accessor.invoke(object, (Object[]) null);
                             if( !visits.contains( value ) ) {
-                                firstField = addComma(firstField);
-                                add(name, value, includes, excludes);
+                                add(name, value, includes, excludes, firstField);
+                                firstField = false;
                             }
                         }
                     }
-                    Field[] ff = object.getClass().getDeclaredFields();
-                    for (Field field : ff) {
-                        if (isValidField(field)) {
-                            if( !visits.contains( field.get(object) ) ) {
-                                firstField = addComma(firstField);
-                                add(field.getName(), field.get(object), includes, excludes);
+                    for( Class current = object.getClass(); current != null; current = current.getSuperclass() ) {
+                        Field[] ff = current.getDeclaredFields();
+                        for (Field field : ff) {
+                            if (isValidField(field)) {
+                                if( !visits.contains( field.get(object) ) ) {
+                                    add(field.getName(), field.get(object), includes, excludes, firstField);
+                                    firstField = false;
+                                }
                             }
                         }
                     }
                 } catch( Exception e ) {
                     throw new JSONException( e );
                 }
-                add('}');
+                endObject();
                 visits = (ChainedSet) visits.getParent();
             }
         }
@@ -494,24 +541,85 @@ public class JSONSerializer {
             return firstField;
         }
 
+        protected void beginObject() {
+            if( prettyPrint ) {
+                if( insideArray ) {
+                    indent( amount );
+                }
+                amount += 4;
+            }
+            add( '{' );
+        }
+
+        protected void endObject() {
+            if( prettyPrint ) {
+                addNewline();
+                amount -= 4;
+                indent( amount );
+            }
+            add( '}' );
+        }
+
+        private void beginArray() {
+            if( prettyPrint ) {
+                amount += 4;
+                insideArray = true;
+            }
+            add('[');
+        }
+
+        private void endArray() {
+            if( prettyPrint ) {
+                addNewline();
+                amount -= 4;
+                insideArray = false;
+                indent( amount );
+            }
+            add(']');
+        }
+
         protected void add( char c ) {
             builder.append( c );
+        }
+
+        private void indent(int amount) {
+            for( int i = 0; i < amount; i++ ) {
+                builder.append( " " );
+            }
+        }
+
+        private void addNewline() {
+            builder.append("\n");
         }
 
         protected void add( Object value ) {
             builder.append( value );
         }
 
-        protected void add(Object key, Object value, Map includes, Map excludes) {
-            builder.append("\"");
-            builder.append( key );
-            builder.append( "\"" );
-            builder.append( ": " );
+        protected void add(Object key, Object value, Map includes, Map excludes, boolean prependComma) {
+            int start = builder.length();
+            addComma( prependComma );
+            addAttribute( key );
 
             Map nextIncludes = includes.containsKey( key ) && includes.get( key ) != null ? (Map)includes.get( key ) : Collections.EMPTY_MAP;
             Map nextExcludes = excludes.containsKey( key ) && excludes.get( key ) != null ? (Map)excludes.get( key ) : Collections.EMPTY_MAP;
 
+            int len = builder.length();
             json( value, nextIncludes, nextExcludes );
+            if( len == builder.length() ) {
+                builder.delete( start, len ); // erase the attribute key we didn't output anything.
+            }
+        }
+
+        private void addAttribute(Object key) {
+            if( prettyPrint ) {
+                addNewline();
+                indent( amount );
+            }
+            builder.append("\"");
+            builder.append( key );
+            builder.append( "\"" );
+            builder.append( ": " );
         }
 
         private void unicode(char c) {
@@ -526,6 +634,14 @@ public class JSONSerializer {
     }
 
     private class ShallowVisitor extends ObjectVisitor {
+
+        public ShallowVisitor() {
+            super();
+        }
+
+        public ShallowVisitor(boolean prettyPrint) {
+            super(prettyPrint);
+        }
 
         protected boolean isIncluded(PropertyDescriptor prop, Map includes, Map excludes ) {
             if( includes.containsKey( prop.getName() ) ) {
@@ -546,12 +662,24 @@ public class JSONSerializer {
                 return accessor.getAnnotation(JSON.class).include();
             }
 
+            if( excludes.containsKey("*") ) {
+                return false;
+            }
+
             Class propType = prop.getPropertyType();
             return !(propType.isArray() || Iterable.class.isAssignableFrom(propType) || Map.class.isAssignableFrom(propType));
         }
     }
 
     private class DeepVisitor extends ObjectVisitor {
+
+        public DeepVisitor() {
+            super();
+        }
+
+        public DeepVisitor(boolean prettyPrint) {
+            super(prettyPrint);
+        }
 
         protected boolean isIncluded( PropertyDescriptor prop, Map includes, Map excludes ) {
             if( includes.containsKey( prop.getName() ) ) {
@@ -571,6 +699,11 @@ public class JSONSerializer {
             if( accessor.isAnnotationPresent( JSON.class ) ) {
                 return accessor.getAnnotation(JSON.class).include();
             }
+
+            if( excludes.containsKey("*") ) {
+                return false;
+            }
+
             return true;
         }
     }

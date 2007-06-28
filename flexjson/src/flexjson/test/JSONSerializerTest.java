@@ -32,6 +32,7 @@ public class JSONSerializerTest extends TestCase {
     private List people;
     private Network network;
     private Zipcode pedroZip;
+    private Employee dilbert;
 
     @SuppressWarnings({"unchecked"})
     public void setUp() {
@@ -84,6 +85,8 @@ public class JSONSerializerTest extends TestCase {
         people.add( charlie );
         people.add( ben );
         people.add( pedro );
+
+        dilbert = new Employee("Dilbert", "", new Date(), new Address( "123 Finland Dr", "Cubicleville", "Hell", new Zipcode("66666") ), new Address( "123 Finland Dr", "Cubicleville", "Hell", new Zipcode("66666") ), "Initech" );
 
         network = new Network("My Network", charlie, ben );
     }
@@ -183,6 +186,22 @@ public class JSONSerializerTest extends TestCase {
         }
         assertTrue( colorsJson.startsWith("{") );
         assertTrue( colorsJson.endsWith("}") );
+    }
+
+    public void testArray() {
+        int[] array = new int[30];
+        for( int i = 0; i < array.length; i++ ) {
+            array[i] = i;
+        }
+
+        String json = new JSONSerializer().serialize( array );
+
+        for( int i = 0; i < array.length; i++ ) {
+            assertNumber( i, json );
+        }
+
+        assertFalse( "Assert that there are no double quotes in the output", json.contains("\"") );
+        assertFalse( "Assert that there are no single quotes in the output", json.contains("\'") );
     }
 
     @SuppressWarnings({"ForLoopReplaceableByForEach"})
@@ -333,6 +352,38 @@ public class JSONSerializerTest extends TestCase {
         assertAttributeMissing("person", json);
     }
 
+    public void testSerializeSuperClass() {
+        JSONSerializer serializer = new JSONSerializer();
+        String json = serializer.serialize( dilbert );
+
+        assertAttribute("company", json );
+        assertStringValue( "Initech", json );
+        assertAttribute("firstname", json );
+        assertStringValue( "Dilbert", json );
+    }
+
+    public void testSerializePublicFields() {
+        Spiderman spiderman = new Spiderman();
+
+        JSONSerializer serializer = new JSONSerializer();
+        String json = serializer.serialize( spiderman );
+
+        assertAttribute( "spideySense", json );
+        assertAttribute( "superpower", json );
+        assertStringValue( "Creates web", json );
+    }
+
+    public void testPrettyPrint() {
+        JSONSerializer serializer = new JSONSerializer();
+
+        String charlieJson = serializer.include("phones").prettyPrint( charlie );
+        System.out.println( charlieJson );
+    }
+
+    public void testWildcards() {
+
+    }
+
     private int occurs(String str, String json) {
         int current = 0;
         int count = 0;
@@ -370,8 +421,8 @@ public class JSONSerializerTest extends TestCase {
         }
     }
 
-    private void assertNumber(Number time, String json) {
-        assertTrue( time + " is missing as a number.", json.contains( time.toString() ) );
+    private void assertNumber(Number number, String json) {
+        assertTrue( number + " is missing as a number.", json.contains( number.toString() ) );
     }
 
     private void assertStringValueMissing( String value, String json ) {
