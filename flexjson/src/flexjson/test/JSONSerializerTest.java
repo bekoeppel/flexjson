@@ -23,6 +23,7 @@ import junit.textui.TestRunner;
 import java.util.*;
 
 import flexjson.JSONSerializer;
+import flexjson.PathExpression;
 import flexjson.test.mock.*;
 
 public class JSONSerializerTest extends TestCase {
@@ -285,13 +286,13 @@ public class JSONSerializerTest extends TestCase {
         JSONSerializer serializer = new JSONSerializer();
         serializer.setIncludes( Arrays.asList( "people.hobbies", "phones", "home", "people.resume" ) );
 
-        List includes = serializer.getIncludes();
+        List<PathExpression> includes = serializer.getIncludes();
         assertFalse( includes.isEmpty() );
         assertEquals( 4, includes.size() );
-        assertTrue( includes.contains("people.hobbies") );
-        assertTrue( includes.contains("people.resume") );
-        assertTrue( includes.contains("phones") );
-        assertTrue( includes.contains("home") );
+        assertTrue( includes.contains( new PathExpression("people.hobbies") ) );
+        assertTrue( includes.contains( new PathExpression("people.resume") ) );
+        assertTrue( includes.contains( new PathExpression("phones") ) );
+        assertTrue( includes.contains( new PathExpression("home") ) );
     }
 
     public void testI18n() {
@@ -381,7 +382,46 @@ public class JSONSerializerTest extends TestCase {
     }
 
     public void testWildcards() {
+        JSONSerializer serializer = new JSONSerializer();
+        String json = serializer.include("phones").exclude("*.class").serialize( charlie );
 
+        assertAttributeMissing("class", json);
+        assertAttribute("phones", json);
+    }
+
+    public void testExcludeAll() {
+        JSONSerializer serializer = new JSONSerializer();
+        String json = serializer.exclude("*").serialize( charlie );
+
+        assertEquals("{}", json);
+        assertAttributeMissing("class", json);
+        assertAttributeMissing("phones", json);
+        assertAttributeMissing("firstname", json);
+        assertAttributeMissing("lastname", json);
+    }
+
+    public void testMixedWildcards() {
+        JSONSerializer serializer = new JSONSerializer();
+        String json = serializer.include("firstname","lastname").exclude("*").prettyPrint( charlie );
+
+        assertAttribute("firstname", json);
+        assertStringValue("Charlie",json);
+        assertAttribute("lastname", json);
+        assertStringValue("Hubbard",json);
+        assertAttributeMissing("class", json);
+        assertAttributeMissing("phones", json);
+        assertAttributeMissing("birthdate", json);
+
+        serializer = new JSONSerializer();
+        json = serializer.include("firstname","lastname", "phones.areaCode", "phones.exchange", "phones.number").exclude("*").prettyPrint( charlie );
+
+        assertAttribute("firstname", json);
+        assertStringValue("Charlie",json);
+        assertAttribute("lastname", json);
+        assertStringValue("Hubbard",json);
+        assertAttributeMissing("class", json);
+        assertAttribute("phones", json);
+        assertAttributeMissing("birthdate", json);
     }
 
     private int occurs(String str, String json) {

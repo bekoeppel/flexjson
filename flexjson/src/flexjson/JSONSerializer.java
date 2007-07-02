@@ -148,8 +148,8 @@ public class JSONSerializer {
 
     public final static char[] HEX = "0123456789ABCDEF".toCharArray();
 
-    Map excludeFields = new HashMap();
-    Map includeFields = new HashMap();
+    List<PathExpression> excludeFields = new ArrayList<PathExpression>();
+    List<PathExpression> includeFields = new ArrayList<PathExpression>();
 
     /**
      * Create a serializer instance.  It's unconfigured in terms of fields
@@ -230,7 +230,9 @@ public class JSONSerializer {
      * @return this instance for method chaining.
      */
     public JSONSerializer exclude( String... fields ) {
-        addFieldsTo(excludeFields, fields);
+        for( String field : fields ) {
+            addExclude( field );
+        }
         return this;
     }
 
@@ -246,7 +248,9 @@ public class JSONSerializer {
      * @return this instance for method chaining.
      */
     public JSONSerializer include( String... fields ) {
-        addFieldsTo(includeFields, fields );
+        for( String field : fields ) {
+            includeFields.add( new PathExpression( field ) );
+        }
         return this;
     }
 
@@ -255,8 +259,8 @@ public class JSONSerializer {
      *
      * @return A List of dot notation fields included in serialization.
      */
-    public List getIncludes() {
-        return renderFields( includeFields );
+    public List<PathExpression> getIncludes() {
+        return includeFields;
     }
 
     /**
@@ -264,8 +268,8 @@ public class JSONSerializer {
      *
      * @return A List of dot notation fields excluded from serialization.
      */
-    public List getExcludes() {
-        return renderFields( excludeFields );
+    public List<PathExpression> getExcludes() {
+        return excludeFields;
     }
 
     /**
@@ -278,7 +282,7 @@ public class JSONSerializer {
      */
     public void setIncludes( List fields ) {
         for( Object field : fields ) {
-            addFieldsTo( includeFields, field.toString() );
+            includeFields.add( new PathExpression( field.toString() ) );
         }
     }
 
@@ -292,8 +296,20 @@ public class JSONSerializer {
      */
     public void setExcludes( List fields ) {
         for( Object field : fields ) {
-            addFieldsTo( excludeFields, field.toString() );
+            addExclude( field );
         }
+    }
+
+    private void addExclude(Object field) {
+        String name = field.toString();
+        int index = name.lastIndexOf('.');
+        if( index > 0 ) {
+            PathExpression expression = new PathExpression( name.substring( 0, index ) );
+            if( !expression.isWildcard() ) {
+                includeFields.add( expression );
+            }
+        }
+        excludeFields.add( new PathExpression( name ) );
     }
 
     /**
@@ -317,45 +333,16 @@ public class JSONSerializer {
         return new ShallowVisitor( true ).visit( rootName, target );
     }
 
-    private void addFieldsTo(Map root, String... fields) {
-        for (String field : fields) {
-            Map current = root;
-            String[] paths = field.split("\\.");
-            for( int i = 0; i < paths.length; i++ ) {
-                String path = paths[i];
-                if( !current.containsKey( path ) || current.get(path) == null ) {
-                    current.put( path, i + 1 < paths.length ? new HashMap() : null );
-                }
-                current = (Map)current.get( path );
-            }
-        }
-    }
-
-    private List renderFields(Map includeFields) {
-        List fields = new ArrayList( includeFields.size() );
-        for( Object key : includeFields.keySet() ) {
-            Map children = (Map) includeFields.get( key );
-            if( children != null ) {
-                List childrenFields = renderFields(children);
-                for( Iterator i = childrenFields.iterator(); i.hasNext(); ) {
-                    Object child = i.next();
-                    fields.add( key + "." + child );
-                }
-            } else {
-                fields.add( key.toString() );
-            }
-        }
-        return fields;
-    }
-
     private abstract class ObjectVisitor {
         protected StringBuilder builder;
         protected boolean prettyPrint = false;
         private int amount = 0;
         private boolean insideArray = false;
+        private Path path;
 
         protected ObjectVisitor() {
             builder = new StringBuilder();
+            path = new Path();
         }
 
         public ObjectVisitor(boolean prettyPrint) {
@@ -364,7 +351,7 @@ public class JSONSerializer {
         }
 
         public String visit( Object target ) {
-            json( target, includeFields, excludeFields );
+            json( target );
             return builder.toString();
         }
 
@@ -372,12 +359,12 @@ public class JSONSerializer {
             beginObject();
             string(rootName);
             add(':');
-            json( target, includeFields, excludeFields );
+            json( target );
             endObject();
             return builder.toString();
         }
 
-        private void json(Object object, Map includes, Map excludes) {
+        private void json(Object object) {
             if (object == null) add("null");
             else if (object instanceof Class)
                 string( ((Class)object).getName() );
@@ -390,31 +377,31 @@ public class JSONSerializer {
             else if (object instanceof Character)
                 string(object);
             else if (object instanceof Map)
-                map( (Map)object, includes, excludes);
+                map( (Map)object);
             else if (object.getClass().isArray())
-                array( object, includes, excludes );
+                array( object );
             else if (object instanceof Iterable)
-                array(((Iterable) object).iterator(), includes, excludes );
+                array(((Iterable) object).iterator() );
             else if( object instanceof Date)
                 date( (Date)object );
             else if( object instanceof Enum )
                 enumerate( (Enum)object );
             else
-                bean(object, includes, excludes );
+                bean( object );
         }
 
         private void enumerate(Enum value) {
             string( value.name() );
         }
 
-        private void map(Map map, Map includes, Map excludes) {
+        private void map(Map map) {
             beginObject();
             Iterator it = map.keySet().iterator();
             boolean firstField = true;
             while (it.hasNext()) {
                 Object key = it.next();
                 int len = builder.length();
-                add( key, map.get(key), includes, excludes, firstField );
+                add( key, map.get(key), firstField );
                 if( len < builder.length() ) {
                     firstField = false;
                 }
@@ -422,32 +409,32 @@ public class JSONSerializer {
             endObject();
         }
 
-        private void array(Iterator it, Map includes, Map excludes) {
+        private void array(Iterator it) {
             beginArray();
             while (it.hasNext()) {
                 if( prettyPrint ) {
                     addNewline();
                 }
-                addArrayElement( it.next(), includes, excludes, it.hasNext() );
+                addArrayElement( it.next(), it.hasNext() );
             }
             endArray();
         }
 
-        private void array(Object object, Map includes, Map excludes) {
+        private void array(Object object) {
             beginArray();
             int length = Array.getLength(object);
             for (int i = 0; i < length; ++i) {
                 if( prettyPrint ) {
                     addNewline();
                 }
-                addArrayElement( Array.get(object, i), includes, excludes, i < length - 1 );
+                addArrayElement( Array.get(object, i), i < length - 1 );
             }
             endArray();
         }
 
-        private void addArrayElement(Object object, Map includes, Map excludes, boolean isLast ) {
+        private void addArrayElement(Object object, boolean isLast ) {
             int len = builder.length();
-            json( object, includes, excludes );
+            json( object );
             if( len < builder.length() ) { // make sure we at least added an element.
                 if ( isLast ) add(',');
             }
@@ -463,7 +450,7 @@ public class JSONSerializer {
             for (char c = it.first(); c != CharacterIterator.DONE; c = it.next()) {
                 if (c == '"') add("\\\"");
                 else if (c == '\\') add("\\\\");
-                else if (c == '/') add("\\/");
+                // else if (c == '/') add("\\/");
                 else if (c == '\b') add("\\b");
                 else if (c == '\f') add("\\f");
                 else if (c == '\n') add("\\n");
@@ -487,7 +474,7 @@ public class JSONSerializer {
         private ChainedSet visits = new ChainedSet( Collections.EMPTY_SET );
 
         @SuppressWarnings({"unchecked"})
-        protected void bean(Object object, Map includes, Map excludes) {
+        protected void bean(Object object) {
             if( !visits.contains( object ) ) {
                 visits = new ChainedSet( visits );
                 visits.add( object );
@@ -498,24 +485,28 @@ public class JSONSerializer {
                     boolean firstField = true;
                     for (PropertyDescriptor prop : props) {
                         String name = prop.getName();
+                        path.enqueue( name );
                         Method accessor = prop.getReadMethod();
-                        if (accessor != null && isIncluded( prop, includes, excludes ) ) {
+                        if (accessor != null && isIncluded( prop ) ) {
                             Object value = accessor.invoke(object, (Object[]) null);
                             if( !visits.contains( value ) ) {
-                                add(name, value, includes, excludes, firstField);
+                                add(name, value, firstField);
                                 firstField = false;
                             }
                         }
+                        path.pop();
                     }
                     for( Class current = object.getClass(); current != null; current = current.getSuperclass() ) {
                         Field[] ff = current.getDeclaredFields();
                         for (Field field : ff) {
+                            path.enqueue( field.getName() );
                             if (isValidField(field)) {
                                 if( !visits.contains( field.get(object) ) ) {
-                                    add(field.getName(), field.get(object), includes, excludes, firstField);
+                                    add(field.getName(), field.get(object), firstField);
                                     firstField = false;
                                 }
                             }
+                            path.pop();
                         }
                     }
                 } catch( Exception e ) {
@@ -526,7 +517,7 @@ public class JSONSerializer {
             }
         }
 
-        protected abstract boolean isIncluded( PropertyDescriptor prop, Map includes, Map excludes );
+        protected abstract boolean isIncluded( PropertyDescriptor prop );
 
         protected boolean isValidField(Field field) {
             return !Modifier.isStatic( field.getModifiers() ) && Modifier.isPublic( field.getModifiers() ) && !Modifier.isTransient( field.getModifiers() );
@@ -596,16 +587,13 @@ public class JSONSerializer {
             builder.append( value );
         }
 
-        protected void add(Object key, Object value, Map includes, Map excludes, boolean prependComma) {
+        protected void add(Object key, Object value, boolean prependComma) {
             int start = builder.length();
             addComma( prependComma );
             addAttribute( key );
 
-            Map nextIncludes = includes.containsKey( key ) && includes.get( key ) != null ? (Map)includes.get( key ) : Collections.EMPTY_MAP;
-            Map nextExcludes = excludes.containsKey( key ) && excludes.get( key ) != null ? (Map)excludes.get( key ) : Collections.EMPTY_MAP;
-
             int len = builder.length();
-            json( value, nextIncludes, nextExcludes );
+            json( value );
             if( len == builder.length() ) {
                 builder.delete( start, len ); // erase the attribute key we didn't output anything.
             }
@@ -619,7 +607,10 @@ public class JSONSerializer {
             builder.append("\"");
             builder.append( key );
             builder.append( "\"" );
-            builder.append( ": " );
+            builder.append( ":" );
+            if( prettyPrint ) {
+                builder.append(" ");
+            }
         }
 
         private void unicode(char c) {
@@ -631,6 +622,16 @@ public class JSONSerializer {
                 n <<= 4;
             }
         }
+
+        protected PathExpression matches(PropertyDescriptor prop, List<PathExpression> expressions) {
+            for( PathExpression expr : expressions ) {
+                if( expr.matches( path ) ) {
+                    return expr;
+                }
+            }
+            return null;
+        }
+
     }
 
     private class ShallowVisitor extends ObjectVisitor {
@@ -643,27 +644,25 @@ public class JSONSerializer {
             super(prettyPrint);
         }
 
-        protected boolean isIncluded(PropertyDescriptor prop, Map includes, Map excludes ) {
-            if( includes.containsKey( prop.getName() ) ) {
+        protected boolean isIncluded( PropertyDescriptor prop ) {
+            PathExpression expression = matches( prop, includeFields );
+            if( expression != null ) {
                 return true;
             }
 
-            if( excludes.containsKey( prop.getName() ) ) {
+            expression = matches( prop, excludeFields );
+            if( expression != null ) {
                 // This is sort of unique, and up for some interpretation to best behavior.
                 // Right now it assumes if you specifiy a nested exclude that means you want to
                 // include the parent object because if you don't then this exclude is meaningless.
                 // EX: .exclude( "parent.name" ) means that the field named parent has to be included
                 // in order for you to exclude the name field.
-                return excludes.get( prop.getName() ) != null;
+                return false;
             }
 
             Method accessor = prop.getReadMethod();
             if( accessor.isAnnotationPresent( JSON.class ) ) {
                 return accessor.getAnnotation(JSON.class).include();
-            }
-
-            if( excludes.containsKey("*") ) {
-                return false;
             }
 
             Class propType = prop.getPropertyType();
@@ -681,27 +680,25 @@ public class JSONSerializer {
             super(prettyPrint);
         }
 
-        protected boolean isIncluded( PropertyDescriptor prop, Map includes, Map excludes ) {
-            if( includes.containsKey( prop.getName() ) ) {
+        protected boolean isIncluded( PropertyDescriptor prop ) {
+            PathExpression expression = matches( prop, includeFields );
+            if( expression != null ) {
                 return true;
             }
 
-            if( excludes.containsKey( prop.getName() ) ) {
+            expression = matches( prop, excludeFields );
+            if( expression != null ) {
                 // This is sort of unique, and up for some interpretation to best behavior.
                 // Right now it assumes if you specifiy a nested exclude that means you want to
                 // include the parent object because if you don't then this exclude is meaningless.
                 // EX: .exclude( "parent.name" ) means that the field named parent has to be included
                 // in order for you to exclude the name field.
-                return excludes.get( prop.getName() ) != null;
+                return false;
             }
 
             Method accessor = prop.getReadMethod();
             if( accessor.isAnnotationPresent( JSON.class ) ) {
                 return accessor.getAnnotation(JSON.class).include();
-            }
-
-            if( excludes.containsKey("*") ) {
-                return false;
             }
 
             return true;
