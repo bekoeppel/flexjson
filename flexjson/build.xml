@@ -44,6 +44,7 @@
           <classpath>
               <pathelement location="${libdir}/junit4.1/junit-4.1.jar"/>
               <pathelement location="flexjson.jar"/>
+              <pathelement location="flexjson_test.jar"/>
           </classpath>
           <formatter type="plain" usefile="true" />
           <batchtest todir="${basedir}/junit">
