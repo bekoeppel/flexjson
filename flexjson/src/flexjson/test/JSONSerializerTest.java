@@ -24,6 +24,7 @@ import java.util.*;
 
 import flexjson.JSONSerializer;
 import flexjson.PathExpression;
+import flexjson.HTMLEncoder;
 import flexjson.test.mock.*;
 
 public class JSONSerializerTest extends TestCase {
@@ -289,10 +290,10 @@ public class JSONSerializerTest extends TestCase {
         List<PathExpression> includes = serializer.getIncludes();
         assertFalse( includes.isEmpty() );
         assertEquals( 4, includes.size() );
-        assertTrue( includes.contains( new PathExpression("people.hobbies") ) );
-        assertTrue( includes.contains( new PathExpression("people.resume") ) );
-        assertTrue( includes.contains( new PathExpression("phones") ) );
-        assertTrue( includes.contains( new PathExpression("home") ) );
+        assertTrue( includes.contains( new PathExpression("people.hobbies", true) ) );
+        assertTrue( includes.contains( new PathExpression("people.resume", true) ) );
+        assertTrue( includes.contains( new PathExpression("phones", true) ) );
+        assertTrue( includes.contains( new PathExpression("home", true) ) );
     }
 
     public void testI18n() {
@@ -387,6 +388,15 @@ public class JSONSerializerTest extends TestCase {
 
         assertAttributeMissing("class", json);
         assertAttribute("phones", json);
+        assertAttributeMissing("hobbies", json);
+    }
+
+    public void testWildcardDepthControl() {
+        JSONSerializer serializer = new JSONSerializer();
+        String json = serializer.include("*.class").prettyPrint( charlie );
+
+        assertAttributeMissing("phones", json);
+        assertAttributeMissing("hobbies", json);
     }
 
     public void testExcludeAll() {
@@ -398,6 +408,7 @@ public class JSONSerializerTest extends TestCase {
         assertAttributeMissing("phones", json);
         assertAttributeMissing("firstname", json);
         assertAttributeMissing("lastname", json);
+        assertAttributeMissing("hobbies", json);
     }
 
     public void testMixedWildcards() {
@@ -422,6 +433,28 @@ public class JSONSerializerTest extends TestCase {
         assertAttributeMissing("class", json);
         assertAttribute("phones", json);
         assertAttributeMissing("birthdate", json);
+    }
+
+    public void testHtmlTransformation() {
+        String json = new JSONSerializer().transform( new HTMLEncoder(), "" ).serialize("Marker & Thompson");
+        assertEquals("Assert that the & was replaced with &amp;", "\"Marker &amp; Thompson\"", json );
+
+        Map map = new HashMap();
+        map.put( "Chuck D", "Chuck D <chuckd@publicenemy.com>");
+        map.put( "Run", "Run <run@rundmc.com>");
+        json = new JSONSerializer().transform( new HTMLEncoder(), "" ).serialize( map );
+        assertStringValue( "Chuck D &lt;chuckd@publicenemy.com&gt;", json );
+        assertStringValue( "Run &lt;run@rundmc.com&gt;", json );
+
+        Person xeno = new Person("><eno", "h&d", new Date(), new Address( "1092 Hemphill", "Atlanta", "GA", new Zipcode("30319") ), new Address( "333 \"Diddle & Town\"", "Atlanta", "30329", new Zipcode("30320") ) );
+
+        json = new JSONSerializer().transform( new HTMLEncoder(), "firstname", "lastname" ).exclude("*.class").serialize( xeno );
+
+        assertStringValue( "&gt;&lt;eno", json );
+        assertStringValue( "h&amp;d", json );
+        assertStringValue( "333 \\\"Diddle & Town\\\"", json );
+        assertStringValueMissing( "333 &quot;Diddle &amp; Town&quot;", json );
+        assertAttributeMissing( "class", json );
     }
 
     private int occurs(String str, String json) {

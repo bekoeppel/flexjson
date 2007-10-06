@@ -3,18 +3,21 @@ package flexjson;
 import java.util.Arrays;
 
 /**
- * Created by IntelliJ IDEA.
- * User: charlie
- * Date: Jun 27, 2007
- * Time: 11:36:34 PM
+ * This is an internal class for Flexjson.  It's used to match on fields it encounters
+ * while walking the object graph.  Every expression is expressed in dot notation like foo.bar.baz.  Each term
+ * between the dots is a field name in that parent object.  All expressions are relative to some parent object
+ * within the context in which they are used.  Typically it is the object you're serializing.  Expressions may
+ * also contain wildcards like *.class.
  */
 public class PathExpression {
     String[] expression;
     boolean wildcard = false;
+    boolean included = true;
 
-    public PathExpression( String expr ) {
+    public PathExpression( String expr, boolean anInclude ) {
         expression = expr.split("\\.");
         wildcard = expr.indexOf('*') >= 0;
+        included = anInclude;
     }
 
     public String toString() {
@@ -57,6 +60,9 @@ public class PathExpression {
         return wildcard;
     }
 
+    public boolean isIncluded() {
+        return included;
+    }
 
     public boolean equals(Object o) {
         if (this == o) return true;

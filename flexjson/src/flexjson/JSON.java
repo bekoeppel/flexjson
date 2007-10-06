@@ -26,7 +26,7 @@ import java.lang.annotation.ElementType;
  * annotate fields or methods with this, but be consistent if you start
  * doing one vs. the other.  Typically this will be used to exclude
  * fields that should never be included in the serialization.  For
- * example the password of a User. 
+ * example the password of a User.
  */
 @Retention( value = RetentionPolicy.RUNTIME )
 @Target({ElementType.TYPE, ElementType.METHOD})

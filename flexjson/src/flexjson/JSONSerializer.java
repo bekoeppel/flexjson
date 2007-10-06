@@ -20,14 +20,12 @@ import java.util.Date;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
-import java.lang.reflect.Method;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.Array;
+import java.lang.reflect.*;
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
 
 /**
+ * <p>
  * JSONSerializer is the main class for performing serialization of Java objects
  * to JSON.  JSONSerializer by default performs a shallow serialization.  While
  * this might seem strange there is a method to this madness.  Shallow serialization
@@ -37,8 +35,11 @@ import java.text.StringCharacterIterator;
  * You don't have to change your object model to make JSON work so it reduces your
  * work load, and keeps you
  * <a href="http://en.wikipedia.org/wiki/Don't_repeat_yourself">DRY</a>.
+ * </p>
  *
+ * <p>
  * Let's go through a simple example:
+ * </p>
  *
  * <pre>
  *    JSONSerializer serializer = new JSONSerializer();
@@ -46,8 +47,10 @@ import java.text.StringCharacterIterator;
  *
  * </pre>
  *
+ * <p>
  * What this statement does is output the json from the instance of person.  So
  * the JSON we might see for this could look like:
+ * </p>
  *
  * <pre>
  *    { "class": "com.mysite.Person",
@@ -58,17 +61,20 @@ import java.text.StringCharacterIterator;
  *    }
  *
  * </pre>
- *
+ * <p>
  * In this case it's look like it's pretty standard stuff.  But, let's say
  * Person had many hobbies (i.e. Person.hobbies is a java.util.List).  In
  * this case if we executed the code above we'd still get the same output.
  * This is a very important feature of flexjson, and that is any instance
  * variable that is a Collection, Map, or Object reference won't be serialized
  * by default.  This is what gives flexjson the shallow serialization.
+ * </p>
  *
+ * <p>
  * How would we include the <em>hobbies</em> field?  Using the {@link flexjson.JSONSerializer#include}
  * method allows us to include these fields in the serialization process.  Here is
  * how we'd do that:
+ * </p>
  *
  * <pre>
  *    return new JSONSerializer().include("hobbies").serialize( person );
@@ -93,63 +99,97 @@ import java.text.StringCharacterIterator;
  *
  * </pre>
  *
+ * <p>
  * If the <em>hobbies</em> field contained objects, say Hobby instances, then a
  * shallow copy of those objects would be performed.  Let's go further and say
  * <em>hobbies</em> had a List of all the people who enjoyed this hobby.
  * This would create a circular reference between Person and Hobby.  Since the
  * shallow copy is being performed on Hobby JSONSerialize won't serialize the people
  * field when serializing Hobby instances thus breaking the chain of circular references.
+ * </p>
  *
+ * <p>
  * But, for the sake of argument and illustration let's say we wanted to send the
  * <em>people</em> field in Hobby.  We can do the following:
+ * </p>
  *
  * <pre>
  *    return new JSONSerializer().include("hobbies.people").serialize( person );
  *
  * </pre>
  *
+ * <p>
  * JSONSerializer is smart enough to know that you want <em>hobbies</em> field included and
  * the <em>people</em> field inside hobbies' instances too.  The dot notation allows you
  * do traverse the object graph specifying instance fields.  But, remember a shallow copy
  * will stop the code from getting into an infinte loop.
+ * </p>
  *
+ * <p>
  * You can also use the exclude method to exclude fields that would be included.  Say
  * we have a User object.  It would be a serious security risk if we sent the password
  * over the network.  We can use the exclude method to prevent the password field from
  * being sent.
+ * </p>
  *
  * <pre>
  *   return new JSONSerialize().exclude("password").serialize(user);
  *
  * </pre>
  *
+ * <p>
  * JSONSerializer will also pay attention to any method or field annotated by
  * {@link flexjson.JSON}.  You can include and exclude fields permenantly using the
  * annotation.  This is good like in the case of User.password which should never
  * ever be sent through JSON.  However, fields like <em>hobbies</em> or
  * <em>favoriteMovies</em> depends on the situation so it's best NOT to annotate
  * those fields, and use the {@link flexjson.JSONSerializer#include} method.
+ * </p>
  *
+ * <p>
  * In a shallow copy only these types of instance fields will be sent:
  * <strong>String</strong>, <strong>Date</strong>, <strong>Number</strong>,
- * <strong>Boolean</strong>, <strong>Character</strong>, <strong>Enum</strong>, and
- * <strong>null</strong>.  All types will be excluded by default.  Fields marked
- * static or transient are not serialized.
- *
+ * <strong>Boolean</strong>, <strong>Character</strong>, <strong>Enum</strong>,
+ * <strong>Object</strong> and <strong>null</strong>.  Subclasses of Object will be serialized
+ * except for Collection or Arrays.  Anything that would cause a N objects would not be sent.
+ * All types will be excluded by default.  Fields marked static or transient are not serialized.
+ * </p>
+ * <p>
+ * Includes and excludes can include wildcards.  Wildcards allow you to do things like exclude
+ * all class attributes.  For example *.class would remove the class attribute that all objects
+ * have when serializing.  A open ended wildcard like * would cause deep serialization to take
+ * place.  Be careful with that one.  Although you can limit it's depth with an exclude like
+ * *.foo.  The order of evaluation of includes and excludes is the order in which you called their
+ * functions.  First call to those functions will cause those expressions to be evaluated first.
+ * The first expression to match a path that action will be taken thus short circuiting all other
+ * expressions defined later.
+ * </p>
+ * <p>
+ * Transforers are a new addition that allow you to modify the values that are being serialized.
+ * This allows you to create different output for certain conditions.  This is very important in
+ * web applications.  Say you are saving your text to the DB that could contain &lt; and &gt;.  If
+ * you plan to add that content to your HTML page you'll need to escape those characters.  Transformers
+ * allow you to do this.  Flexjson ships with a simple HTML encoder {@link flexjson.HTMLEncoder}.
+ * Transformers are specified in dot notation just like include and exclude methods, but it doesn't
+ * support wildcards.
+ * </p>
+ * <p>
  * JSONSerializer is safe to use the serialize() methods from two seperate
  * threads.  It is NOT safe to use combination of {@link flexjson.JSONSerializer#include(String[])}
- * and {@link flexjson.JSONSerializer#exclude(String[])} from multiple threads at the same time.
- * It is also NOT safe to use {@link flexjson.JSONSerializer#serialize(String, Object)} and
- * include/exclude from multiple threads.  The reason for not making them more thread safe is
- * to boost performance.  Typical use case won't call for two threads to modify the
- * JSONSerializer at the same type it's trying to serialize.
+ * {@link JSONSerializer#transform(Transformer, String[])}, or {@link flexjson.JSONSerializer#exclude(String[])}
+ * from multiple threads at the same time.  It is also NOT safe to use
+ * {@link flexjson.JSONSerializer#serialize(String, Object)} and include/exclude/transform from
+ * multiple threads.  The reason for not making them more thread safe is to boost performance.
+ * Typical use case won't call for two threads to modify the JSONSerializer at the same type it's
+ * trying to serialize.
+ * </p>
  */
 public class JSONSerializer {
 
     public final static char[] HEX = "0123456789ABCDEF".toCharArray();
 
-    List<PathExpression> excludeFields = new ArrayList<PathExpression>();
-    List<PathExpression> includeFields = new ArrayList<PathExpression>();
+    List<PathExpression> pathExpressions = new ArrayList<PathExpression>();
+    Map<Path, Transformer> transformations = new HashMap<Path,Transformer>();
 
     /**
      * Create a serializer instance.  It's unconfigured in terms of fields
@@ -224,7 +264,11 @@ public class JSONSerializer {
      * All the fields to the left of the last field will be included.
      * In order to exclude the medicalHistory field we have to
      * include the people field since people would've been excluded
-     * anyway since it's a Collection of Person objects.
+     * anyway since it's a Collection of Person objects.  The order of
+     * evaluation is the order in which you call the exclude method.
+     * The first call to exclude will be evaluated before other calls to
+     * include or exclude.  The field expressions are evaluated in order
+     * you pass to this method.
      *
      * @param fields one or more field expressions to exclude.
      * @return this instance for method chaining.
@@ -242,14 +286,39 @@ public class JSONSerializer {
      * it one or more fields.  Examples are: "hobbies",
      * "hobbies.people", "people.emails", or "character.inventory".
      * When using dot notation each field between the dots will
-     * be included in the serialization process.
+     * be included in the serialization process.  The order of
+     * evaluation is the order in which you call the include method.
+     * The first call to include will be evaluated before other calls to
+     * include or exclude.  The field expressions are evaluated in order
+     * you pass to this method.
      *
      * @param fields one or more field expressions to include.
      * @return this instance for method chaining.
      */
     public JSONSerializer include( String... fields ) {
         for( String field : fields ) {
-            includeFields.add( new PathExpression( field ) );
+            pathExpressions.add( new PathExpression( field, true ) );
+        }
+        return this;
+    }
+
+    /**
+     * This adds a Transformer used to manipulate the value of all the fields you give it.
+     * Fields can be in dot notation just like {@link JSONSerializer#include} and
+     * {@link JSONSerializer#exclude } methods.  However, transform doesn't support wildcards.
+     * Specifying more than one field allows you to add a single instance to multiple fields.
+     * It's there for handiness. :-) 
+     * @param transformer the instance used to transform values
+     * @param fields the paths to the fields you want to transform.  They can be in dot notation.
+     * @return Hit you back with the JSONSerializer for method chain goodness.
+     */
+    public JSONSerializer transform( Transformer transformer, String... fields ) {
+        for( String field : fields ) {
+            if( field.length() == 0 ) {
+                transformations.put( new Path(), transformer );
+            } else {
+                transformations.put( new Path( field.split("\\.") ), transformer );
+            }
         }
         return this;
     }
@@ -260,7 +329,13 @@ public class JSONSerializer {
      * @return A List of dot notation fields included in serialization.
      */
     public List<PathExpression> getIncludes() {
-        return includeFields;
+        List<PathExpression> expressions = new ArrayList<PathExpression>();
+        for( PathExpression expression : pathExpressions ) {
+            if( expression.isIncluded() ) {
+                expressions.add( expression );
+            }
+        }
+        return expressions;
     }
 
     /**
@@ -269,7 +344,13 @@ public class JSONSerializer {
      * @return A List of dot notation fields excluded from serialization.
      */
     public List<PathExpression> getExcludes() {
-        return excludeFields;
+        List<PathExpression> excludes = new ArrayList<PathExpression>();
+        for( PathExpression expression : pathExpressions ) {
+            if( !expression.isIncluded() ) {
+                excludes.add( expression );
+            }
+        }
+        return excludes;
     }
 
     /**
@@ -282,7 +363,7 @@ public class JSONSerializer {
      */
     public void setIncludes( List fields ) {
         for( Object field : fields ) {
-            includeFields.add( new PathExpression( field.toString() ) );
+            pathExpressions.add( new PathExpression( field.toString(), true ) );
         }
     }
 
@@ -304,12 +385,12 @@ public class JSONSerializer {
         String name = field.toString();
         int index = name.lastIndexOf('.');
         if( index > 0 ) {
-            PathExpression expression = new PathExpression( name.substring( 0, index ) );
+            PathExpression expression = new PathExpression( name.substring( 0, index ), true );
             if( !expression.isWildcard() ) {
-                includeFields.add( expression );
+                pathExpressions.add( expression );
             }
         }
-        excludeFields.add( new PathExpression( name ) );
+        pathExpressions.add( new PathExpression( name, false ) );
     }
 
     /**
@@ -371,7 +452,7 @@ public class JSONSerializer {
             else if (object instanceof Boolean)
                 bool( ((Boolean) object) );
             else if (object instanceof Number)
-                add(object);
+                add( doTransform( object ) );
             else if (object instanceof String)
                 string(object);
             else if (object instanceof Character)
@@ -446,7 +527,7 @@ public class JSONSerializer {
 
         private void string(Object obj) {
             add('"');
-            CharacterIterator it = new StringCharacterIterator(obj.toString());
+            CharacterIterator it = new StringCharacterIterator( doTransform( obj ).toString() );
             for (char c = it.first(); c != CharacterIterator.DONE; c = it.next()) {
                 if (c == '"') add("\\\"");
                 else if (c == '\\') add("\\\\");
@@ -480,7 +561,7 @@ public class JSONSerializer {
                 visits.add( object );
                 beginObject();
                 try {
-                    BeanInfo info = Introspector.getBeanInfo(object.getClass());
+                    BeanInfo info = Introspector.getBeanInfo( findBeanClass( object ) );
                     PropertyDescriptor[] props = info.getPropertyDescriptors();
                     boolean firstField = true;
                     for (PropertyDescriptor prop : props) {
@@ -509,12 +590,39 @@ public class JSONSerializer {
                             path.pop();
                         }
                     }
+                } catch( JSONException e ) {
+                    throw e;
                 } catch( Exception e ) {
-                    throw new JSONException( e );
+                    throw new JSONException( "Error trying to serialize path: " + path.toString(), e );
                 }
                 endObject();
                 visits = (ChainedSet) visits.getParent();
             }
+        }
+
+        private Object doTransform(Object value) {
+            if( transformations.containsKey( path ) ) {
+                value = transformations.get( path ).transform( value );
+            }
+            return value;
+        }
+
+        private Class<?> findBeanClass(Object object) {
+            try {
+                Class[] classes = object.getClass().getInterfaces();
+                for( Class clazz : classes ) {
+                    if( clazz.getName().equals("org.hibernate.proxy.HibernateProxy") ) {
+                        Method method = object.getClass().getMethod("getHibernateLazyInitializer");
+                        Object initializer = method.invoke( object );
+                        Method pmethod = initializer.getClass().getMethod("getPersistentClass");
+                        return pmethod.invoke( initializer ).getClass();
+                    }
+                }
+            } catch (IllegalAccessException e) {
+            } catch (NoSuchMethodException e) {
+            } catch (InvocationTargetException e) {
+            }
+            return object.getClass();
         }
 
         protected abstract boolean isIncluded( PropertyDescriptor prop );
@@ -645,19 +753,9 @@ public class JSONSerializer {
         }
 
         protected boolean isIncluded( PropertyDescriptor prop ) {
-            PathExpression expression = matches( prop, includeFields );
+            PathExpression expression = matches( prop, pathExpressions);
             if( expression != null ) {
-                return true;
-            }
-
-            expression = matches( prop, excludeFields );
-            if( expression != null ) {
-                // This is sort of unique, and up for some interpretation to best behavior.
-                // Right now it assumes if you specifiy a nested exclude that means you want to
-                // include the parent object because if you don't then this exclude is meaningless.
-                // EX: .exclude( "parent.name" ) means that the field named parent has to be included
-                // in order for you to exclude the name field.
-                return false;
+                return expression.isIncluded();
             }
 
             Method accessor = prop.getReadMethod();
@@ -681,19 +779,9 @@ public class JSONSerializer {
         }
 
         protected boolean isIncluded( PropertyDescriptor prop ) {
-            PathExpression expression = matches( prop, includeFields );
+            PathExpression expression = matches( prop, pathExpressions);
             if( expression != null ) {
-                return true;
-            }
-
-            expression = matches( prop, excludeFields );
-            if( expression != null ) {
-                // This is sort of unique, and up for some interpretation to best behavior.
-                // Right now it assumes if you specifiy a nested exclude that means you want to
-                // include the parent object because if you don't then this exclude is meaningless.
-                // EX: .exclude( "parent.name" ) means that the field named parent has to be included
-                // in order for you to exclude the name field.
-                return false;
+                return expression.isIncluded();
             }
 
             Method accessor = prop.getReadMethod();

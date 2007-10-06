@@ -4,10 +4,7 @@ import java.util.List;
 import java.util.LinkedList;
 
 /**
- * Created by IntelliJ IDEA.
- * User: charlie
- * Date: Jun 27, 2007
- * Time: 11:40:52 PM
+ * Internal class used by Flexjson to represent a path to a field within a serialized stream.
  */
 public class Path {
     LinkedList<String> path = new LinkedList<String>();
@@ -36,5 +33,34 @@ public class Path {
 
     public int length() {
         return path.size();
+    }
+
+    public String toString() {
+        StringBuilder builder = new StringBuilder ( "[ " );
+        boolean afterFirst = false;
+        for( String current : path ) {
+            if( afterFirst ) {
+                builder.append( "." );
+            }
+            builder.append( current );
+            afterFirst = true;
+        }
+        builder.append( " ]" );
+        return builder.toString();
+    }
+
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Path path1 = (Path) o;
+
+        if (!path.equals(path1.path)) return false;
+
+        return true;
+    }
+
+    public int hashCode() {
+        return path.hashCode();
     }
 }
