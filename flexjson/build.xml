@@ -1,5 +1,7 @@
 <project basedir="." default="info" name="flexjson">
 
+    <property name="version" value="1.5"/>
+
     <property name="builddir" value="${basedir}/classes"/>
     <property name="srcdir" value="${basedir}/src"/>
     <property name="libdir" value="${basedir}/lib"/>
@@ -7,8 +9,11 @@
     <echo message="Hello ${ant.home}"/>
 
     <target name="info">
-        <echo message="Build file for the Flexjson project."/>
-        <echo message="Run the all target to build the project."/>
+        <echo>
+            To perform a release run:
+
+            ant all release
+        </echo>
     </target>
 
     <target name="clean">
@@ -70,7 +75,7 @@
         <zip destfile="${basedir}/release/src.zip">
             <fileset dir="${srcdir}" includes="**/*.java"/>
         </zip>
-        <zip destfile="${basedir}/release/flexjson_1.2.zip">
+        <zip destfile="${basedir}/release/flexjson_${version}.zip">
             <fileset dir="${basedir}" includes="flexjson*.jar"/>
             <fileset dir="${basedir}">
                 <include name="LICENSE-2.0.txt"/>

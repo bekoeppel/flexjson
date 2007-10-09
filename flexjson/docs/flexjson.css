@@ -112,3 +112,7 @@ b.rtop b.r1, b.rtop b.r2, b.rtop b.r3, b.rtop b.r4 {
     margin-left: 9em;
     margin-right: 9em;
 }
+
+.important {
+    font-weight: bold;
+}

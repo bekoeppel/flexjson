@@ -59,6 +59,7 @@
         In the above diagram you can see Person has many instances of Phone, and has many Addresses.  While this is a
         trival object model it will help us demostrate the ideas behind Flexjson.
     </p>
+    <h2> The Basics </h2>
     <p>
         Flexjson takes a different approach allowing you to control the depth to which it will serialize.  It's very
         similiar in concept to lazy loading in Hibernate which allows you to have a connected object model, but control
@@ -88,6 +89,8 @@
     }
 
     </blockquote>
+
+    <h2>Working With Includes</h2>
 
     <p>
         Looks pretty much like you'd expect.  However, our Person object contains more fields than name, birthday,
@@ -177,6 +180,8 @@
         have to specify it twice.  You can use the dot notation to trace over your object graph very easily.
     </p>
 
+    <h2>More on Includes</h2>
+
     <p>
         There is an alternate form of serialize() method that allows you to specify an outer object for collections.
         There are some javascript libraries like <a href="http://www.extjs.com">EXTJS</a> (previously known as YUI-EXT)
@@ -219,6 +224,8 @@
     }
     </blockquote>
 
+    <h2>Working With Excludes</h2>
+
     <p>
         Not only can you include, but you can specify it in terms of exclude as well.  The exclude() method allows you to
         exclude certain fields from serilization.  This can come in handy if you have special fields that you don't want
@@ -229,7 +236,7 @@
 
         User u = ...load a user...;
 
-        return new JSONSerializer().exclude("password").include("hobbies")serialize(p);
+        return new JSONSerializer().exclude("password").include("hobbies").serialize(p);
     }
 
     </blockquote>
@@ -242,6 +249,8 @@
         it doesn't change anything because retinalScan wasn't going to be included in the first place.  Said another way
         it's only <em>the last field</em> that is <em>excluded</em> all other <em>parent fields</em> are <em>included</em>.
     </p>
+
+    <h2>Excluding Using Annotations</h2>
 
     <p>
         Always having to do your excludes in this manner can be cumbersome especially if you always intend something to
@@ -287,6 +296,81 @@
 
     </blockquote>
 
+    <h2>Code Gone Wildcard</h2>
+
+    <p>
+        In 1.5 you can now specify wildcards in your include() and exclude() method calls.  This makes it easy to
+        include or exclude several fields very easily.  It's very common for people to want to remove the class attribute
+        written to the stream.  With wildcards it becomes very easy to accomplish this.  For example:
+    </p>
+
+    <blockquote class="java">
+    public String doSomething( Object arg1, ... ) {
+
+        User u = ...load a user...;
+
+        return new JSONSerializer().exclude("*.class").serialize(p);
+    }
+    </blockquote>
+
+    <p>
+        Any path ending with class will now be excluded from the output.  Wildcards match any depth you specify.  So
+        it doesn't matter how deep your object path has gotten.  An exclude of *.class will match to any path depth.
+        So if flexjson is serializing the field with path of &quot;foo.bar.class&quot; the &quot;*&quot; in &quot;*.class&quot;
+        will match foo.bar.
+    </p>
+
+    <p>
+        Wildcards do not expand the depth to which you are serializing in most cases.  They only operate in the depth you
+        have specified.  That means if you specify *.list, paths like foo.list would be serialized, but foo.bar.list would
+        not.  If you wanted foo.bar.list you would need have an include for foo.bar from another statement.  Same goes for
+        things like *.class.  Every object has a class member because of Object.getClass().  However, *.class won't
+        extend the depth of your serialization.  There are cases where serialization depth will be expanded.  You have to
+        be careful when doing specifying wildcards with recursive structures.  If you had a tree structure and did an
+        include on *.children it will expand the depth of your serialization all the way.  The other case where wildcards
+        will expand your serialization is &quot;*&quot;.  That is the same as doing a deep serialization so be careful
+        using it.
+    </p>
+
+    <h2>Order of Evaluation</h2>
+
+    <p>
+        <span class="important">Order of evaluation has changed as of 1.5</span>.  Now that we've discussed includes and
+        excludes let's talk about order of evaluation.  What happens if I include a field then I exclude that same
+        field later?  What will Flexjson do?  The answer is includes and excludes are evaluated in order they were added.
+        This is important with the introduction of wildcards.  Say I want to serialize just two fields of an object.  I
+        can do the following:
+    </p>
+
+    <blockquote class="java">
+    public String doSomething( Object arg1, ... ) {
+
+        User u = ...load a user...;
+
+        return new JSONSerializer().include("username").exclude("*").serialize(p);
+    }
+
+    </blockquote>
+
+    <p>
+        The above code would serialize just the username field from the user object, but it would exclude all other
+        fields.  If I reversed the order of the include and exclude calls it would exclude all of the fields, and the
+        username field wouldn't be included?  Why is that?  That's because internally flexjson would have a list of
+        expressions.  Think of it like a list where the order is the following:
+    </p>
+
+    <blockquote class="java">
+        [ &quot;*&quot;, &quot;username&quot; ];
+    </blockquote>
+
+    <p>
+        Flexjson would visit each field in the User object, and evaluate it against all of the rules in the list.  It
+        starts the head of the list and stops once it finds the first match.  In this case &quot;*&quot; would match
+        all fields of User object, and it would exclude it thus never reaching the &quot;username&quot; entry.
+    </p>
+
+    <h2>Deep Serialization</h2>
+
     <p>
         In 1.2 there was a new feature added to perform a deep serialization of the object using the deepSerialize()
         method.  As with serialize() method deepSerialize() method will use includes, excludes, and annotations to
@@ -311,6 +395,53 @@
         what is being serialized.  Deep serialization can send a lot more data that you anticipated if you
         use it frivolously.
     </p>
+
+    <h2>Transformers More Than Meets the Eye</h2>
+
+    <p>
+        In 1.5 an exciting new feature was added.  Let's say we're have some JSON text data and we're going to place it
+        into the page, but this data contains unfriendly HTML.  By that I mean you have the possibility of having things
+        like &lt;, &gt;, or &amp;.  We need to replace those parts of our text with &amp;lt;, &amp;gt;, &amp;amp;.  How
+        do you do it?  Well in prior versions you'd need to put special getters/setters on your domain model to perform
+        the conversion, or you'd have to do it on the client.  Oh yes I'm sure there are much more bizarre things you could
+        do, but these are the "cleanest" solutions.
+    </p>
+
+    <p>
+        Transformers address this problem by letting you specify a transformer object to particpate in serialization
+        with Flexjson.  Flexjson includes a very simple HTMLEncoder to do entity replacement for you.  Here's how it works.
+    </p>
+
+    <blockquote class="java">
+        public String doSomething( Object arg1, ... ) {
+
+            EMail mail = ...load an email...;
+
+            return new JSONSerializer().transform( new HTMLEncoder(), "to", "cc", "bcc", "from").serialize(p);
+        }
+    </blockquote>
+
+    <p>
+        In the above code the transform() method registers the HTMLEncoder transformer with serializer for 4 fields.  Email
+        messages usually have something like the following in the recepient fields: "Plug 1" &lt;plug1@delasoul.com&gt;.
+        Unfortunately, HTML doesn't like the &lt; and &gt; in them so you need to HTML encode them.  The transform method
+        supports the dot notation, but it doesn't support wildcards.  This makes the algorithm for finding the Transformer
+        instance faster.
+    </p>
+
+    <p>
+        Transformers are very interesting in that you can use them for all sorts of problems.  Say you accept Markdown
+        notation on your new wiki software.  You store the Markdown text in the DB, and later render the HTML using the
+        Transformer architecture.
+    </p>
+
+    <p>
+        Say you only want to accept some of the HTML tags from the user for security reasons.  Transformers could filter
+        out any nefarious data from your objects when sending it through JSON.  Transformers are very useful, and Flexjson
+        will include more out of the box Transformers in the future.
+    </p>
+
+    <h2>Thread safety and Reuse</h2>
 
     <p>
         Finally, JSONSerializer instances can be reused to serialize many objects of the same type.  Once you 
@@ -341,6 +472,8 @@
     }
 
     </blockquote>
+
+    <h2>The End</h2>
 
     <p>
         That's really all you need to know about Flexjson.  It's really just that simple and lightweight.  Please
