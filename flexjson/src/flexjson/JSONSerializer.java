@@ -547,9 +547,11 @@ public class JSONSerializer {
         }
 
         private void date(Date date) {
-            // builder.append( "new Date( " );
-            builder.append( date.getTime() );
-            // builder.append( ")" );
+            if( transformations.containsKey( path ) ) {
+                string( date.getTime() );
+            } else {
+                builder.append( date.getTime() );
+            }
         }
 
         private ChainedSet visits = new ChainedSet( Collections.EMPTY_SET );

@@ -25,6 +25,7 @@ import java.util.*;
 import flexjson.JSONSerializer;
 import flexjson.PathExpression;
 import flexjson.HTMLEncoder;
+import flexjson.DateTransformer;
 import flexjson.test.mock.*;
 
 public class JSONSerializerTest extends TestCase {
@@ -49,12 +50,12 @@ public class JSONSerializerTest extends TestCase {
         Phone pedroPhone = new Phone( PhoneNumberType.MOBILE, "123 555 2323");
 
         Calendar pedroCal = Calendar.getInstance();
-        pedroCal.set( 1980, 4, 12, 11, 45);
+        pedroCal.set( 1980, Calendar.APRIL, 12, 11, 45);
         pedro = new Person("Pedro", "Neves", pedroCal.getTime(), pedroHome, pedroWork );
         pedro.getPhones().add( pedroPhone );
 
         Calendar cal = Calendar.getInstance();
-        cal.set(1976, 3, 21, 8, 11);
+        cal.set(1976, Calendar.MARCH, 21, 8, 11);
         charlie = new Person("Charlie", "Hubbard", cal.getTime(), home, work );
         charlie.getPhones().add( pagerPhone );
         charlie.getPhones().add( cellPhone );
@@ -67,7 +68,7 @@ public class JSONSerializerTest extends TestCase {
         Address benwork = new Address("44 Planetary St.", "Neptune", "Milkiway", new Zipcode("12345") );
         
         Calendar benCal = Calendar.getInstance();
-        benCal.set(1978, 7, 5, 8, 11);
+        benCal.set(1978, Calendar.JULY, 5, 8, 11);
         ben = new Person("Ben", "Hubbard", benCal.getTime(), benhome, benwork );
         ben.getHobbies().add( "Purse snatching" );
         ben.getHobbies().add( "Running sweat shops" );
@@ -455,6 +456,13 @@ public class JSONSerializerTest extends TestCase {
         assertStringValue( "333 \\\"Diddle & Town\\\"", json );
         assertStringValueMissing( "333 &quot;Diddle &amp; Town&quot;", json );
         assertAttributeMissing( "class", json );
+    }
+
+    public void testDateTransforming() {
+        String json = new JSONSerializer().transform( new DateTransformer("yyyy-MM-dd"), "birthdate" ).serialize( charlie );
+
+        assertAttribute( "birthdate", json );
+        assertStringValue( "1976-03-21", json );
     }
 
     private int occurs(String str, String json) {
