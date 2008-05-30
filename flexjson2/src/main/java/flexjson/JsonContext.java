@@ -202,7 +202,7 @@ public class JsonContext {
     }
 
     public TypeContext peekTypeContext() {
-        if(typeContextStack.size() > 0) {
+        if (!typeContextStack.isEmpty()) {
             return typeContextStack.peek();
         } else {
             return null;
@@ -233,59 +233,87 @@ public class JsonContext {
      * @param value
      */
     public void write(String value) {
+        TypeContext currentTypeContext = peekTypeContext();
+        if (currentTypeContext != null &&
+                currentTypeContext.getBasicType() == BasicType.ARRAY) {
+            writeIndent();
+        }
         out.write(value);
     }
 
     public TypeContext writeOpenObject() {
+        if (prettyPrint) {
+            TypeContext currentTypeContext = peekTypeContext();
+            if (currentTypeContext != null &&
+                    currentTypeContext.getBasicType() == BasicType.ARRAY) {
+                writeIndent();
+            }
+        }
         TypeContext typeContext = new TypeContext(BasicType.OBJECT);
         pushTypeContext(typeContext);
-        write("{");
+        out.write("{");
         if (prettyPrint) {
-            write("\n");
             indent += 4;
+            out.write("\n");
         }
         return typeContext;
     }
 
     public void writeCloseObject() {
         if (prettyPrint) {
-            write("\n");
+            out.write("\n");
             indent -= 4;
-            if (prettyPrint) writeIndent();
+            writeIndent();
         }
-        write("}");
+        out.write("}");
         popTypeContext();
     }
 
     public void writeName(String name) {
         if (prettyPrint) writeIndent();
         writeQuoted(name);
-        write(":");
-        if (prettyPrint) write(" ");
+        out.write(":");
+        if (prettyPrint) out.write(" ");
     }
 
     public void writeComma() {
-        write(",");
-        if (prettyPrint && peekTypeContext().getBasicType() != BasicType.ARRAY) {
-            write("\n");
+        out.write(",");
+        if (prettyPrint) {
+            out.write("\n");
         }
     }
 
     public TypeContext writeOpenArray() {
+        if (prettyPrint) {
+            TypeContext currentTypeContext = peekTypeContext();
+            if (currentTypeContext != null &&
+                    currentTypeContext.getBasicType() == BasicType.ARRAY) {
+                writeIndent();
+            }
+        }
         TypeContext typeContext = new TypeContext(BasicType.ARRAY);
         pushTypeContext(typeContext);
-        write("[");
+        out.write("[");
+        if (prettyPrint) {
+            indent += 4;
+            out.write("\n");
+        }
         return typeContext;
     }
 
     public void writeCloseArray() {
-        write("]");
+        if (prettyPrint) {
+            out.write("\n");
+            indent -= 4;
+            writeIndent();
+        }
+        out.write("]");
         popTypeContext();
     }
 
     public void writeIndent() {
         for (int i = 0; i < indent; i++) {
-            write(" ");
+            out.write(" ");
         }
     }
 
@@ -295,6 +323,13 @@ public class JsonContext {
      * @param value
      */
     public void writeQuoted(String value) {
+        if (prettyPrint) {
+            TypeContext currentTypeContext = peekTypeContext();
+            if (currentTypeContext != null &&
+                    currentTypeContext.getBasicType() == BasicType.ARRAY) {
+                writeIndent();
+            }
+        }
         out.write("\"");
         CharacterIterator it = new StringCharacterIterator(value);
         for (char c = it.first(); c != CharacterIterator.DONE; c = it.next()) {
