@@ -80,7 +80,8 @@ public class SimpleSerializeTest extends TestCase {
                         .transform(new StringArrayTransformer(), String[].class)
                         .rootName("myRootName");
 
-        String string = serializer.deepSerialize(person, writer);
+        serializer.deepSerialize(person, writer);
+        String string = writer.toString();
         logger.info(string);
         assertTrue(string.contains("{\"myRootName\":"));
         assertTrue(string.contains("\"state\":\"Nevada\","));
@@ -100,7 +101,8 @@ public class SimpleSerializeTest extends TestCase {
                         .rootName("myRootName")
                         .prettyPrint(true);
 
-        String string = serializer.deepSerialize(person, writer);
+        serializer.deepSerialize(person, writer);
+        String string = writer.toString();
         logger.info(string);
 
     }

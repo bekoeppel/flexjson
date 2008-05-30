@@ -77,11 +77,76 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="pom.xml" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="pom.xml" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="6" column="18" selection-start="369" selection-end="369" vertical-scroll-proportion="-0.87295824">
+            <state line="6" column="18" selection-start="369" selection-end="369" vertical-scroll-proportion="0.021778584">
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="FlatDateTransformer.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/test/java/flexjson/transformer/FlatDateTransformer.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="30" column="35" selection-start="896" selection-end="896" vertical-scroll-proportion="0.55026454">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="JsonSerializer.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/flexjson/JsonSerializer.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="356" column="34" selection-start="14560" selection-end="14560" vertical-scroll-proportion="-1.1304348">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="IterableTransformer.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/flexjson/transformer/IterableTransformer.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="24" column="64" selection-start="921" selection-end="921" vertical-scroll-proportion="0.1904762">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SimpleSerializeTest.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/test/java/flexjson/SimpleSerializeTest.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="104" column="15" selection-start="3506" selection-end="3506" vertical-scroll-proportion="0.26811594">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="JsonContext.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/flexjson/JsonContext.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="246" column="27" selection-start="7076" selection-end="7076" vertical-scroll-proportion="0.5228137">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BasicDateTransformer.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/flexjson/transformer/BasicDateTransformer.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="27" column="0" selection-start="859" selection-end="859" vertical-scroll-proportion="0.27513227">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ObjectTransformer.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/flexjson/transformer/ObjectTransformer.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="48" column="39" selection-start="2039" selection-end="2039" vertical-scroll-proportion="0.34567901">
+              <folding>
+                <marker date="1198519051000" expanded="false" signature="646:828" placeholder="..." />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -233,6 +298,52 @@
           <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src" />
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
         </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src/main" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src/main/java" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src/main/java/flexjson" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="flexjson" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="flexjson" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src/main" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src/main/java" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src/main/java/flexjson" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src/main/java/flexjson/transformer" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
       </PATH>
     </subPane>
   </component>
@@ -271,12 +382,12 @@
       <recent name="flexjson.model" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.flexjson in flexjson">
-    <tempConfiguration default="false" name="flexjson in flexjson" type="JUnit" factoryName="JUnit" enabled="false" merge="false">
+  <component name="RunManager" selected="JUnit.All in flexjson">
+    <tempConfiguration default="false" name="All in flexjson" type="JUnit" factoryName="JUnit" enabled="false" merge="false">
       <module name="flexjson" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="flexjson" />
+      <option name="PACKAGE_NAME" value="" />
       <option name="MAIN_CLASS_NAME" />
       <option name="METHOD_NAME" />
       <option name="TEST_OBJECT" value="package" />
@@ -337,29 +448,6 @@
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
     </configuration>
-    <configuration default="true" type="Remote" factoryName="Remote">
-      <option name="USE_SOCKET_TRANSPORT" value="true" />
-      <option name="SERVER_MODE" value="false" />
-      <option name="SHMEM_ADDRESS" value="javadebug" />
-      <option name="HOST" value="localhost" />
-      <option name="PORT" value="5005" />
-    </configuration>
-    <configuration default="true" type="Application" factoryName="Application" enabled="false" merge="false">
-      <option name="MAIN_CLASS_NAME" />
-      <option name="VM_PARAMETERS" />
-      <option name="PROGRAM_PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="ENABLE_SWING_INSPECTOR" value="false" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <module name="" />
-      <envs />
-      <method>
-        <option name="Make" value="true" />
-      </method>
-    </configuration>
     <configuration default="true" type="JUnit" factoryName="JUnit" enabled="false" merge="false">
       <module name="" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
@@ -382,8 +470,31 @@
         <option name="Make" value="true" />
       </method>
     </configuration>
+    <configuration default="true" type="Application" factoryName="Application" enabled="false" merge="false">
+      <option name="MAIN_CLASS_NAME" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="" />
+      <envs />
+      <method>
+        <option name="Make" value="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="Remote" factoryName="Remote">
+      <option name="USE_SOCKET_TRANSPORT" value="true" />
+      <option name="SERVER_MODE" value="false" />
+      <option name="SHMEM_ADDRESS" value="javadebug" />
+      <option name="HOST" value="localhost" />
+      <option name="PORT" value="5005" />
+    </configuration>
     <list size="1">
-      <item index="0" class="java.lang.String" itemvalue="JUnit.flexjson in flexjson" />
+      <item index="0" class="java.lang.String" itemvalue="JUnit.All in flexjson" />
     </list>
     <configuration name="&lt;template&gt;" type="WebApp" default="true" selected="false">
       <Host>localhost</Host>
@@ -438,13 +549,13 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="1" y="22" width="1680" height="1024" extended-state="0" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32960895" order="0" />
       <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="1" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="13" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25751072" order="1" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32903227" order="7" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32903227" order="7" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24954017" order="2" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32903227" order="2" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" order="12" />
@@ -452,9 +563,9 @@
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="3" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.21291123" order="2" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" order="6" />
-      <window_info id="Maven projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.14960147" order="8" />
+      <window_info id="Maven projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.15144083" order="8" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="4" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32903227" order="8" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32903227" order="8" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" order="7" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" order="5" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.36666667" order="10" />
@@ -529,23 +640,9 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/flexjson/transformer/NumberTransformer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="17" column="13" selection-start="659" selection-end="659" vertical-scroll-proportion="0.06349207">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/flexjson/model/Experience.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="11" column="29" selection-start="246" selection-end="246" vertical-scroll-proportion="0.02116402">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/flexjson/transformer/IterableTransformer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="28" column="66" selection-start="1120" selection-end="1120" vertical-scroll-proportion="0.27513227">
           <folding />
         </state>
       </provider>
@@ -560,20 +657,6 @@
     <entry file="file://$PROJECT_DIR$/src/test/java/flexjson/JsonSerializerTest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="159" column="72" selection-start="6925" selection-end="6925" vertical-scroll-proportion="-3.9492753">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/flexjson/JsonContext.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="256" column="8" selection-start="7280" selection-end="7280" vertical-scroll-proportion="0.49239543">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/flexjson/JsonSerializer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="351" column="60" selection-start="14563" selection-end="14563" vertical-scroll-proportion="7.847909">
           <folding />
         </state>
       </provider>
@@ -608,31 +691,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/flexjson/transformer/ObjectTransformer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="74" column="79" selection-start="3366" selection-end="3366" vertical-scroll-proportion="0.8536155">
-          <folding>
-            <marker date="1198519051000" expanded="false" signature="646:828" placeholder="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/flexjson/transformer/FlatDateTransformer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="54" column="31" selection-start="1717" selection-end="1717" vertical-scroll-proportion="1.1428572">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/flexjson/SimpleSerializeTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="157" column="27" selection-start="5372" selection-end="5372" vertical-scroll-proportion="2.8913043">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/flexjson/TypeContext.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="44" column="37" selection-start="1210" selection-end="1210" vertical-scroll-proportion="0.63492066">
@@ -642,7 +700,58 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="18" selection-start="369" selection-end="369" vertical-scroll-proportion="-0.87295824">
+        <state line="6" column="18" selection-start="369" selection-end="369" vertical-scroll-proportion="0.021778584">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/flexjson/transformer/ObjectTransformer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="48" column="39" selection-start="2039" selection-end="2039" vertical-scroll-proportion="0.34567901">
+          <folding>
+            <marker date="1198519051000" expanded="false" signature="646:828" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/flexjson/transformer/FlatDateTransformer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="30" column="35" selection-start="896" selection-end="896" vertical-scroll-proportion="0.55026454">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/flexjson/JsonSerializer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="356" column="34" selection-start="14560" selection-end="14560" vertical-scroll-proportion="-1.1304348">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/flexjson/transformer/IterableTransformer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="24" column="64" selection-start="921" selection-end="921" vertical-scroll-proportion="0.1904762">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/flexjson/SimpleSerializeTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="104" column="15" selection-start="3506" selection-end="3506" vertical-scroll-proportion="0.26811594">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/flexjson/transformer/BasicDateTransformer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="27" column="0" selection-start="859" selection-end="859" vertical-scroll-proportion="0.27513227">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/flexjson/JsonContext.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="246" column="27" selection-start="7076" selection-end="7076" vertical-scroll-proportion="0.5228137">
           <folding />
         </state>
       </provider>

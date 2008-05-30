@@ -228,7 +228,7 @@ public class JsonSerializer {
      * This performs a shallow serialization of the target instance. It uses a StringBuilder to write output to.
      *
      * @param target - the instance to serialize to JSON
-     * @return toString output of OutputHandler 
+     * @return returns JSON as a String
      */
     public String serialize(Object target) {
         return serialize(target, SerializationType.SHALLOW, new StringBuilderOutputHandler(new StringBuilder()));
@@ -243,10 +243,9 @@ public class JsonSerializer {
      *
      * @param target - the instance to serialize to JSON
      * @param out - Writer to write output to
-     * @return toString output of OutputHandler
      */
-    public String serialize(Object target, Writer out) {
-        return serialize(target, SerializationType.SHALLOW, new WriterOutputHandler(out));
+    public void serialize(Object target, Writer out) {
+        serialize(target, SerializationType.SHALLOW, new WriterOutputHandler(out));
     }
 
     /**
@@ -255,7 +254,7 @@ public class JsonSerializer {
      *
      * @param target - the instance to serialize to JSON
      * @param out - StringBuilder to write output to
-     * @return toString output of OutputHandler
+     * @return returns JSON as a String
      */
     public String serialize(Object target, StringBuilder out) {
         return serialize(target, SerializationType.SHALLOW, new StringBuilderOutputHandler(out));
@@ -267,7 +266,7 @@ public class JsonSerializer {
      *
      * @param target - the instance to serialize to JSON
      * @param out - StringBuffer to write output to
-     * @return toString output of OutputHandler
+     * @return returns JSON as a String
      */
     public String serialize(Object target, StringBuffer out) {
         return serialize(target, SerializationType.SHALLOW, new StringBufferOutputHandler(out));
@@ -279,7 +278,7 @@ public class JsonSerializer {
      *
      * @param target - the instance to serialize to JSON
      * @param out - OutputHandler to write output to
-     * @return toString output of OutputHandler
+     * @return returns JSON as a String
      */
     public String serialize(Object target, OutputHandler out) {
         return serialize(target, SerializationType.SHALLOW, out);
@@ -295,7 +294,7 @@ public class JsonSerializer {
      * followed. This uses a StringBuilder to output JSON to.
      *
      * @param target the instance to serialize to JSON.
-     * @return toString output of OutputHandler
+     * @return returns JSON as a String
      */
     public String deepSerialize(Object target) {
         return serialize(target, SerializationType.DEEP, new StringBuilderOutputHandler(new StringBuilder()));
@@ -310,10 +309,9 @@ public class JsonSerializer {
      * 
      * @param target - the instance to serialize to JSON
      * @param out - Writer
-     * @return toString output of OutputHandler
      */
-    public String deepSerialize(Object target, Writer out) {
-        return serialize(target, SerializationType.DEEP, new WriterOutputHandler(out));
+    public void deepSerialize(Object target, Writer out) {
+        serialize(target, SerializationType.DEEP, new WriterOutputHandler(out));
     }
 
     /**
@@ -322,7 +320,7 @@ public class JsonSerializer {
      * 
      * @param target - the instance to serialize to JSON
      * @param out - StringBuilder
-     * @return toString output of OutputHandler
+     * @return returns JSON as a String
      */
     public String deepSerialize(Object target, StringBuilder out) {
         return serialize(target, SerializationType.DEEP, new StringBuilderOutputHandler(out));
@@ -334,7 +332,7 @@ public class JsonSerializer {
      *
      * @param target - the instance to serialize to JSON
      * @param out - StringBuffer
-     * @return toString output of OutputHandler
+     * @return returns JSON as a String
      */
     public String deepSerialize(Object target, StringBuffer out) {
         return serialize(target, SerializationType.DEEP, new StringBufferOutputHandler(out));
@@ -346,7 +344,7 @@ public class JsonSerializer {
      *
      * @param target - the instance to serialize to JSON
      * @param out - OutputHandler to write to
-     * @return toString output of OutputHandler
+     * @return returns JSON as a String
      */
     public String deepSerialize(Object target, OutputHandler out) {
         return serialize(target, SerializationType.DEEP, out);
@@ -357,7 +355,7 @@ public class JsonSerializer {
      * @param target - the instance to serialize to JSON
      * @param serializationType - serialize deep or shallow
      * @param out - output handler
-     * @return toString output of OutputHandler
+     * @return returns JSON as a String
      */
     protected String serialize(Object target, SerializationType serializationType, OutputHandler out) {
         String output = "";

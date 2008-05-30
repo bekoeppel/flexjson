@@ -20,7 +20,7 @@ import java.util.Date;
 public class BasicDateTransformer extends AbstractTransformer {
 
     public void transform(Object object) {
-        getContext().writeQuoted(String.valueOf(((Date) object).getTime()));
+        getContext().write(String.valueOf(((Date) object).getTime()));
     }
 
 }

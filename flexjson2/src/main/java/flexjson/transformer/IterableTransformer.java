@@ -22,16 +22,13 @@ public class IterableTransformer extends AbstractTransformer {
 
     public void transform(Object object) {
         Iterable iterable = (Iterable) object;
-        TypeContext typeContext = new TypeContext(BasicType.ARRAY);
-        getContext().pushTypeContext(typeContext);
-        getContext().writeOpenArray();
+        TypeContext typeContext = getContext().writeOpenArray();
         for (Object item : iterable) {
             if (!typeContext.isFirst()) getContext().writeComma();
             typeContext.setFirst(false);
             getContext().transform(item);
         }
         getContext().writeCloseArray();
-        getContext().popTypeContext();
     }
 
 }
