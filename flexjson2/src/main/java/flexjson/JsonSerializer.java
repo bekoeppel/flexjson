@@ -188,8 +188,6 @@ public class JsonSerializer {
 
     public final static char[] HEX = "0123456789ABCDEF".toCharArray();
 
-    private OutputHandler out;
-
     private TypeTransformerMap typeTransformerMap = new TypeTransformerMap();
     private Map<Path, Transformer> pathTransformerMap = new HashMap<Path, Transformer>();
 
@@ -201,45 +199,10 @@ public class JsonSerializer {
     // OutputHander Configuration
 
     /**
-     * This passes the generated JSON into the provided Writer.
-     * This can be used to stream JSON back to a browser rather
-     * than wait for it to all complete and then dump it all at
-     * once like the StringBufferOutputHandler and StringBuilderOutputHandler
-     *
-     * @param out an implementation of java.io.Writer
-     * @return this instance of JsonSerializer for chaining configs
-     */
-    public JsonSerializer out(Writer out) {
-        this.out = new WriterOutputHandler(out);
-        return this;
-    }
-
-    /**
-     * This uses the passed in StringBuilder to write the JSON output to.
-     *
-     * @param out - SringBuilder to write to
-     * @return this JsonSerializer for chaining configurations
-     */
-    public JsonSerializer out(StringBuilder out) {
-        this.out = new StringBuilderOutputHandler(out);
-        return this;
-    }
-
-    /**
-     * This uses the passed in StringBuilder to write the JSON output to
-     *
-     * @param out - StringBuffer to write to
-     * @return this JsonSerializer for chaining configurations
-     */
-    public JsonSerializer out(StringBuffer out) {
-        this.out = new StringBufferOutputHandler(out);
-        return this;
-    }
-
-    /**
      * format output with indentations
      *
-     * @param prettyPrint
+     * @param prettyPrint - should out put cleanfly formatted Json
+     * @return JsonSerializer for chaining configuration
      */
     public JsonSerializer prettyPrint(boolean prettyPrint) {
         this.prettyPrint = prettyPrint;
@@ -262,13 +225,64 @@ public class JsonSerializer {
     // SERIALIZATION
 
     /**
-     * This performs a shallow serialization of the target instance.
+     * This performs a shallow serialization of the target instance. It uses a StringBuilder to write output to.
      *
-     * @param target the instance to serialize to JSON
+     * @param target - the instance to serialize to JSON
+     * @return toString output of OutputHandler 
      */
     public String serialize(Object target) {
-        serialize(target, SerializationType.SHALLOW);
-        return getJson();
+        return serialize(target, SerializationType.SHALLOW, new StringBuilderOutputHandler(new StringBuilder()));
+    }
+
+    /**
+     * This performs a shallow serialization of the target instance and
+     * passes the generated JSON into the provided Writer.
+     * This can be used to stream JSON back to a browser rather
+     * than wait for it to all complete and then dump it all at
+     * once like the StringBufferOutputHandler and StringBuilderOutputHandler
+     *
+     * @param target - the instance to serialize to JSON
+     * @param out - Writer to write output to
+     * @return toString output of OutputHandler
+     */
+    public String serialize(Object target, Writer out) {
+        return serialize(target, SerializationType.SHALLOW, new WriterOutputHandler(out));
+    }
+
+    /**
+     * This performs a shallow serialization of the target instance and
+     * passes the generated JSON into the provided StringBuilder.
+     *
+     * @param target - the instance to serialize to JSON
+     * @param out - StringBuilder to write output to
+     * @return toString output of OutputHandler
+     */
+    public String serialize(Object target, StringBuilder out) {
+        return serialize(target, SerializationType.SHALLOW, new StringBuilderOutputHandler(out));
+    }
+
+    /**
+     * This performs a shallow serialization of the target instance and
+     * passes the generated JSON into the provided StringBuffer.
+     *
+     * @param target - the instance to serialize to JSON
+     * @param out - StringBuffer to write output to
+     * @return toString output of OutputHandler
+     */
+    public String serialize(Object target, StringBuffer out) {
+        return serialize(target, SerializationType.SHALLOW, new StringBufferOutputHandler(out));
+    }
+
+   /**
+     * This performs a shallow serialization of the target instance and
+     * passes the generated JSON into the provided OutputHandler.
+     *
+     * @param target - the instance to serialize to JSON
+     * @param out - OutputHandler to write output to
+     * @return toString output of OutputHandler
+     */
+    public String serialize(Object target, OutputHandler out) {
+        return serialize(target, SerializationType.SHALLOW, out);
     }
 
     /**
@@ -278,19 +292,77 @@ public class JsonSerializer {
      * are honored.  However, cycles in the target's graph are NOT followed.  This
      * means some members won't be included in the JSON if they would create a cycle.
      * Rather than throwing an exception the cycle creating members are simply not
-     * followed.
+     * followed. This uses a StringBuilder to output JSON to.
      *
      * @param target the instance to serialize to JSON.
+     * @return toString output of OutputHandler
      */
     public String deepSerialize(Object target) {
-        serialize(target, SerializationType.DEEP);
-        return getJson();
+        return serialize(target, SerializationType.DEEP, new StringBuilderOutputHandler(new StringBuilder()));
     }
 
-    protected void serialize(Object target, SerializationType serializationType) {
+    /**
+     * This performs a deep serialization of the target instance and
+     * passes the generated JSON into the provided Writer.
+     * This can be used to stream JSON back to a browser rather
+     * than wait for it to all complete and then dump it all at
+     * once like the StringBufferOutputHandler and StringBuilderOutputHandler
+     * 
+     * @param target - the instance to serialize to JSON
+     * @param out - Writer
+     * @return toString output of OutputHandler
+     */
+    public String deepSerialize(Object target, Writer out) {
+        return serialize(target, SerializationType.DEEP, new WriterOutputHandler(out));
+    }
+
+    /**
+     * This performs a deep serialization of the target instance and
+     * passes the generated JSON into the provided StringBuilder.
+     * 
+     * @param target - the instance to serialize to JSON
+     * @param out - StringBuilder
+     * @return toString output of OutputHandler
+     */
+    public String deepSerialize(Object target, StringBuilder out) {
+        return serialize(target, SerializationType.DEEP, new StringBuilderOutputHandler(out));
+    }
+
+    /**
+     * This performs a deep serialization of the target instance and
+     * passes the generated JSON into the provided StringBuffer.
+     *
+     * @param target - the instance to serialize to JSON
+     * @param out - StringBuffer
+     * @return toString output of OutputHandler
+     */
+    public String deepSerialize(Object target, StringBuffer out) {
+        return serialize(target, SerializationType.DEEP, new StringBufferOutputHandler(out));
+    }
+
+    /**
+     * This performs a deep serialization of the target instance and
+     * passes the generated JSON into the provided OutputHandler.
+     *
+     * @param target - the instance to serialize to JSON
+     * @param out - OutputHandler to write to
+     * @return toString output of OutputHandler
+     */
+    public String deepSerialize(Object target, OutputHandler out) {
+        return serialize(target, SerializationType.DEEP, out);
+    }
+
+    /**
+     *
+     * @param target - the instance to serialize to JSON
+     * @param serializationType - serialize deep or shallow
+     * @param out - output handler
+     * @return toString output of OutputHandler
+     */
+    protected String serialize(Object target, SerializationType serializationType, OutputHandler out) {
+        String output = "";
         // initialize context
         JsonContext context = JsonContext.get();
-        if (out == null) out = new StringBuilderOutputHandler(new StringBuilder());
         context.setOut(out);
         context.setPrettyPrint(prettyPrint);
         context.serializationType(serializationType);
@@ -309,12 +381,13 @@ public class JsonSerializer {
                 context.transform(map);
             }
 
-
+        output = context.getOut().toString();
         } finally {
             // cleanup context
             JsonContext.cleanup();
 
         }
+        return output;
     }
 
     // TRANSFORMER CONFIGURATIONS
@@ -484,18 +557,6 @@ public class JsonSerializer {
         for (String field : fields) {
             addExclude(field);
         }
-    }
-
-    /**
-     * This retrieves the toString value of the configured OutputHandler.
-     * <p/>
-     * In cases where a response writer is passed in this will not be needed
-     * because the generated JSON will be streamed back to the client.
-     *
-     * @return
-     */
-    public String getJson() {
-        return out.toString();
     }
 
 }

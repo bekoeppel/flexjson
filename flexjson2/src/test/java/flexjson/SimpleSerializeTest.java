@@ -35,8 +35,7 @@ public class SimpleSerializeTest extends TestCase {
         Person person = buildPerson1();
 
         JsonSerializer serializer = new JsonSerializer();
-        serializer.deepSerialize(person);
-        String string = serializer.getJson();
+        String string = serializer.deepSerialize(person);
         logger.info(string);
         assertTrue(string.startsWith("{"));
         assertTrue(string.endsWith("}"));
@@ -47,8 +46,7 @@ public class SimpleSerializeTest extends TestCase {
         Person person = buildPerson1();
 
         JsonSerializer serializer = new JsonSerializer();
-        serializer.serialize(person);
-        String string = serializer.getJson();
+        String string = serializer.serialize(person);
         logger.info(string);
         assertTrue(string.startsWith("{\""));
         assertTrue(string.endsWith("}"));
@@ -63,8 +61,7 @@ public class SimpleSerializeTest extends TestCase {
                 .transform(new StringArrayTransformer(), String[].class)
                 .rootName("myRootName");
 
-        serializer.deepSerialize(person);
-        String string = serializer.getJson();
+        String string = serializer.deepSerialize(person);
         logger.info(string);
         assertTrue(string.contains("{\"myRootName\":"));
         assertTrue(string.contains("\"state\":\"Nevada\","));
@@ -81,11 +78,9 @@ public class SimpleSerializeTest extends TestCase {
                 new JsonSerializer()
                         .transform(new StateTransformer(), State.class)
                         .transform(new StringArrayTransformer(), String[].class)
-                        .rootName("myRootName")
-                        .out(writer);
+                        .rootName("myRootName");
 
-        serializer.deepSerialize(person);
-        String string = serializer.getJson();
+        String string = serializer.deepSerialize(person, writer);
         logger.info(string);
         assertTrue(string.contains("{\"myRootName\":"));
         assertTrue(string.contains("\"state\":\"Nevada\","));
@@ -103,11 +98,9 @@ public class SimpleSerializeTest extends TestCase {
                         .transform(new StateTransformer(), State.class)
                         .transform(new StringArrayTransformer(), String[].class)
                         .rootName("myRootName")
-                        .prettyPrint(true)
-                        .out(writer);
+                        .prettyPrint(true);
 
-        serializer.deepSerialize(person);
-        String string = serializer.getJson();
+        String string = serializer.deepSerialize(person, writer);
         logger.info(string);
 
     }
@@ -117,9 +110,7 @@ public class SimpleSerializeTest extends TestCase {
 
         JsonSerializer serializer =
                 new JsonSerializer().prettyPrint(true);
-        serializer.serialize(person.getAddresses());
-
-        String string = serializer.getJson();
+        String string = serializer.serialize(person.getAddresses());
         logger.info(string);
 
     }
@@ -129,9 +120,8 @@ public class SimpleSerializeTest extends TestCase {
 
         JsonSerializer serializer =
                 new JsonSerializer().prettyPrint(true);
-        serializer.serialize(person.getAccounts());
-
-        String string = serializer.getJson();
+        String string = serializer.serialize(person.getAccounts());
+        
         logger.info(string);
     }
 
@@ -165,6 +155,100 @@ public class SimpleSerializeTest extends TestCase {
         
     }
 
+    public void testDeferOnExperience() {
+
+        List<Experience> experienceList = new ArrayList<Experience>();
+        experienceList.add(buildExperience1());
+        experienceList.add(buildExperience2());
+        experienceList.add(buildExperience3());
+        experienceList.add(buildExperience4()); 
+
+        JsonSerializer serializer = new JsonSerializer().transform( new FlatDateTransformer(), Date.class );
+        String json = serializer.serialize(experienceList);
+        logger.info(json);
+    }
+
+    public Experience buildExperience1() {
+        Experience experience = new Experience();
+
+        experience.setId(123);
+        experience.setCandidateId(121);
+        experience.setOrganization("test");
+        experience.setTitle("test");
+        experience.setStateAbbr("AK");
+        experience.setCity("test");
+        Calendar beginCal = Calendar.getInstance();
+        beginCal.set(2006, 0, 1);
+        experience.setBeginDate(beginCal.getTime());
+        experience.setEndDate(null);
+        experience.setCurrent(true);
+        experience.setJobDescription("test");
+
+        return experience;
+        
+    }
+
+    public Experience buildExperience2() {
+        Experience experience = new Experience();
+
+        experience.setId(124);
+        experience.setCandidateId(121);
+        experience.setOrganization("test");
+        experience.setTitle("test");
+        experience.setStateAbbr("AK");
+        experience.setCity("test");
+        Calendar beginCal = Calendar.getInstance();
+        beginCal.set(2006, 0, 1);
+        experience.setBeginDate(beginCal.getTime());
+        experience.setEndDate(null);
+        experience.setCurrent(true);
+        experience.setJobDescription("test");
+
+        return experience;
+    }
+
+    public Experience buildExperience3() {
+        Experience experience = new Experience();
+
+        experience.setId(125);
+        experience.setCandidateId(121);
+        experience.setOrganization("test");
+        experience.setTitle("test");
+        experience.setStateAbbr("AK");
+        experience.setCity("test");
+        Calendar beginCal = Calendar.getInstance();
+        beginCal.set(2007, 0, 1);
+        experience.setBeginDate(beginCal.getTime());
+        experience.setEndDate(null);
+        experience.setCurrent(true);
+        experience.setJobDescription("test");
+
+        return experience;
+
+    }
+
+    public Experience buildExperience4() {
+        Experience experience = new Experience();
+
+        experience.setId(126);
+        experience.setCandidateId(121);
+        experience.setOrganization("test");
+        experience.setTitle("test");
+        experience.setStateAbbr("AK");
+        experience.setCity("test");
+        Calendar beginCal = Calendar.getInstance();
+        beginCal.set(2007, 0, 1);
+        experience.setBeginDate(beginCal.getTime());
+        Calendar endCal = Calendar.getInstance();
+        endCal.set(2007, 0, 1);
+        experience.setEndDate(null);
+        experience.setCurrent(true);
+        experience.setJobDescription("test");
+
+        return experience;
+
+    }
+
     public Candidate buildCandidate1() {
         Candidate candidate = new Candidate();
 
@@ -172,9 +256,6 @@ public class SimpleSerializeTest extends TestCase {
         c1.set(2007, 11, 13);
 
         candidate.setDateOfBirth(c1.getTime());
-
-        Calendar c2 = Calendar.getInstance();
-        c1.set(2006, 1, 12);
 
         return candidate;
     }

@@ -139,10 +139,9 @@ public class JsonSerializerTest extends TestCase {
         assertAttributeMissing("hobbies", benJson);
         assertAttributeMissing("person", benJson);
 
-        serializer.out(new StringBuilder());
         serializer.exclude("home.zipcode", "work.zipcode");
 
-        String json2 = serializer.serialize(charlie);
+        String json2 = serializer.serialize(charlie, new StringBuilder());
         assertStringValue(Person.class.getName(), json2);
         assertAttribute("work", json2);
         assertAttribute("home", json2);
@@ -156,10 +155,9 @@ public class JsonSerializerTest extends TestCase {
         assertAttributeMissing("type", json2);
         assertStringValueMissing("PAGER", json2);
 
-        serializer.out(new StringBuilder());
         serializer.include("hobbies").exclude("phones.areaCode", "phones.exchange", "phones.number");
 
-        String json3 = serializer.serialize(charlie);
+        String json3 = serializer.serialize(charlie, new StringBuilder());
         assertStringValue(Person.class.getName(), json3);
         assertAttribute("work", json3);
         assertAttribute("home", json3);

@@ -219,6 +219,15 @@ public class JsonContext {
     }
 
     /**
+     * get output handler
+     *
+     * @return
+     */
+    public OutputHandler getOut() {
+        return out;
+    }
+
+    /**
      * write a simple non-quoted value to output
      *
      * @param value
@@ -227,12 +236,15 @@ public class JsonContext {
         out.write(value);
     }
 
-    public void writeOpenObject() {
+    public TypeContext writeOpenObject() {
+        TypeContext typeContext = new TypeContext(BasicType.OBJECT);
+        pushTypeContext(typeContext);
         write("{");
         if (prettyPrint) {
             write("\n");
             indent += 4;
         }
+        return typeContext;
     }
 
     public void writeCloseObject() {
@@ -242,6 +254,7 @@ public class JsonContext {
             if (prettyPrint) writeIndent();
         }
         write("}");
+        popTypeContext();
     }
 
     public void writeName(String name) {
@@ -258,12 +271,16 @@ public class JsonContext {
         }
     }
 
-    public void writeOpenArray() {
+    public TypeContext writeOpenArray() {
+        TypeContext typeContext = new TypeContext(BasicType.ARRAY);
+        pushTypeContext(typeContext);
         write("[");
+        return typeContext;
     }
 
     public void writeCloseArray() {
         write("]");
+        popTypeContext();
     }
 
     public void writeIndent() {

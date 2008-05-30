@@ -35,9 +35,7 @@ public class ObjectTransformer extends AbstractTransformer {
                 // traverse object
                 BeanInfo info = Introspector.getBeanInfo(object.getClass());
                 PropertyDescriptor[] props = info.getPropertyDescriptors();
-                TypeContext typeContext = new TypeContext(BasicType.OBJECT);
-                getContext().pushTypeContext(typeContext);
-                getContext().writeOpenObject();
+                TypeContext typeContext = getContext().writeOpenObject();
                 for (PropertyDescriptor prop : props) {
                     String name = prop.getName();
                     path.enqueue(name);
@@ -49,8 +47,7 @@ public class ObjectTransformer extends AbstractTransformer {
                             Transformer transformer = getContext().getTransformer(value);
 
                             if (transformer instanceof Defer) {
-                                Defer d = (Defer) transformer;
-                                d.setValues(name);
+                                typeContext.setPropertyName(name);
                                 transformer.transform(value);
                             } else {
                                 if (!typeContext.isFirst()) getContext().writeComma();
@@ -75,8 +72,7 @@ public class ObjectTransformer extends AbstractTransformer {
                                 Transformer transformer = getContext().getTransformer(value);
 
                                 if (transformer instanceof Defer) {
-                                    Defer d = (Defer) transformer;
-                                    d.setValues(field.getName());
+                                    typeContext.setPropertyName(field.getName());
                                     transformer.transform(value);
                                 } else {
                                     if (!typeContext.isFirst()) getContext().writeComma();
@@ -92,7 +88,6 @@ public class ObjectTransformer extends AbstractTransformer {
                 }
 
                 getContext().writeCloseObject();
-                getContext().popTypeContext();
                 getContext().setVisits((ChainedSet) getContext().getVisits().getParent());
 
             }

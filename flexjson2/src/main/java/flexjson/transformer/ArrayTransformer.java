@@ -23,9 +23,7 @@ import java.lang.reflect.Array;
 public class ArrayTransformer extends AbstractTransformer {
 
     public void transform(Object object) {
-        TypeContext typeContext = new TypeContext(BasicType.ARRAY);
-        getContext().pushTypeContext(typeContext);
-        getContext().writeOpenArray();
+        TypeContext typeContext = getContext().writeOpenArray();
         int length = Array.getLength(object);
         for (int i = 0; i < length; ++i) {
             if (!typeContext.isFirst()) getContext().writeComma();
@@ -33,7 +31,6 @@ public class ArrayTransformer extends AbstractTransformer {
             getContext().transform(Array.get(object, i));
         }
         getContext().writeCloseArray();
-        getContext().popTypeContext();
     }
 
 }

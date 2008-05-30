@@ -24,16 +24,13 @@ public class MapTransformer extends AbstractTransformer {
 
     public void transform(Object object) {
         Map value = (Map) object;
-        TypeContext typeContext = new TypeContext(BasicType.OBJECT);
-        getContext().pushTypeContext(typeContext);
-        getContext().writeOpenObject();
+        TypeContext typeContext = getContext().writeOpenObject();
         for (Object key : value.keySet()) {
             
             Transformer transformer = getContext().getTransformer(value.get(key));
 
             if (transformer instanceof Defer) {
-                Defer d = (Defer) transformer;
-                d.setValues(key.toString());
+                typeContext.setPropertyName(key.toString());
                 transformer.transform(value.get(key));
             } else {
                 if (!typeContext.isFirst()) getContext().writeComma();
@@ -45,7 +42,6 @@ public class MapTransformer extends AbstractTransformer {
 
         }
         getContext().writeCloseObject();
-        getContext().popTypeContext();
     }
 
 }

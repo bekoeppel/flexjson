@@ -22,17 +22,13 @@ public class StringArrayTransformer extends AbstractTransformer {
 
     public void transform(Object object) {
         String[] stringArr = (String[]) object;
-
-        TypeContext typeContext = new TypeContext(BasicType.ARRAY);
-        getContext().pushTypeContext(typeContext);
-        getContext().writeOpenArray();
+        TypeContext typeContext = getContext().writeOpenArray();
         for (String item : stringArr) {
             if (!typeContext.isFirst()) getContext().writeComma();
             typeContext.setFirst(false);
             getContext().transform(item.toUpperCase());
         }
         getContext().writeCloseArray();
-        getContext().popTypeContext();
 
     }
 

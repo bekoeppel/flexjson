@@ -12,18 +12,6 @@ import java.util.Date;
  */
 public class FlatDateTransformer extends AbstractTransformer implements Defer {
 
-    String deferName = "";
-
-    public void setValues(Object... values) {
-        if (values != null && values.length > 0) {
-            this.deferName = (String) values[0];
-        }
-    }
-
-    public void reset() {
-        this.deferName = "";
-    }
-
     public void transform(Object o) {
 
         boolean setContext = false;
@@ -31,9 +19,7 @@ public class FlatDateTransformer extends AbstractTransformer implements Defer {
         TypeContext typeContext = getContext().peekTypeContext();
 
         if (typeContext == null || typeContext.getBasicType() != BasicType.OBJECT) {
-            typeContext = new TypeContext(BasicType.OBJECT);
-            getContext().pushTypeContext(typeContext);
-            getContext().writeOpenObject();
+            typeContext = getContext().writeOpenObject();
             setContext = true;
         }
 
@@ -56,18 +42,17 @@ public class FlatDateTransformer extends AbstractTransformer implements Defer {
 
         if (setContext) {
             getContext().writeCloseObject();
-            getContext().popTypeContext();
         }
-
-        reset();
 
     }
 
     private String fieldName(String suffix) {
-        if(deferName == null || deferName.trim().equals("")) {
+        TypeContext typeContext = getContext().peekTypeContext();
+        String propertyName =  typeContext.getPropertyName();
+        if( propertyName == null || propertyName.trim().equals("")) {
             return suffix.toLowerCase();
         } else {
-            return deferName + suffix;
+            return propertyName + suffix;
         }
 
     }

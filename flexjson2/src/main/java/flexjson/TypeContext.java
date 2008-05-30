@@ -19,6 +19,7 @@ public class TypeContext {
 
     private BasicType basicType;
     private boolean isFirst;
+    private String propertyName;
 
     public TypeContext(BasicType basicType) {
         this.basicType = basicType;
@@ -39,5 +40,13 @@ public class TypeContext {
 
     public void setFirst(boolean first) {
         isFirst = first;
+    }
+
+    public String getPropertyName() {
+        return propertyName;
+    }
+
+    public void setPropertyName(String propertyName) {
+        this.propertyName = propertyName;
     }
 }
