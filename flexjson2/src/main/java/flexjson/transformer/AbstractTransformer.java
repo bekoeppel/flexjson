@@ -17,7 +17,7 @@ package flexjson.transformer;
 
 import flexjson.JsonContext;
 
-abstract class AbstractTransformer implements Transformer {
+public abstract class AbstractTransformer implements Transformer {
 
     public JsonContext getContext() {
         return JsonContext.get();
