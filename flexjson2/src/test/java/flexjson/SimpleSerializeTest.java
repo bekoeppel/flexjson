@@ -155,12 +155,15 @@ public class SimpleSerializeTest extends TestCase {
 
     public Person buildPerson1() {
 
+        Calendar c = Calendar.getInstance();
+        c.set(2007, 11, 13);
+
         // basic person
         Person person = new Person();
         person.setId(1);
         person.setFirstName("Joe");
         person.setLastName("Blow");
-        person.setBirthDate(new Date());
+        person.setBirthDate(c.getTime());
 
         person.setFavoriteFoods(new String[]{"Ice Cream", "Burritos"});
         person.setLuckyNumbers(new Integer[]{13, 23, 73});
