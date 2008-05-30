@@ -15,10 +15,7 @@
  */
 package flexjson.transformer;
 
-import flexjson.ChainedSet;
-import flexjson.JsonException;
-import flexjson.Path;
-import flexjson.PrettyPrintContext;
+import flexjson.*;
 
 import java.beans.BeanInfo;
 import java.beans.Introspector;
@@ -38,8 +35,8 @@ public class ObjectTransformer extends AbstractTransformer {
                 // traverse object
                 BeanInfo info = Introspector.getBeanInfo(object.getClass());
                 PropertyDescriptor[] props = info.getPropertyDescriptors();
-                boolean isFirst = true;
-                getContext().pushPrettyPrintContext(PrettyPrintContext.OBJECT);
+                TypeContext typeContext = new TypeContext(BasicType.OBJECT);
+                getContext().pushTypeContext(typeContext);
                 getContext().writeOpenObject();
                 for (PropertyDescriptor prop : props) {
                     String name = prop.getName();
@@ -48,10 +45,20 @@ public class ObjectTransformer extends AbstractTransformer {
                     if (accessor != null && getContext().isIncluded(prop)) {
                         Object value = accessor.invoke(object, (Object[]) null);
                         if (!getContext().getVisits().contains(value)) {
-                            if (!isFirst) getContext().writeComma();
-                            getContext().writeName(name);
-                            getContext().transform(value);
-                            isFirst = false;
+                            if (!typeContext.isFirst()) getContext().writeComma();
+
+                            Transformer transformer = getContext().getTransformer(value);
+
+                            if (transformer instanceof Defer) {
+                                Defer d = (Defer) transformer;
+                                d.setValues(name);
+                                transformer.transform(value);
+                            } else {
+                                getContext().writeName(name);
+                                transformer.transform(value);
+                            }
+
+                            typeContext.setFirst(false);
                         }
 
                     }
@@ -63,11 +70,21 @@ public class ObjectTransformer extends AbstractTransformer {
                         path.enqueue(field.getName());
                         if (getContext().isValidField(field)) {
                             if (!getContext().getVisits().contains(field.get(object))) {
-                                if (!isFirst) getContext().writeComma();
-                                getContext().writeName(field.getName());
+                                if (!typeContext.isFirst()) getContext().writeComma();
+
                                 Object value = field.get(object);
-                                getContext().transform(value);
-                                isFirst = false;
+                                Transformer transformer = getContext().getTransformer(value);
+
+                                if (transformer instanceof Defer) {
+                                    Defer d = (Defer) transformer;
+                                    d.setValues(field.getName());
+                                    transformer.transform(value);
+                                } else {
+                                    getContext().writeName(field.getName());
+                                    transformer.transform(value);
+                                }
+
+                                typeContext.setFirst(false);
                             }
                         }
                         path.pop();
@@ -75,7 +92,7 @@ public class ObjectTransformer extends AbstractTransformer {
                 }
 
                 getContext().writeCloseObject();
-                getContext().popPrettyPrintContext();
+                getContext().popTypeContext();
                 getContext().setVisits((ChainedSet) getContext().getVisits().getParent());
 
             }

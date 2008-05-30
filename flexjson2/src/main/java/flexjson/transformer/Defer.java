@@ -13,8 +13,28 @@
  * implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-package flexjson;
+package flexjson.transformer;
 
-public enum PrettyPrintContext {
-    OBJECT, ARRAY
+/**
+ * This is a simple interface that can be applied to
+ * a transofrmer. It is used in the {@link ObjectTransformer}
+ * to determine if the name write should be deferred to the
+ * type transformer that will handle its value. This provides
+ * the flexibility to flatten out an object heirarcy.
+ */
+public interface Defer {
+
+    /**
+     * receives deferred values from the calling transformer
+     * @param values
+     */
+    public void setValues(Object... values);
+
+    /**
+     * resets the deferred values to default when completed
+     */
+    public void reset();
+
+
+
 }

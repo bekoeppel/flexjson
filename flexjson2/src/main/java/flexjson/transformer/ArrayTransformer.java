@@ -15,24 +15,25 @@
  */
 package flexjson.transformer;
 
-import flexjson.PrettyPrintContext;
+import flexjson.BasicType;
+import flexjson.TypeContext;
 
 import java.lang.reflect.Array;
 
 public class ArrayTransformer extends AbstractTransformer {
 
     public void transform(Object object) {
-        boolean isFirst = true;
-        getContext().pushPrettyPrintContext(PrettyPrintContext.ARRAY);
+        TypeContext typeContext = new TypeContext(BasicType.ARRAY);
+        getContext().pushTypeContext(typeContext);
         getContext().writeOpenArray();
         int length = Array.getLength(object);
         for (int i = 0; i < length; ++i) {
-            if (!isFirst) getContext().writeComma();
+            if (!typeContext.isFirst()) getContext().writeComma();
             getContext().transform(Array.get(object, i));
-            isFirst = false;
+            typeContext.setFirst(false);
         }
         getContext().writeCloseArray();
-        getContext().popPrettyPrintContext();
+        getContext().popTypeContext();
     }
 
 }

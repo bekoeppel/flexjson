@@ -15,7 +15,8 @@
  */
 package flexjson.transformer;
 
-import flexjson.PrettyPrintContext;
+import flexjson.BasicType;
+import flexjson.TypeContext;
 
 import java.util.Map;
 
@@ -23,17 +24,26 @@ public class MapTransformer extends AbstractTransformer {
 
     public void transform(Object object) {
         Map value = (Map) object;
-        boolean isFirst = true;
-        getContext().pushPrettyPrintContext(PrettyPrintContext.OBJECT);
+        TypeContext typeContext = new TypeContext(BasicType.OBJECT);
+        getContext().pushTypeContext(typeContext);
         getContext().writeOpenObject();
         for (Object key : value.keySet()) {
-            if (!isFirst) getContext().writeComma();
-            getContext().writeName(key.toString());
-            getContext().transform(value.get(key));
-            isFirst = false;
+            if (!typeContext.isFirst()) getContext().writeComma();
+            Transformer transformer = getContext().getTransformer(value.get(key));
+
+            if (transformer instanceof Defer) {
+                Defer d = (Defer) transformer;
+                d.setValues(key.toString());
+                transformer.transform(value.get(key));
+            } else {
+                getContext().writeName(key.toString());
+                transformer.transform(value.get(key));
+            }
+
+            typeContext.setFirst(false);
         }
         getContext().writeCloseObject();
-        getContext().popPrettyPrintContext();
+        getContext().popTypeContext();
     }
 
 }

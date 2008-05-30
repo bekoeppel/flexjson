@@ -16,6 +16,7 @@
 package flexjson;
 
 import flexjson.model.*;
+import flexjson.transformer.FlatDateTransformer;
 import flexjson.transformer.StateTransformer;
 import flexjson.transformer.StringArrayTransformer;
 import junit.framework.TestCase;
@@ -132,6 +133,24 @@ public class SimpleSerializeTest extends TestCase {
 
         String string = serializer.getJson();
         logger.info(string);
+    }
+
+    public void testDeferOnDate() {
+        Date birthDate = buildPerson1().getBirthDate();
+        JsonSerializer serializer = new JsonSerializer();
+        serializer.transform(new FlatDateTransformer(), Date.class);
+        String json = serializer.serialize(birthDate);
+        logger.info(json);
+        assertEquals(json, "{\"month\":11,\"day\":13,\"year\":2007}");
+    }
+
+    public void testDeferOnPersonWithFlatDate() {
+        Person person = buildPerson1();
+        JsonSerializer serializer = new JsonSerializer();
+        serializer.transform(new FlatDateTransformer(), Date.class);
+        String json = serializer.serialize(person);
+        logger.info(json);
+        assertTrue(json.contains("\"birthDateMonth\":11,\"birthDateDay\":13,\"birthDateYear\":2007"));
     }
 
     public Person buildPerson1() {

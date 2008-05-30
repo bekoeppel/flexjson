@@ -15,22 +15,23 @@
  */
 package flexjson.transformer;
 
-import flexjson.PrettyPrintContext;
+import flexjson.BasicType;
+import flexjson.TypeContext;
 
 public class IterableTransformer extends AbstractTransformer {
 
     public void transform(Object object) {
         Iterable iterable = (Iterable) object;
-        boolean isFirst = true;
-        getContext().pushPrettyPrintContext(PrettyPrintContext.ARRAY);
+        TypeContext typeContext = new TypeContext(BasicType.ARRAY);
+        getContext().pushTypeContext(typeContext);
         getContext().writeOpenArray();
         for (Object item : iterable) {
-            if (!isFirst) getContext().writeComma();
+            if (!typeContext.isFirst()) getContext().writeComma();
             getContext().transform(item);
-            isFirst = false;
+            typeContext.setFirst(false);
         }
         getContext().writeCloseArray();
-        getContext().popPrettyPrintContext();
+        getContext().popTypeContext();
     }
 
 }

@@ -37,7 +37,7 @@ public class JsonContext {
 
     private OutputHandler out;
     private boolean prettyPrint = false;
-    private Stack<PrettyPrintContext> prettyPrintContextStack = new Stack<PrettyPrintContext>();
+    private Stack<TypeContext> typeContextStack = new Stack<TypeContext>();
 
     private int indent = 0;
     private TypeTransformerMap typeTransformerMap = new TypeTransformerMap();
@@ -137,6 +137,24 @@ public class JsonContext {
 
     }
 
+    /**
+     * Retrieves a transformer for the provided object
+     *
+     * @param object
+     * @return
+     */
+    public Transformer getTransformer(Object object) {
+
+        Transformer transformer = getPathTransformer(object);
+
+        if (transformer == null) {
+            transformer = getTypeTransformer(object);
+        }
+
+        return transformer;
+
+    }
+
     private Transformer getPathTransformer(Object object) {
         if (null == object) return getTypeTransformer(object);
         return pathTransformerMap.get(path);
@@ -175,16 +193,20 @@ public class JsonContext {
         this.prettyPrint = prettyPrint;
     }
 
-    public void pushPrettyPrintContext(PrettyPrintContext contextEnum) {
-        prettyPrintContextStack.push(contextEnum);
+    public void pushTypeContext(TypeContext contextEnum) {
+        typeContextStack.push(contextEnum);
     }
 
-    public void popPrettyPrintContext() {
-        prettyPrintContextStack.pop();
+    public void popTypeContext() {
+        typeContextStack.pop();
     }
 
-    public PrettyPrintContext peekPrettyPrintContext() {
-        return prettyPrintContextStack.peek();
+    public TypeContext peekTypeContext() {
+        if(typeContextStack.size() > 0) {
+            return typeContextStack.peek();
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -231,7 +253,7 @@ public class JsonContext {
 
     public void writeComma() {
         write(",");
-        if (prettyPrint && peekPrettyPrintContext() != PrettyPrintContext.ARRAY) {
+        if (prettyPrint && peekTypeContext().getBasicType() != BasicType.ARRAY) {
             write("\n");
         }
     }
