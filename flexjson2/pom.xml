@@ -1,0 +1,75 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>flexjson</groupId>
+    <artifactId>flexjson</artifactId>
+    <packaging>jar</packaging>
+    <version>2.0a1</version>
+    <name>flexjson</name>
+    <url>http://flexjson.sourceforge.net/</url>
+    <dependencies>
+
+        <!-- TEST -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>3.8.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.4.3</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.4.3</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.5</source>
+                    <target>1.5</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    <distributionManagement>
+        <downloadUrl>http://m2.silvermindsoftware.com/repo/</downloadUrl>
+        <repository>
+            <uniqueVersion>false</uniqueVersion>
+            <id>silvermindsoftware.release</id>
+            <name>Silvermind Software Release Repo</name>
+            <url>scp://m2.silvermindsoftware.com/home/bgoodin/www/m2.silvermindsoftware.com/public_html/repo</url>
+            <layout>default</layout>
+        </repository>
+        <snapshotRepository>
+            <uniqueVersion>true</uniqueVersion>
+            <id>silvermindsoftware.snapshot</id>
+            <name>Silvermind Software Snapshot Repo</name>
+            <url>scp://m2.silvermindsoftware.com/home/bgoodin/www/m2.silvermindsoftware.com/public_html/snapshot</url>
+            <layout>default</layout>
+        </snapshotRepository>
+    </distributionManagement>
+    <repositories>
+        <repository>
+            <id>silvermindsoftware.repo</id>
+            <name>Silvermind Software Release Repo</name>
+            <url>http://m2.silvermindsoftware.com/repo/</url>
+            <releases>
+                <checksumPolicy>fail</checksumPolicy>
+                <updatePolicy>never</updatePolicy>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+</project>
