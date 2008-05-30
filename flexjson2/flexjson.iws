@@ -77,7 +77,7 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="pom.xml" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="pom.xml" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
             <state line="6" column="18" selection-start="369" selection-end="369" vertical-scroll-proportion="0.021778584">
@@ -115,7 +115,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SimpleSerializeTest.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="SimpleSerializeTest.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/test/java/flexjson/SimpleSerializeTest.java">
           <provider selected="true" editor-type-id="text-editor">
             <state line="29" column="13" selection-start="989" selection-end="989" vertical-scroll-proportion="-1.2391304">
@@ -699,13 +699,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="18" selection-start="369" selection-end="369" vertical-scroll-proportion="0.021778584">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/flexjson/transformer/ObjectTransformer.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="48" column="39" selection-start="2039" selection-end="2039" vertical-scroll-proportion="0.34567901">
@@ -778,6 +771,13 @@
     <entry file="file://$PROJECT_DIR$/src/test/java/flexjson/SimpleSerializeTest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="29" column="13" selection-start="989" selection-end="989" vertical-scroll-proportion="-1.2391304">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="6" column="18" selection-start="369" selection-end="369" vertical-scroll-proportion="0.021778584">
           <folding />
         </state>
       </provider>
