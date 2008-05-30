@@ -21,8 +21,6 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
 import java.util.*;
@@ -40,10 +38,9 @@ public class JsonContext {
     private Stack<TypeContext> typeContextStack = new Stack<TypeContext>();
 
     private int indent = 0;
-    private TypeTransformerMap typeTransformerMap = new TypeTransformerMap();
-    private Map<Path, Transformer> pathTransformerMap = new HashMap<Path, Transformer>();
-
-    private List<PathExpression> pathExpressions = new ArrayList<PathExpression>();
+    private TypeTransformerMap typeTransformerMap;
+    private Map<Path, Transformer> pathTransformerMap;
+    private List<PathExpression> pathExpressions;
 
     private SerializationType serializationType = SerializationType.SHALLOW;
 
@@ -52,65 +49,7 @@ public class JsonContext {
     private Path path = new Path();
 
 
-    public JsonContext() {
-        // define all standard type transformers
-        Transformer transformer = new NullTransformer();
-        typeTransformerMap.put(null, transformer);
-
-        transformer = new ObjectTransformer();
-        typeTransformerMap.put(Object.class, transformer);
-
-        transformer = new ClassTransformer();
-        typeTransformerMap.put(Class.class, transformer);
-
-        transformer = new BooleanTransformer();
-        typeTransformerMap.put(boolean.class, transformer);
-        typeTransformerMap.put(Boolean.class, transformer);
-
-        transformer = new NumberTransformer();
-        typeTransformerMap.put(Number.class, transformer);
-
-        typeTransformerMap.put(Integer.class, transformer);
-        typeTransformerMap.put(int.class, transformer);
-
-        typeTransformerMap.put(Long.class, transformer);
-        typeTransformerMap.put(long.class, transformer);
-
-        typeTransformerMap.put(Double.class, transformer);
-        typeTransformerMap.put(double.class, transformer);
-
-        typeTransformerMap.put(Float.class, transformer);
-        typeTransformerMap.put(float.class, transformer);
-
-        typeTransformerMap.put(BigDecimal.class, transformer);
-        typeTransformerMap.put(BigInteger.class, transformer);
-
-        transformer = new StringTransformer();
-        typeTransformerMap.put(String.class, transformer);
-
-        transformer = new CharacterTransformer();
-        typeTransformerMap.put(Character.class, transformer);
-        typeTransformerMap.put(char.class, transformer);
-
-        transformer = new BasicDateTransformer();
-        typeTransformerMap.put(Date.class, transformer);
-
-        transformer = new EnumTransformer();
-        typeTransformerMap.put(Enum.class, transformer);
-
-        transformer = new IterableTransformer();
-        typeTransformerMap.put(Iterable.class, transformer);
-
-        transformer = new MapTransformer();
-        typeTransformerMap.put(Map.class, transformer);
-
-        transformer = new NullTransformer();
-        typeTransformerMap.put(void.class, transformer);
-
-        transformer = new ArrayTransformer();
-        typeTransformerMap.put(Arrays.class, transformer);
-
-    }
+    public JsonContext() {}
 
     // CONFIGURE SERIALIZATION
     public void serializationType(SerializationType serializationType) {
@@ -161,7 +100,7 @@ public class JsonContext {
     }
 
     private Transformer getTypeTransformer(Object object) {
-        return typeTransformerMap.get(object);
+        return typeTransformerMap.getTransformer(object);
     }
 
     /**
@@ -169,8 +108,8 @@ public class JsonContext {
      *
      * @param typeTransformerMap
      */
-    public void addTypeTransformers(TypeTransformerMap typeTransformerMap) {
-        this.typeTransformerMap.putAll(typeTransformerMap);
+    public void setTypeTransformers(TypeTransformerMap typeTransformerMap) {
+        this.typeTransformerMap = typeTransformerMap;
     }
 
     /**
@@ -178,8 +117,8 @@ public class JsonContext {
      *
      * @param pathTransformerMap
      */
-    public void addPathTransformers(Map<Path, Transformer> pathTransformerMap) {
-        this.pathTransformerMap.putAll(pathTransformerMap);
+    public void setPathTransformers(Map<Path, Transformer> pathTransformerMap) {
+        this.pathTransformerMap = pathTransformerMap;
     }
 
     // OUTPUT
@@ -219,7 +158,7 @@ public class JsonContext {
     }
 
     /**
-     * get output handler
+     * getTransformer output handler
      *
      * @return
      */
@@ -363,7 +302,7 @@ public class JsonContext {
     // MANAGE CONTEXT
 
     /**
-     * static method to get the context for this thread
+     * static method to getTransformer the context for this thread
      *
      * @return
      */
@@ -392,8 +331,8 @@ public class JsonContext {
         return this.path;
     }
 
-    public void addPathExpressions(List<PathExpression> pathExpressions) {
-        this.pathExpressions.addAll(pathExpressions);
+    public void setPathExpressions(List<PathExpression> pathExpressions) {
+        this.pathExpressions = pathExpressions;
     }
 
     public boolean isIncluded(PropertyDescriptor prop) {

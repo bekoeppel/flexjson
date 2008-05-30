@@ -160,7 +160,7 @@ public class SimpleSerializeTest extends TestCase {
     public void testDeferOnExperience() {
 
         List<Experience> experienceList = new ArrayList<Experience>();
-        experienceList.add(buildExperience1());
+        experienceList.add(builbExperience1());
         experienceList.add(buildExperience2());
         experienceList.add(buildExperience3());
         experienceList.add(buildExperience4()); 
@@ -170,7 +170,7 @@ public class SimpleSerializeTest extends TestCase {
         logger.info(json);
     }
 
-    public Experience buildExperience1() {
+    public Experience builbExperience1() {
         Experience experience = new Experience();
 
         experience.setId(123);
@@ -184,7 +184,11 @@ public class SimpleSerializeTest extends TestCase {
         experience.setBeginDate(beginCal.getTime());
         experience.setEndDate(null);
         experience.setCurrent(true);
-        experience.setJobDescription("test");
+        experience.setJobDescription("¥ Item 1\n" +
+                "¥ Item 2\n" +
+                "¥ Item 3.\n" +
+                "¥ Item 4.\n" +
+                "¥ Item 5\n");
 
         return experience;
         

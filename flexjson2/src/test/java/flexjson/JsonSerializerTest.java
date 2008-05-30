@@ -228,6 +228,21 @@ public class JsonSerializerTest extends TestCase {
         assertSerializedTo("Hello\nWorld", "\"Hello\\nWorld\"");
         assertSerializedTo("Hello 'Charlie'", "\"Hello 'Charlie'\"");
         assertSerializedTo("Hello \"Charlie\"", "\"Hello \\\"Charlie\\\"\"");
+        assertSerializedTo(
+                "¥ Shadowing the senior pastor as he performed weekly duties including sermon\n" +
+                "preparation, wedding, funerals, and other activities.\n" +
+                "¥ Teaching Junior High School Sunday School.\n" +
+                "¥ Participating in session meetings, worship planning meetings, and staff meetings.\n" +
+                "¥ Assisting in research for sermon preparation.\n" +
+                "¥ Speaking occasionally in church including scripture reading and giving the\n" +
+                "announcements.",
+                "\"¥ Shadowing the senior pastor as he performed weekly duties including sermon\\n" +
+                "preparation, wedding, funerals, and other activities.\\n" +
+                "¥ Teaching Junior High School Sunday School.\\n" +
+                "¥ Participating in session meetings, worship planning meetings, and staff meetings.\\n" +
+                "¥ Assisting in research for sermon preparation.\\n" +
+                "¥ Speaking occasionally in church including scripture reading and giving the\\n" +
+                "announcements.\"");
     }
 
     public void testListOfObjects() {

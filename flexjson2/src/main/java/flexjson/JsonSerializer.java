@@ -64,7 +64,7 @@ import java.util.Map;
  * <p>
  * In this case it's look like it's pretty standard stuff.  But, let's say
  * Person had many hobbies (i.e. Person.hobbies is a java.util.List).  In
- * this case if we executed the code above we'd still get the same output.
+ * this case if we executed the code above we'd still getTransformer the same output.
  * This is a very important feature of flexjson, and that is any instance
  * variable that is a Collection, Map, or Object reference won't be serialized
  * by default.  This is what gives flexjson the shallow serialization.
@@ -188,7 +188,7 @@ public class JsonSerializer {
 
     public final static char[] HEX = "0123456789ABCDEF".toCharArray();
 
-    private TypeTransformerMap typeTransformerMap = new TypeTransformerMap();
+    private TypeTransformerMap typeTransformerMap = new TypeTransformerMap(TransformerUtil.getDefaultTypeTransformers());
     private Map<Path, Transformer> pathTransformerMap = new HashMap<Path, Transformer>();
 
     private List<PathExpression> pathExpressions = new ArrayList<PathExpression>();
@@ -364,9 +364,9 @@ public class JsonSerializer {
         context.setOut(out);
         context.setPrettyPrint(prettyPrint);
         context.serializationType(serializationType);
-        context.addTypeTransformers(typeTransformerMap);
-        context.addPathTransformers(pathTransformerMap);
-        context.addPathExpressions(pathExpressions);
+        context.setTypeTransformers(typeTransformerMap);
+        context.setPathTransformers(pathTransformerMap);
+        context.setPathExpressions(pathExpressions);
 
         try {
 

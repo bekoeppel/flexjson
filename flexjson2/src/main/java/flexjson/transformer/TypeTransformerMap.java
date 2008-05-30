@@ -24,41 +24,73 @@ import java.util.HashMap;
  */
 public class TypeTransformerMap extends HashMap<Class, Transformer> {
 
-    @SuppressWarnings("unchecked")
-    public Transformer get(Object key) {
-        return findTransformer(key == null ? void.class : key.getClass());
+    private TypeTransformerMap parentTransformerMap;
+
+    public TypeTransformerMap() {
     }
 
-    private Transformer findTransformer(Class key) {
+    public TypeTransformerMap(TypeTransformerMap parentTransformerMap) {
+        this.parentTransformerMap = parentTransformerMap;
+    }
+
+    @SuppressWarnings("unchecked")
+    public Transformer getTransformer(Object key) {
+        Transformer transformer = findTransformer(key == null ? void.class : key.getClass(), key == null ? void.class : key.getClass());
+        if (transformer == null && parentTransformerMap != null) {
+            // if no transformers found in child then check parent
+            transformer = parentTransformerMap.getTransformer(key);
+            if(transformer != null) {
+                updateTransformers(key == null ? void.class : key.getClass(), transformer);
+            }
+        }
+        return transformer;
+    }
+
+    Transformer findTransformer(Class key, Class originalKey) {
+
+        if(key == null) return null;
 
         // if specific type found
-        if (super.containsKey(key)) {
-            return super.get(key);
+        if (containsKey(key)) {
+            if(key != originalKey) {
+                return updateTransformers(originalKey, get(key));
+            } else {
+                return get(key);
+            }
         }
 
         // handle arrays specially if no specific array type handler
         // Arrays.class is used for this because it would never appear
         // in an object that needs to be serialized.
         if (key.isArray()) {
-            return super.get(Arrays.class);
+            return updateTransformers(originalKey, get(Arrays.class));
         }
 
         // check for interface transformer
         for (Class interfaze : key.getInterfaces()) {
 
-            if (super.containsKey(interfaze)) {
-                return super.get(interfaze);
+            if (containsKey(interfaze)) {
+                return updateTransformers(originalKey, get(interfaze));
             } else {
                 for (Class superInterface : interfaze.getInterfaces()) {
-                    if (super.containsKey(superInterface))
-                        return super.get(superInterface);
+                    if (containsKey(superInterface)) {
+                        return updateTransformers(originalKey, get(superInterface));
+                    }
                 }
             }
 
         }
 
         // if no interface transformers then check superclass
-        return findTransformer(key.getSuperclass());
+        return findTransformer(key.getSuperclass(), originalKey);
 
+    }
+
+    private Transformer updateTransformers(Class key, Transformer transformer) {
+        // only make changes to the child TypeTransformerMap
+        if (transformer != null) {
+            put(key, transformer);
+        }
+        return transformer;
     }
 }
