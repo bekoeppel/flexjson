@@ -33,6 +33,21 @@
     <disable_hints />
   </component>
   <component name="DebuggerManager">
+    <line_breakpoints>
+      <breakpoint url="file://$PROJECT_DIR$/src/test/java/flexjson/transformer/FlatDateTransformer.java" line="28" class="flexjson.transformer.FlatDateTransformer" package="flexjson.transformer">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="false" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+    </line_breakpoints>
     <breakpoint_any>
       <breakpoint>
         <option name="NOTIFY_CAUGHT" value="true" />
@@ -77,32 +92,12 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="ObjectTransformer.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/flexjson/transformer/ObjectTransformer.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="53" column="48" selection-start="2364" selection-end="2368" vertical-scroll-proportion="0.34567901">
-              <folding>
-                <marker date="1197572816000" expanded="false" signature="646:828" placeholder="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="IterableTransformer.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/flexjson/transformer/IterableTransformer.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="28" column="29" selection-start="1083" selection-end="1083" vertical-scroll-proportion="0.27513227">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="MapTransformer.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/flexjson/transformer/MapTransformer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="22" column="13" selection-start="739" selection-end="739" vertical-scroll-proportion="0.105820104">
+            <state line="47" column="25" selection-start="1698" selection-end="1698" vertical-scroll-proportion="0.63492066">
               <folding>
-                <marker date="1197572809000" expanded="false" signature="653:724" placeholder="..." />
+                <marker date="1197655848000" expanded="false" signature="653:724" placeholder="..." />
               </folding>
             </state>
           </provider>
@@ -111,7 +106,25 @@
       <file leaf-file-name="pom.xml" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="6" column="18" selection-start="369" selection-end="369" vertical-scroll-proportion="0.021778584">
+            <state line="6" column="18" selection-start="369" selection-end="369" vertical-scroll-proportion="0.1306715">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Candidate.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/test/java/flexjson/model/Candidate.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="196" column="0" selection-start="4107" selection-end="4107" vertical-scroll-proportion="4.148148">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="NumberTransformer.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/flexjson/transformer/NumberTransformer.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="17" column="13" selection-start="659" selection-end="659" vertical-scroll-proportion="0.06349207">
               <folding />
             </state>
           </provider>
@@ -120,25 +133,36 @@
       <file leaf-file-name="FlatDateTransformer.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/test/java/flexjson/transformer/FlatDateTransformer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="45" column="31" selection-start="1261" selection-end="1261" vertical-scroll-proportion="0.6208113">
+            <state line="39" column="0" selection-start="1052" selection-end="1052" vertical-scroll-proportion="0.68430334">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SimpleSerializeTest.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/test/java/flexjson/SimpleSerializeTest.java">
+      <file leaf-file-name="IterableTransformer.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/flexjson/transformer/IterableTransformer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="165" column="39" selection-start="5447" selection-end="5447" vertical-scroll-proportion="0.47826087">
+            <state line="28" column="66" selection-start="1120" selection-end="1120" vertical-scroll-proportion="0.27513227">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="BasicType.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/flexjson/BasicType.java">
+      <file leaf-file-name="ObjectTransformer.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/flexjson/transformer/ObjectTransformer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="7" column="12" selection-start="105" selection-end="105" vertical-scroll-proportion="0.14814815">
+            <state line="82" column="36" selection-start="3811" selection-end="3811" vertical-scroll-proportion="0.91312385">
+              <folding>
+                <marker date="1197655804000" expanded="false" signature="646:828" placeholder="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="StringArrayTransformer.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/test/java/flexjson/transformer/StringArrayTransformer.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="30" column="12" selection-start="1139" selection-end="1139" vertical-scroll-proportion="0.31746033">
               <folding />
             </state>
           </provider>
@@ -147,7 +171,7 @@
       <file leaf-file-name="TypeContext.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/flexjson/TypeContext.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="17" column="13" selection-start="647" selection-end="647" vertical-scroll-proportion="0.06349207">
+            <state line="35" column="22" selection-start="1026" selection-end="1026" vertical-scroll-proportion="0.44444445">
               <folding />
             </state>
           </provider>
@@ -156,16 +180,7 @@
       <file leaf-file-name="ArrayTransformer.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/flexjson/transformer/ArrayTransformer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="30" column="29" selection-start="1116" selection-end="1116" vertical-scroll-proportion="0.27513227">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="JsonContext.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/flexjson/JsonContext.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="208" column="9" selection-start="6347" selection-end="6347" vertical-scroll-proportion="0.02173913">
+            <state line="30" column="40" selection-start="1127" selection-end="1127" vertical-scroll-proportion="0.27513227">
               <folding />
             </state>
           </provider>
@@ -293,7 +308,7 @@
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
         </PATH_ELEMENT>
         <PATH_ELEMENT>
-          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src/test/java/flexjson/transformer" />
+          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src/test/java/flexjson/model" />
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
         </PATH_ELEMENT>
       </PATH>
@@ -312,18 +327,6 @@
         </PATH_ELEMENT>
         <PATH_ELEMENT>
           <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src/main" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src/main/java" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src/main/java/flexjson" />
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
         </PATH_ELEMENT>
       </PATH>
@@ -364,16 +367,15 @@
       <recent name="flexjson.model" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.SimpleSerializeTest">
-    <tempConfiguration default="false" name="SimpleSerializeTest" type="JUnit" factoryName="JUnit" enabled="false" merge="false">
-      <pattern value="flexjson.*" />
+  <component name="RunManager" selected="JUnit.All in flexjson">
+    <tempConfiguration default="false" name="All in flexjson" type="JUnit" factoryName="JUnit" enabled="false" merge="false">
       <module name="flexjson" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="flexjson" />
-      <option name="MAIN_CLASS_NAME" value="flexjson.SimpleSerializeTest" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" />
       <option name="METHOD_NAME" />
-      <option name="TEST_OBJECT" value="class" />
+      <option name="TEST_OBJECT" value="package" />
       <option name="VM_PARAMETERS" />
       <option name="PARAMETERS" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
@@ -381,7 +383,7 @@
       <option name="PASS_PARENT_ENVS" value="true" />
       <option name="ADDITIONAL_CLASS_PATH" />
       <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="wholeProject" />
+        <value defaultName="singleModule" />
       </option>
       <envs />
       <RunnerSettings RunnerId="Run" />
@@ -477,7 +479,7 @@
       </method>
     </configuration>
     <list size="1">
-      <item index="0" class="java.lang.String" itemvalue="JUnit.SimpleSerializeTest" />
+      <item index="0" class="java.lang.String" itemvalue="JUnit.All in flexjson" />
     </list>
     <configuration name="&lt;template&gt;" type="WebApp" default="true" selected="false">
       <Host>localhost</Host>
@@ -551,7 +553,7 @@
       <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32903227" order="8" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" order="7" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" order="5" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.36745688" order="10" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.36666667" order="10" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="5" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="0" />
       <window_info id="Duplicates" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="14" />
@@ -623,26 +625,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/flexjson/transformer/NullTransformer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="18" column="0" selection-start="705" selection-end="705" vertical-scroll-proportion="0.054545455">
-          <folding>
-            <marker date="1197566956000" expanded="false" signature="0:614" placeholder="/.../" />
-            <marker date="1197566956000" expanded="true" signature="710:887" placeholder="/**...*/" />
-            <marker date="1197566956000" expanded="true" signature="929:972" placeholder="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/flexjson/JsonSerializerTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="387" column="19" selection-start="16250" selection-end="16250" vertical-scroll-proportion="0.013872832">
-          <folding>
-            <marker date="1197566956000" expanded="true" signature="641:960" placeholder="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/flexjson/transformer/Defer.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="33" column="44" selection-start="1167" selection-end="1167" vertical-scroll-proportion="0.4021164">
@@ -664,43 +646,16 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/flexjson/transformer/StringArrayTransformer.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/flexjson/JsonContext.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="27" column="38" selection-start="1019" selection-end="1019" vertical-scroll-proportion="0.27513227">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/flexjson/transformer/ObjectTransformer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="53" column="48" selection-start="2364" selection-end="2368" vertical-scroll-proportion="0.34567901">
-          <folding>
-            <marker date="1197572816000" expanded="false" signature="646:828" placeholder="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/flexjson/transformer/IterableTransformer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="28" column="29" selection-start="1083" selection-end="1083" vertical-scroll-proportion="0.27513227">
+        <state line="208" column="9" selection-start="6347" selection-end="6347" vertical-scroll-proportion="0.02173913">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/flexjson/transformer/MapTransformer.java">
+    <entry file="file://$PROJECT_DIR$/src/test/java/flexjson/SimpleSerializeTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="22" column="13" selection-start="739" selection-end="739" vertical-scroll-proportion="0.105820104">
-          <folding>
-            <marker date="1197572809000" expanded="false" signature="653:724" placeholder="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="18" selection-start="369" selection-end="369" vertical-scroll-proportion="0.021778584">
+        <state line="155" column="24" selection-start="5162" selection-end="5162" vertical-scroll-proportion="0.33333334">
           <folding />
         </state>
       </provider>
@@ -712,37 +667,76 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/flexjson/transformer/NumberTransformer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="17" column="13" selection-start="659" selection-end="659" vertical-scroll-proportion="0.06349207">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/flexjson/TypeContext.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="17" column="13" selection-start="647" selection-end="647" vertical-scroll-proportion="0.06349207">
+        <state line="35" column="22" selection-start="1026" selection-end="1026" vertical-scroll-proportion="0.44444445">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/flexjson/transformer/ArrayTransformer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="30" column="29" selection-start="1116" selection-end="1116" vertical-scroll-proportion="0.27513227">
+        <state line="30" column="40" selection-start="1127" selection-end="1127" vertical-scroll-proportion="0.27513227">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/flexjson/JsonContext.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/flexjson/transformer/IterableTransformer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="208" column="9" selection-start="6347" selection-end="6347" vertical-scroll-proportion="0.02173913">
+        <state line="28" column="66" selection-start="1120" selection-end="1120" vertical-scroll-proportion="0.27513227">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/flexjson/transformer/StringArrayTransformer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="30" column="12" selection-start="1139" selection-end="1139" vertical-scroll-proportion="0.31746033">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/flexjson/transformer/FlatDateTransformer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="45" column="31" selection-start="1261" selection-end="1261" vertical-scroll-proportion="0.6208113">
+        <state line="39" column="0" selection-start="1052" selection-end="1052" vertical-scroll-proportion="0.68430334">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/flexjson/SimpleSerializeTest.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/flexjson/transformer/ObjectTransformer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="165" column="39" selection-start="5447" selection-end="5447" vertical-scroll-proportion="0.47826087">
+        <state line="82" column="36" selection-start="3811" selection-end="3811" vertical-scroll-proportion="0.91312385">
+          <folding>
+            <marker date="1197655804000" expanded="false" signature="646:828" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/flexjson/transformer/MapTransformer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="47" column="25" selection-start="1698" selection-end="1698" vertical-scroll-proportion="0.63492066">
+          <folding>
+            <marker date="1197655848000" expanded="false" signature="653:724" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="6" column="18" selection-start="369" selection-end="369" vertical-scroll-proportion="0.1306715">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/flexjson/model/Candidate.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="196" column="0" selection-start="4107" selection-end="4107" vertical-scroll-proportion="4.148148">
           <folding />
         </state>
       </provider>

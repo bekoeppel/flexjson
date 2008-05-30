@@ -27,8 +27,8 @@ public class IterableTransformer extends AbstractTransformer {
         getContext().writeOpenArray();
         for (Object item : iterable) {
             if (!typeContext.isFirst()) getContext().writeComma();
-            getContext().transform(item);
             typeContext.setFirst(false);
+            getContext().transform(item);
         }
         getContext().writeCloseArray();
         getContext().popTypeContext();

@@ -29,8 +29,8 @@ public class ArrayTransformer extends AbstractTransformer {
         int length = Array.getLength(object);
         for (int i = 0; i < length; ++i) {
             if (!typeContext.isFirst()) getContext().writeComma();
-            getContext().transform(Array.get(object, i));
             typeContext.setFirst(false);
+            getContext().transform(Array.get(object, i));
         }
         getContext().writeCloseArray();
         getContext().popTypeContext();

@@ -28,8 +28,8 @@ public class StringArrayTransformer extends AbstractTransformer {
         getContext().writeOpenArray();
         for (String item : stringArr) {
             if (!typeContext.isFirst()) getContext().writeComma();
-            getContext().transform(item.toUpperCase());
             typeContext.setFirst(false);
+            getContext().transform(item.toUpperCase());
         }
         getContext().writeCloseArray();
         getContext().popTypeContext();

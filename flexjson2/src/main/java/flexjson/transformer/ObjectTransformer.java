@@ -45,7 +45,6 @@ public class ObjectTransformer extends AbstractTransformer {
                     if (accessor != null && getContext().isIncluded(prop)) {
                         Object value = accessor.invoke(object, (Object[]) null);
                         if (!getContext().getVisits().contains(value)) {
-                            if (!typeContext.isFirst()) getContext().writeComma();
 
                             Transformer transformer = getContext().getTransformer(value);
 
@@ -54,11 +53,12 @@ public class ObjectTransformer extends AbstractTransformer {
                                 d.setValues(name);
                                 transformer.transform(value);
                             } else {
+                                if (!typeContext.isFirst()) getContext().writeComma();
+                                typeContext.setFirst(false);
                                 getContext().writeName(name);
                                 transformer.transform(value);
                             }
 
-                            typeContext.setFirst(false);
                         }
 
                     }
@@ -70,7 +70,6 @@ public class ObjectTransformer extends AbstractTransformer {
                         path.enqueue(field.getName());
                         if (getContext().isValidField(field)) {
                             if (!getContext().getVisits().contains(field.get(object))) {
-                                if (!typeContext.isFirst()) getContext().writeComma();
 
                                 Object value = field.get(object);
                                 Transformer transformer = getContext().getTransformer(value);
@@ -80,11 +79,12 @@ public class ObjectTransformer extends AbstractTransformer {
                                     d.setValues(field.getName());
                                     transformer.transform(value);
                                 } else {
+                                    if (!typeContext.isFirst()) getContext().writeComma();
+                                    typeContext.setFirst(false);
                                     getContext().writeName(field.getName());
                                     transformer.transform(value);
                                 }
 
-                                typeContext.setFirst(false);
                             }
                         }
                         path.pop();

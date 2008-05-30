@@ -41,10 +41,8 @@ public class FlatDateTransformer extends AbstractTransformer implements Defer {
         Calendar c = Calendar.getInstance();
         c.setTime(date);
 
-        if (!typeContext.isFirst()) {
-            getContext().writeComma();
-            typeContext.setFirst(false);
-        }
+        if (!typeContext.isFirst()) getContext().writeComma();
+        typeContext.setFirst(false);
         getContext().writeName(fieldName("Month"));
         getContext().transform(c.get(Calendar.MONTH));
 

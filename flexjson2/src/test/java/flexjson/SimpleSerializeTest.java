@@ -153,6 +153,32 @@ public class SimpleSerializeTest extends TestCase {
         assertTrue(json.contains("\"birthDateMonth\":11,\"birthDateDay\":13,\"birthDateYear\":2007"));
     }
 
+    public void testDeferOnCandidate() {
+
+        Candidate candidate = buildCandidate1();
+        JsonSerializer serializer = new JsonSerializer();
+        serializer.transform(new FlatDateTransformer(), Date.class);
+        String json = serializer.serialize(candidate);
+        logger.info(json);
+        assertTrue(json.contains("\"dateOfBirthMonth\":11,\"dateOfBirthDay\":13,\"dateOfBirthYear\":2007,"));
+        assertFalse(json.contains(",,"));
+        
+    }
+
+    public Candidate buildCandidate1() {
+        Candidate candidate = new Candidate();
+
+        Calendar c1 = Calendar.getInstance();
+        c1.set(2007, 11, 13);
+
+        candidate.setDateOfBirth(c1.getTime());
+
+        Calendar c2 = Calendar.getInstance();
+        c1.set(2006, 1, 12);
+
+        return candidate;
+    }
+
     public Person buildPerson1() {
 
         Calendar c = Calendar.getInstance();
