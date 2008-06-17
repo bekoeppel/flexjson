@@ -1,0 +1,494 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head xmlns="http://www.w3.org/1999/xhtml">
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+    <title>JSON Serialization Usage</title>
+    <link rel='stylesheet' type='text/css' href='flexjson.css'/>
+</head>
+<body>
+
+<div class="doc">
+    <b class="rtop">
+        <b class="r1"></b>
+        <b class="r2"></b>
+        <b class="r3"></b>
+        <b class="r4"></b>
+    </b>
+    <h2 class="flexjsonTitle">Flexjson</h2>
+
+    <div class="menu">
+        <ul>
+            <li><a href="https://sourceforge.net/projects/flexjson/">Project Page</a></li>
+            <li><a href="https://sourceforge.net/project/showfiles.php?group_id=194042">Download</a></li>
+            <li><a href="https://sourceforge.net/forum/forum.php?forum_id=686321">Forums</a></li>
+            <li><a href="javadoc/index.html">Javadoc</a></li>
+            <li><a href="testimonials.html">Testimonials</a></li>
+            <li><a href="http://wrongnotes.blogspot.com/">Blog</a></li>
+            <li><a href="changelog.html">Change Log</a></li>
+        </ul>
+    </div>
+
+    <div class="content">
+
+    <a href="http://sourceforge.net/donate/index.php?group_id=194042"><img src="http://images.sourceforge.net/images/project-support.jpg" width="88" height="32" border="0" alt="Support Flexjson by Donating" /> </a>
+
+    <p>
+        JavaScript Object Notation (aka JSON) is a very popular alternative to XML for transmitting data to the web browser.
+        Flexjson is a lightweight library for serializing Java objects into JSON.  What's different about
+        Flexjson is it's control over what gets serialized allowing both deep and shallow copies of objects.  Most JSON
+        serializers mimic object serialization libraries and try to serialize the entire object graph from the object being
+        turned into JSON.  This causes problems when you want a connected object model in your server, but you  can't
+        send that object model to the client because the serialization library will try to send the entire object graph.
+        This makes it very hard to create object oriented models and serialize pieces of that model to the client without
+        sending everything.  Other JSON libraries require you to create a lot of boiler plate code to translate your
+        object representation into a JSON object.  In this regard I shouldn't have to explain myself, but to keep it
+        short let's me just say I hate boiler plate translation code!  Flexjson tries to solve both of these problems
+        by offering a higher level API or dare I say
+        <a href="http://en.wikipedia.org/wiki/Domain-specific_language">DSL</a> for specifying your intent.
+    </p>
+    <p>
+        In order to explore Flexjson we will be using the following model.  Let's say we're building a PIM or contact
+        management application.  Here are some classes we might see in an application like this along with the
+        relationships between them.
+    </p>
+
+    <img src="example_object_model.jpg" alt="UML Diagram of Person, Address, Zipcode, and Phone classes."/>
+
+    <p>
+        In the above diagram you can see Person has many instances of Phone, and has many Addresses.  While this is a
+        trival object model it will help us demostrate the ideas behind Flexjson.
+    </p>
+    <h2> The Basics </h2>
+    <p>
+        Flexjson takes a different approach allowing you to control the depth to which it will serialize.  It's very
+        similiar in concept to lazy loading in Hibernate which allows you to have a connected object model, but control
+        what objects are loaded out of your database for performance.  Let's look at a simple example first to get a
+        feel for how the library works.  Say we are serializing an instance of Person.  We might do the following:
+    </p>
+    <blockquote class="java">
+    public String doSomething( Object arg1, ... ) {
+
+        Person p = ...load a person...;
+
+        JSONSerializer serializer = new JSONSerializer();
+        return serializer.serialize( p );
+    }
+
+    </blockquote>
+    <p>
+        The above would produce the following output:
+    </p>
+
+    <blockquote class="json">
+    {
+        "class": "Person",
+        "name": "William Shakespeare",
+        "birthday": -12802392000000,
+        "nickname": "Bill"
+    }
+
+    </blockquote>
+
+    <h2>Working With Includes</h2>
+
+    <p>
+        Looks pretty much like you'd expect.  However, our Person object contains more fields than name, birthday,
+        and nickname so what happened to phoneNumbers, and addresses?  By default Flexjson serializes the immediate
+        fields of that object.  It's just a shallow representation of the object.  <em>All collections are not serialized
+        by default</em>.  Or said another way any one to many, and many to many relationships are not serizialized by
+        default.  Object references are serialized by default.  That being many to one and one to one relationships will
+        be serialized by default.  This is consistent with other libraries like hibernate and JPA which will eagerly
+        load these relationships by default.  But, let's say we wanted to include the phoneNumbers field in our output
+        then we could do the following:
+    </p>
+
+    <blockquote class="java">
+    public String doSomething( Object arg1, ... ) {
+
+        Person p = ...load a person...;
+
+        return new JSONSerializer().include("phoneNumbers").serialize(p);
+    }
+
+    </blockquote>
+
+    <p>
+        In this example, we're telling the serializer to include the following fields from the target object.  <em>Collections
+        are serialized in full including the shallow copy of the objects they contain</em>.  So in our example, Person has
+        a List field called phoneNumbers, and that List contains Phone instances.  This means Flexjson will send a shallow
+        copy of Person, the List of phoneNumbers, and a shallow copy of each Phone instance within the List.  So the output
+        might look like:
+    </p>
+
+    <blockquote class="json">
+    {
+        "class": "Person",
+        "name": "William Shakespeare",
+        "birthday": -12802392000000,
+        "nickname": "Bill"
+        "phoneNumbers": [
+            {
+                "class": "Phone",
+                "name": "cell",
+                "number": "555-123-4567"
+            },
+            {
+                "class": "Phone",
+                "name": "home",
+                "number": "555-987-6543"
+            },
+            {
+                "class": "Phone",
+                "name": "work",
+                "number": "555-678-3542"
+            }
+       ]
+    }
+
+    </blockquote>
+    <p>
+        Getting the hang of it?  It's pretty simple.  If you wanted to send both phoneNumbers and addresses you can call
+        include method twice, or you can include two parameters to the include method using Java's new vararg feature.
+        Personally I prefer the later since I think it makes it shorter and easier to read.  But, it's your choice.
+    </p>
+    <blockquote class="java">
+    public String doSomething( Object arg1, ... ) {
+
+        Person p = ...load a person...;
+
+        return new JSONSerializer().include("phoneNumbers", "addresses").serialize(p);
+    }
+
+    </blockquote>
+    <p>
+        So in this case we'll only get the street, city, and state, but not the zipcode because that is an object reference.
+        It's an easy fix using the dot notation.  Here is an example to include the zipcode with each Address instance.
+    </p>
+    <blockquote class="java">
+    public String doSomething( Object arg1, ... ) {
+
+        Person p = ...load a person...;
+
+        return new JSONSerializer().include("phoneNumbers", "addresses.zipcode").serialize(p);
+    }
+
+    </blockquote>
+    <p>
+        Flexjson is smart enough to know you mean the object contained with this collection and not the collection itself.
+        It's also smart enough to know that the addresses reference has to be included in order to include zipcode so you don't
+        have to specify it twice.  You can use the dot notation to trace over your object graph very easily.
+    </p>
+
+    <h2>More on Includes</h2>
+
+    <p>
+        There is an alternate form of serialize() method that allows you to specify an outer object for collections.
+        There are some javascript libraries like <a href="http://www.extjs.com">EXTJS</a> (previously known as YUI-EXT)
+        that require this for their JSON data models.  However, I haven't found any JSON libraries that offer this type
+        of serialization.  Here is an example:
+    </p>
+
+    <blockquote class="java">
+    public String getPeople( Object arg1, ... ) {
+
+        List people = ...load a person...;
+
+        return new JSONSerializer().include("phoneNumbers").serialize("people", people);
+    }
+
+    </blockquote>
+
+    <p>
+        The resulting JSON would look like the following:
+    </p>
+
+    <blockquote class="json">
+    {
+        "people" : [
+            {
+                "class": "Person",
+                "name": "Warren Buffet",
+                "birthday": -1241467200000,
+                "nickname": "Oracle of Omaha",
+                "phonNumbers" : [ ... ],
+            },
+            {
+                "class": "Person",
+                "name": "Steven Jobs",
+                "birthday": -468702000000,
+                "nickname": "Steve",
+                "phonNumbers" : [ ... ],
+            }
+        ]
+    }
+    </blockquote>
+
+    <h2>Working With Excludes</h2>
+
+    <p>
+        Not only can you include, but you can specify it in terms of exclude as well.  The exclude() method allows you to
+        exclude certain fields from serilization.  This can come in handy if you have special fields that you don't want
+        sent to the client like passwords, or secret data that should remain on the server.
+    </p>
+    <blockquote class="java">
+    public String doSomething( Object arg1, ... ) {
+
+        User u = ...load a user...;
+
+        return new JSONSerializer().exclude("password").include("hobbies").serialize(p);
+    }
+
+    </blockquote>
+    <p>
+        Using dot notation with exludes has a subtle difference in it's use when compared with includes.  If you exclude a
+        nested field it implies that the rest of the parent object is included.  So if I say
+        <code>exclude("head.rightEye.retinalScan")</code>.
+        The retinalScan member of rightEye field will be excluded, but both rightEye and head field <em>will be included</em>.
+        The reason is in order to exclude retinalScan field you have to include the rightEye member.  If you didn't then
+        it doesn't change anything because retinalScan wasn't going to be included in the first place.  Said another way
+        it's only <em>the last field</em> that is <em>excluded</em> all other <em>parent fields</em> are <em>included</em>.
+    </p>
+
+    <h2>Excluding Using Annotations</h2>
+
+    <p>
+        Always having to do your excludes in this manner can be cumbersome especially if you always intend something to
+        be excluded or included.  Flexjson provides a way to express this using annotations.  The JSON annotation can be used
+        to mark a field in the object as included by default.  Annotations can be placed on the methods or fields.  A good
+        example of this might be the Address object that contains a reference to Zipcode object. Since Zipcode is an integral
+        part of every Address (in the US) then it might make more sense for us to default this with the annotation.  So in
+        our Address object we could do the following:
+    </p>
+
+    <blockquote class="java">
+    public class Address {
+       private String name;
+       private String street;
+       private String city;
+       private String state;
+       private Zipcode zipcode;
+
+       @JSON
+       public Zipcode getZipcode() {
+       }
+    }
+
+    </blockquote>
+
+    <p>
+        Annotations can improve your security so that fields that shouldn't be sent over the wire ever can be fixed in
+        one place.  That way you keep your code more <a href="http://en.wikipedia.org/wiki/Don't_repeat_yourself">DRY</a>,
+        and that prevents accidental security flaws.  Consider if we store the a hashed version of a password in our User
+        object.
+    </p>
+
+    <blockquote class="java">
+    public class User {
+       private String login;
+       private String hashedPassword;
+       private Date lastLogin;
+
+       @JSON(include=false)
+       public String getHashedPassword() {
+       }
+    }
+
+    </blockquote>
+
+    <h2>Code Gone Wildcard</h2>
+
+    <p>
+        In 1.5 you can now specify wildcards in your include() and exclude() method calls.  This makes it easy to
+        include or exclude several fields very easily.  It's very common for people to want to remove the class attribute
+        written to the stream.  With wildcards it becomes very easy to accomplish this.  For example:
+    </p>
+
+    <blockquote class="java">
+    public String doSomething( Object arg1, ... ) {
+
+        User u = ...load a user...;
+
+        return new JSONSerializer().exclude("*.class").serialize(p);
+    }
+    </blockquote>
+
+    <p>
+        Any path ending with class will now be excluded from the output.  Wildcards match any depth you specify.  So
+        it doesn't matter how deep your object path has gotten.  An exclude of *.class will match to any path depth.
+        So if flexjson is serializing the field with path of &quot;foo.bar.class&quot; the &quot;*&quot; in &quot;*.class&quot;
+        will match foo.bar.
+    </p>
+
+    <p>
+        Wildcards do not expand the depth to which you are serializing in most cases.  They only operate in the depth you
+        have specified.  That means if you specify *.list, paths like foo.list would be serialized, but foo.bar.list would
+        not.  If you wanted foo.bar.list you would need have an include for foo.bar from another statement.  Same goes for
+        things like *.class.  Every object has a class member because of Object.getClass().  However, *.class won't
+        extend the depth of your serialization.  There are cases where serialization depth will be expanded.  You have to
+        be careful when doing specifying wildcards with recursive structures.  If you had a tree structure and did an
+        include on *.children it will expand the depth of your serialization all the way.  The other case where wildcards
+        will expand your serialization is &quot;*&quot;.  That is the same as doing a deep serialization so be careful
+        using it.
+    </p>
+
+    <h2>Order of Evaluation</h2>
+
+    <p>
+        <span class="important">Order of evaluation has changed as of 1.5</span>.  Now that we've discussed includes and
+        excludes let's talk about order of evaluation.  What happens if I include a field then I exclude that same
+        field later?  What will Flexjson do?  The answer is includes and excludes are evaluated in order they were added.
+        This is important with the introduction of wildcards.  Say I want to serialize just two fields of an object.  I
+        can do the following:
+    </p>
+
+    <blockquote class="java">
+    public String doSomething( Object arg1, ... ) {
+
+        User u = ...load a user...;
+
+        return new JSONSerializer().include("username").exclude("*").serialize(p);
+    }
+
+    </blockquote>
+
+    <p>
+        The above code would serialize just the username field from the user object, but it would exclude all other
+        fields.  If I reversed the order of the include and exclude calls it would exclude all of the fields, and the
+        username field wouldn't be included?  Why is that?  That's because internally flexjson would have a list of
+        expressions.  Think of it like a list where the order is the following:
+    </p>
+
+    <blockquote class="java">
+        [ &quot;*&quot;, &quot;username&quot; ];
+    </blockquote>
+
+    <p>
+        Flexjson would visit each field in the User object, and evaluate it against all of the rules in the list.  It
+        starts the head of the list and stops once it finds the first match.  In this case &quot;*&quot; would match
+        all fields of User object, and it would exclude it thus never reaching the &quot;username&quot; entry.
+    </p>
+
+    <h2>Deep Serialization</h2>
+
+    <p>
+        In 1.2 there was a new feature added to perform a deep serialization of the object using the deepSerialize()
+        method.  As with serialize() method deepSerialize() method will use includes, excludes, and annotations to
+        figure out what you want sent.  However, includes are generally redundant except in the case where you want
+        override an excluding annotation on a field.  Deep serialization will not serialize cycles in your graph so
+        if you have a bi directional relationship say parent has a child and child has a parent.  The back reference
+        from child to parent won't be included in the JSON output.  This is the same for shallow serialization as
+        well.  Here is a quick example:
+    </p>
+
+    <blockquote class="java">
+        public String doSomething( Object arg1, ... ) {
+
+            Person p = ...load a person...;
+
+            return new JSONSerializer().deepSerialize(p); // send the entire graph starting at person
+        }
+    </blockquote>
+
+    <p>
+        Deep serialization should be used sparingly, and reserved for only cases where you really understand
+        what is being serialized.  Deep serialization can send a lot more data that you anticipated if you
+        use it frivolously.
+    </p>
+
+    <h2>Transformers More Than Meets the Eye</h2>
+
+    <p>
+        In 1.5 an exciting new feature was added.  Let's say we're have some JSON text data and we're going to place it
+        into the page, but this data contains unfriendly HTML.  By that I mean you have the possibility of having things
+        like &lt;, &gt;, or &amp;.  We need to replace those parts of our text with &amp;lt;, &amp;gt;, &amp;amp;.  How
+        do you do it?  Well in prior versions you'd need to put special getters/setters on your domain model to perform
+        the conversion, or you'd have to do it on the client.  Oh yes I'm sure there are much more bizarre things you could
+        do, but these are the "cleanest" solutions.
+    </p>
+
+    <p>
+        Transformers address this problem by letting you specify a transformer object to particpate in serialization
+        with Flexjson.  Flexjson includes a very simple HTMLEncoder to do entity replacement for you.  Here's how it works.
+    </p>
+
+    <blockquote class="java">
+        public String doSomething( Object arg1, ... ) {
+
+            EMail mail = ...load an email...;
+
+            return new JSONSerializer().transform( new HTMLEncoder(), "to", "cc", "bcc", "from").serialize(p);
+        }
+    </blockquote>
+
+    <p>
+        In the above code the transform() method registers the HTMLEncoder transformer with serializer for 4 fields.  Email
+        messages usually have something like the following in the recepient fields: "Plug 1" &lt;plug1@delasoul.com&gt;.
+        Unfortunately, HTML doesn't like the &lt; and &gt; in them so you need to HTML encode them.  The transform method
+        supports the dot notation, but it doesn't support wildcards.  This makes the algorithm for finding the Transformer
+        instance faster.
+    </p>
+
+    <p>
+        Transformers are very interesting in that you can use them for all sorts of problems.  Say you accept Markdown
+        notation on your new wiki software.  You store the Markdown text in the DB, and later render the HTML using the
+        Transformer architecture.
+    </p>
+
+    <p>
+        Say you only want to accept some of the HTML tags from the user for security reasons.  Transformers could filter
+        out any nefarious data from your objects when sending it through JSON.  Transformers are very useful, and Flexjson
+        will include more out of the box Transformers in the future.
+    </p>
+
+    <h2>Thread safety and Reuse</h2>
+
+    <p>
+        Finally, JSONSerializer instances can be reused to serialize many objects of the same type.  Once you 
+        instantiate the object you can reuse it across multiple threads so long as you don't call include or exclude
+        methods.  Typically this isn't an issue since you might follow this pattern of instantiation:
+    </p>
+
+    <blockquote class="java">
+    public class PersonController {
+
+        JSONSerializer personSerializer;
+
+        public PersonController() {
+            personSerializer = new JSONSerializer().include("addresses.zipcdoe");
+        }
+
+        public String listPerson() {
+           Person p = ....;
+
+           return personSerializer.serialize( p );
+        }
+
+        public String editPerson() {
+           Person p = ....;
+
+           return personSerializer.serialize( p );
+        }
+    }
+
+    </blockquote>
+
+    <h2>The End</h2>
+
+    <p>
+        That's really all you need to know about Flexjson.  It's really just that simple and lightweight.  Please
+        give me some feedback.  I'd love to hear about improvements or new features you would like added.
+        Email me at charlie DOT hubbard ( I don't want spam so this is here to stop harvesters ) AT gmail DOT com.
+    </p>
+
+    </div>
+    <b class="rbottom">
+        <b class="r4"></b>
+        <b class="r3"></b>
+        <b class="r2"></b>
+        <b class="r1"></b>
+    </b>
+</div>
+
+</body>
+</html>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <assembly>
-    <id>flexjson-2.0b1</id>
+    <id></id>
     <formats>
         <format>zip</format>
         <format>tar.gz</format>
@@ -26,6 +26,13 @@
             <outputDirectory></outputDirectory>
             <includes>
                 <include>LICENSE-2.0.txt</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>src/main/docs</directory>
+            <outputDirectory>docs</outputDirectory>
+            <includes>
+                <include>**/*</include>
             </includes>
         </fileSet>
     </fileSets>
