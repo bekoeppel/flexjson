@@ -68,6 +68,14 @@ public class TransformerUtil {
         transformer = new ArrayTransformer();
         defaultTransformers.put(Arrays.class, transformer);
 
+        try {
+            Class hibernateProxy = Class.forName("org.hibernate.proxy.HibernateProxy");
+            defaultTransformers.put( hibernateProxy, new HibernateTransformer() );
+        } catch( ClassNotFoundException ex ) {
+            // no hibernate so ignore.
+        }
+
+
         Collections.unmodifiableMap(defaultTransformers);
     }
 

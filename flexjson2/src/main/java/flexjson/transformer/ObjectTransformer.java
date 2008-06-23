@@ -26,33 +26,34 @@ import java.lang.reflect.Method;
 public class ObjectTransformer extends AbstractTransformer {
 
     public void transform(Object object) {
-        Path path = getContext().getPath();
-        ChainedSet visits = getContext().getVisits();
+        JsonContext context = getContext();
+        Path path = context.getPath();
+        ChainedSet visits = context.getVisits();
         try {
             if (!visits.contains(object)) {
-                getContext().setVisits(new ChainedSet(visits));
-                getContext().getVisits().add(object);
+                context.setVisits(new ChainedSet(visits));
+                context.getVisits().add(object);
                 // traverse object
-                BeanInfo info = Introspector.getBeanInfo(object.getClass());
+                BeanInfo info = Introspector.getBeanInfo( resolveClass(object) );
                 PropertyDescriptor[] props = info.getPropertyDescriptors();
-                TypeContext typeContext = getContext().writeOpenObject();
+                TypeContext typeContext = context.writeOpenObject();
                 for (PropertyDescriptor prop : props) {
                     String name = prop.getName();
                     path.enqueue(name);
                     Method accessor = prop.getReadMethod();
-                    if (accessor != null && getContext().isIncluded(prop)) {
+                    if (accessor != null && context.isIncluded(prop)) {
                         Object value = accessor.invoke(object, (Object[]) null);
-                        if (!getContext().getVisits().contains(value)) {
+                        if (!context.getVisits().contains(value)) {
 
-                            Transformer transformer = getContext().getTransformer(value);
+                            Transformer transformer = context.getTransformer(value);
 
                             if (transformer instanceof Defer) {
                                 typeContext.setPropertyName(name);
                                 transformer.transform(value);
                             } else {
-                                if (!typeContext.isFirst()) getContext().writeComma();
+                                if (!typeContext.isFirst()) context.writeComma();
                                 typeContext.setFirst(false);
-                                getContext().writeName(name);
+                                context.writeName(name);
                                 transformer.transform(value);
                             }
 
@@ -65,19 +66,19 @@ public class ObjectTransformer extends AbstractTransformer {
                     Field[] ff = current.getDeclaredFields();
                     for (Field field : ff) {
                         path.enqueue(field.getName());
-                        if (getContext().isValidField(field)) {
-                            if (!getContext().getVisits().contains(field.get(object))) {
+                        if (context.isValidField(field) && context.isIncluded( field ) ) {
+                            if (!context.getVisits().contains(field.get(object))) {
 
                                 Object value = field.get(object);
-                                Transformer transformer = getContext().getTransformer(value);
+                                Transformer transformer = context.getTransformer(value);
 
                                 if (transformer instanceof Defer) {
                                     typeContext.setPropertyName(field.getName());
                                     transformer.transform(value);
                                 } else {
-                                    if (!typeContext.isFirst()) getContext().writeComma();
+                                    if (!typeContext.isFirst()) context.writeComma();
                                     typeContext.setFirst(false);
-                                    getContext().writeName(field.getName());
+                                    context.writeName(field.getName());
                                     transformer.transform(value);
                                 }
 
@@ -87,8 +88,8 @@ public class ObjectTransformer extends AbstractTransformer {
                     }
                 }
 
-                getContext().writeCloseObject();
-                getContext().setVisits((ChainedSet) getContext().getVisits().getParent());
+                context.writeCloseObject();
+                context.setVisits((ChainedSet) context.getVisits().getParent());
 
             }
         } catch (JsonException e) {
@@ -96,6 +97,10 @@ public class ObjectTransformer extends AbstractTransformer {
         } catch (Exception e) {
             throw new JsonException("Error trying to deepSerialize", e);
         }
+    }
+
+    protected Class resolveClass( Object obj ) {
+        return obj.getClass();
     }
 
 }

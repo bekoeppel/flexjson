@@ -21,6 +21,7 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.InvocationTargetException;
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
 import java.util.*;
@@ -33,6 +34,7 @@ public class JsonContext {
         }
     };
 
+    private String rootName;
     private OutputHandler out;
     private boolean prettyPrint = false;
     private Stack<TypeContext> typeContextStack = new Stack<TypeContext>();
@@ -147,6 +149,7 @@ public class JsonContext {
             return null;
         }
     }
+
 
     /**
      * Set the output handler.
@@ -269,24 +272,35 @@ public class JsonContext {
                 writeIndent();
             }
         }
+
         out.write("\"");
-        CharacterIterator it = new StringCharacterIterator(value);
-        for (char c = it.first(); c != CharacterIterator.DONE; c = it.next()) {
-            if (c == '"') out.write("\\\"");
-            else if (c == '\\') out.write("\\\\");
-            else if (c == '\b') out.write("\\b");
-            else if (c == '\f') out.write("\\f");
-            else if (c == '\n') out.write("\\n");
-            else if (c == '\r') out.write("\\r");
-            else if (c == '\t') out.write("\\t");
-            else if (Character.isISOControl(c)) {
+        int last = 0;
+        int len = value.length();
+        for( int i = 0; i < len; i++ ) {
+            char c = value.charAt(i);
+            if (c == '"') {
+                last = out.write(value, last, i, "\\\"");
+            } else if (c == '\\') {
+                last = out.write(value, last, i, "\\\\");
+            } else if (c == '\b') {
+                last = out.write(value, last, i, "\\b");
+            } else if (c == '\f') {
+                last = out.write(value, last, i, "\\f");
+            } else if (c == '\n') {
+                last = out.write(value, last, i, "\\n");
+            } else if (c == '\r') {
+                last = out.write(value, last, i, "\\r");
+            } else if (c == '\t') {
+                last = out.write(value, last, i, "\\t");
+            } else if (Character.isISOControl(c)) {
+                last = out.write(value, last, i) + 1;
                 unicode(c);
-            } else {
-                out.write(String.valueOf(c));
             }
         }
+        if( last < value.length() ) {
+            out.write( value, last, value.length() );
+        }
         out.write("\"");
-
     }
 
     private void unicode(char c) {
@@ -327,6 +341,14 @@ public class JsonContext {
         this.visits = visits;
     }
 
+    public String getRootName() {
+        return rootName;
+    }
+
+    public void setRootName(String rootName) {
+        this.rootName = rootName;
+    }
+
     public Path getPath() {
         return this.path;
     }
@@ -336,43 +358,48 @@ public class JsonContext {
     }
 
     public boolean isIncluded(PropertyDescriptor prop) {
+        PathExpression expression = matches( pathExpressions );
+        if (expression != null) {
+            return expression.isIncluded();
+        }
+
+        Method accessor = prop.getReadMethod();
+        if (accessor.isAnnotationPresent(JSON.class)) {
+            return accessor.getAnnotation(JSON.class).include();
+        }
+
         if (serializationType == SerializationType.SHALLOW) {
-
-            PathExpression expression = matches(prop, pathExpressions);
-            if (expression != null) {
-                return expression.isIncluded();
-            }
-
-            Method accessor = prop.getReadMethod();
-            if (accessor.isAnnotationPresent(JSON.class)) {
-                return accessor.getAnnotation(JSON.class).include();
-            }
-
             Class propType = prop.getPropertyType();
             return !(propType.isArray() || Iterable.class.isAssignableFrom(propType) || Map.class.isAssignableFrom(propType));
-
         } else {
-
-            PathExpression expression = matches(prop, pathExpressions);
-            if (expression != null) {
-                return expression.isIncluded();
-            }
-
-            Method accessor = prop.getReadMethod();
-            if (accessor.isAnnotationPresent(JSON.class)) {
-                return accessor.getAnnotation(JSON.class).include();
-            }
-
             return true;
         }
 
+    }
+
+    public boolean isIncluded( Field field ) {
+        PathExpression expression = matches( pathExpressions );
+        if( expression != null ) {
+            return expression.isIncluded();
+        }
+
+        if( field.isAnnotationPresent( JSON.class ) ) {
+            return field.getAnnotation( JSON.class ).include();
+        }
+
+        if( serializationType == SerializationType.SHALLOW ) {
+            Class type = field.getType();
+            return !( type.isArray() || Iterable.class.isAssignableFrom(type) || Map.class.isAssignableFrom(type) );
+        } else {
+            return true;
+        }
     }
 
     public boolean isValidField(Field field) {
         return !Modifier.isStatic(field.getModifiers()) && Modifier.isPublic(field.getModifiers()) && !Modifier.isTransient(field.getModifiers());
     }
 
-    protected PathExpression matches(PropertyDescriptor prop, List<PathExpression> expressions) {
+    protected PathExpression matches(List<PathExpression> expressions) {
         for (PathExpression expr : expressions) {
             if (expr.matches(path)) {
                 return expr;

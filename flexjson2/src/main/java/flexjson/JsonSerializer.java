@@ -193,9 +193,6 @@ public class JsonSerializer {
 
     private List<PathExpression> pathExpressions = new ArrayList<PathExpression>();
 
-    private String rootName;
-    private boolean prettyPrint = false;
-
     // OutputHander Configuration
 
     /**
@@ -205,7 +202,7 @@ public class JsonSerializer {
      * @return JsonSerializer for chaining configuration
      */
     public JsonSerializer prettyPrint(boolean prettyPrint) {
-        this.prettyPrint = prettyPrint;
+        JsonContext.get().setPrettyPrint( prettyPrint );
         return this;
     }
 
@@ -218,7 +215,7 @@ public class JsonSerializer {
      * @return this JsonSerializer for chaining configurations
      */
     public JsonSerializer rootName(String rootName) {
-        this.rootName = rootName;
+        JsonContext.get().setRootName( rootName );
         return this;
     }
 
@@ -362,7 +359,6 @@ public class JsonSerializer {
         // initialize context
         JsonContext context = JsonContext.get();
         context.setOut(out);
-        context.setPrettyPrint(prettyPrint);
         context.serializationType(serializationType);
         context.setTypeTransformers(typeTransformerMap);
         context.setPathTransformers(pathTransformerMap);
@@ -371,6 +367,7 @@ public class JsonSerializer {
         try {
 
             //initiate serialization of target tree
+            String rootName = context.getRootName();
             if (rootName == null || rootName.trim().equals("")) {
                 context.transform(target);
             } else {

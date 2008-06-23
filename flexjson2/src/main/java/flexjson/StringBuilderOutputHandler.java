@@ -28,6 +28,17 @@ public class StringBuilderOutputHandler implements OutputHandler {
         return this;
     }
 
+    public int write(String value, int start, int end, String append) {
+        out.append( value, start, end );
+        out.append( append );
+        return end + 1;
+    }
+
+    public int write(String value, int start, int end) {
+        out.append( value, start, end );
+        return end;
+    }
+
     public String toString() {
         return out.toString();
     }
