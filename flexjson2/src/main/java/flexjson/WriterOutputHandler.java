@@ -30,7 +30,7 @@ public class WriterOutputHandler implements OutputHandler {
         try {
             out.write(value);
         } catch (IOException e) {
-            throw new JsonException("There was a problem writing output to the Writer.", e);
+            throw new JSONException("There was a problem writing output to the Writer.", e);
         }
         return this;
     }
@@ -41,7 +41,7 @@ public class WriterOutputHandler implements OutputHandler {
             out.write( append );
             return end + 1;
         } catch (IOException e) {
-            throw new JsonException("There was a problem writing output to the Writer.", e);
+            throw new JSONException("There was a problem writing output to the Writer.", e);
         }
     }
 
@@ -50,7 +50,7 @@ public class WriterOutputHandler implements OutputHandler {
             out.write( value, start, end );
             return end;
         } catch (IOException e) {
-            throw new JsonException("There was a problem writing output to the Writer.", e);
+            throw new JSONException("There was a problem writing output to the Writer.", e);
         }
     }
 

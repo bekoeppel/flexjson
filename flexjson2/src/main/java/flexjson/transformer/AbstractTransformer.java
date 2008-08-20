@@ -15,12 +15,12 @@
  */
 package flexjson.transformer;
 
-import flexjson.JsonContext;
+import flexjson.JSONContext;
 
 public abstract class AbstractTransformer implements Transformer {
 
-    public JsonContext getContext() {
-        return JsonContext.get();
+    public JSONContext getContext() {
+        return JSONContext.get();
     }
 
 }

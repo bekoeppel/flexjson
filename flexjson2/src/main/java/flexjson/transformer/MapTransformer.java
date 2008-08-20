@@ -17,28 +17,40 @@ package flexjson.transformer;
 
 import flexjson.BasicType;
 import flexjson.TypeContext;
+import flexjson.Path;
+import flexjson.JSONContext;
 
 import java.util.Map;
 
 public class MapTransformer extends AbstractTransformer {
 
     public void transform(Object object) {
+        JSONContext context = getContext();
+        Path path = context.getPath();
         Map value = (Map) object;
+
         TypeContext typeContext = getContext().writeOpenObject();
         for (Object key : value.keySet()) {
-            
-            Transformer transformer = getContext().getTransformer(value.get(key));
 
-            if (transformer instanceof Defer) {
-                typeContext.setPropertyName(key.toString());
-                transformer.transform(value.get(key));
-            } else {
-                if (!typeContext.isFirst()) getContext().writeComma();
-                typeContext.setFirst(false);
-                getContext().writeName(key.toString());
-                transformer.transform(value.get(key));
+            path.enqueue((String)key);
+
+            if(context.isIncluded((String)key, value.get(key))) {
+
+                Transformer transformer = getContext().getTransformer(value.get(key));
+
+                if (transformer instanceof Defer) {
+                    typeContext.setPropertyName(key.toString());
+                    transformer.transform(value.get(key));
+                } else {
+                    if (!typeContext.isFirst()) getContext().writeComma();
+                    typeContext.setFirst(false);
+                    getContext().writeName(key.toString());
+                    transformer.transform(value.get(key));
+                }
+                
             }
 
+            path.pop();
 
         }
         getContext().writeCloseObject();

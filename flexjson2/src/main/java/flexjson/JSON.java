@@ -21,7 +21,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * This annotation is used by {@link flexjson.JsonSerializer} to include
+ * This annotation is used by {@link JSONSerializer} to include
  * or exclude fields from the JSON serialization process.  You may
  * annotate fields or methods with this, but be consistent if you start
  * doing one vs. the other.  Typically this will be used to exclude

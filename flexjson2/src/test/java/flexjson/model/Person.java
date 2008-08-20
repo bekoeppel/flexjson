@@ -15,6 +15,8 @@
  */
 package flexjson.model;
 
+import flexjson.model.LoopClassOne;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +31,7 @@ public class Person {
     private Integer[] luckyNumbers;
     private Integer[][] pastLottoPicks;
     private String description;
+    private List<LoopClassOne> loopClassOnes;
 
     private List<Address> addresses;
 
@@ -114,4 +117,11 @@ public class Person {
         this.description = description;
     }
 
+    public List<LoopClassOne> getLoopClassOnes() {
+        return loopClassOnes;
+    }
+
+    public void setLoopClassOnes(List<LoopClassOne> loopClassOnes) {
+        this.loopClassOnes = loopClassOnes;
+    }
 }

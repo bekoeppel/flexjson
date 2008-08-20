@@ -26,7 +26,7 @@ import java.lang.reflect.Method;
 public class ObjectTransformer extends AbstractTransformer {
 
     public void transform(Object object) {
-        JsonContext context = getContext();
+        JSONContext context = getContext();
         Path path = context.getPath();
         ChainedSet visits = context.getVisits();
         try {
@@ -92,10 +92,10 @@ public class ObjectTransformer extends AbstractTransformer {
                 context.setVisits((ChainedSet) context.getVisits().getParent());
 
             }
-        } catch (JsonException e) {
+        } catch (JSONException e) {
             throw e;
         } catch (Exception e) {
-            throw new JsonException("Error trying to deepSerialize", e);
+            throw new JSONException("Error trying to deepSerialize", e);
         }
     }
 

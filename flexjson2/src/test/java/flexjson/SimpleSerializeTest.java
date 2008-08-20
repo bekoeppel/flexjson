@@ -34,7 +34,8 @@ public class SimpleSerializeTest extends TestCase {
     public void testDeepSerializePerson() {
         Person person = buildPerson1();
 
-        JsonSerializer serializer = new JsonSerializer();
+        JSONSerializer serializer = new JSONSerializer();
+        serializer.exclude("loopClassOnes.loopClassTwo.loopClassOne");
         String string = serializer.deepSerialize(person);
         logger.info(string);
         assertTrue(string.startsWith("{"));
@@ -45,7 +46,8 @@ public class SimpleSerializeTest extends TestCase {
     public void testSerializePerson() {
         Person person = buildPerson1();
 
-        JsonSerializer serializer = new JsonSerializer();
+        JSONSerializer serializer = new JSONSerializer();
+        serializer.exclude("loopClassOnes.loopClassTwo.loopClassOne");
         String string = serializer.serialize(person);
         logger.info(string);
         assertTrue(string.startsWith("{\""));
@@ -56,9 +58,10 @@ public class SimpleSerializeTest extends TestCase {
     public void testDeepSerializePersonWithRootName() {
         Person person = buildPerson1();
 
-        JsonSerializer serializer = new JsonSerializer()
+        JSONSerializer serializer = new JSONSerializer()
                 .transform(new StateTransformer(), State.class)
                 .transform(new StringArrayTransformer(), String[].class)
+                .exclude("myRootName.loopClassOnes.loopClassTwo.loopClassOne")
                 .rootName("myRootName");
 
         String string = serializer.deepSerialize(person);
@@ -74,10 +77,11 @@ public class SimpleSerializeTest extends TestCase {
         StringWriter writer = new StringWriter();
 
 
-        JsonSerializer serializer =
-                new JsonSerializer()
+        JSONSerializer serializer =
+                new JSONSerializer()
                         .transform(new StateTransformer(), State.class)
                         .transform(new StringArrayTransformer(), String[].class)
+                        .exclude("myRootName.loopClassOnes.loopClassTwo.loopClassOne")
                         .rootName("myRootName");
 
         serializer.deepSerialize(person, writer);
@@ -94,10 +98,11 @@ public class SimpleSerializeTest extends TestCase {
         StringWriter writer = new StringWriter();
 
 
-        JsonSerializer serializer =
-                new JsonSerializer()
+        JSONSerializer serializer =
+                new JSONSerializer()
                         .transform(new StateTransformer(), State.class)
                         .transform(new StringArrayTransformer(), String[].class)
+                        .exclude("myRootName.loopClassOnes.loopClassTwo.loopClassOne")
                         .rootName("myRootName")
                         .prettyPrint(true);
 
@@ -110,8 +115,8 @@ public class SimpleSerializeTest extends TestCase {
     public void testSerializeAddressList() {
         Person person = buildPerson1();
 
-        JsonSerializer serializer =
-                new JsonSerializer().prettyPrint(true);
+        JSONSerializer serializer =
+                new JSONSerializer().prettyPrint(true);
         String string = serializer.serialize(person.getAddresses());
         logger.info(string);
 
@@ -120,8 +125,8 @@ public class SimpleSerializeTest extends TestCase {
     public void testSerializeAccountsMap() {
         Person person = buildPerson1();
 
-        JsonSerializer serializer =
-                new JsonSerializer().prettyPrint(true);
+        JSONSerializer serializer =
+                new JSONSerializer().prettyPrint(true);
         String string = serializer.serialize(person.getAccounts());
         
         logger.info(string);
@@ -129,7 +134,7 @@ public class SimpleSerializeTest extends TestCase {
 
     public void testDeferOnDate() {
         Date birthDate = buildPerson1().getBirthDate();
-        JsonSerializer serializer = new JsonSerializer();
+        JSONSerializer serializer = new JSONSerializer();
         serializer.transform(new FlatDateTransformer(), Date.class);
         String json = serializer.serialize(birthDate);
         logger.info(json);
@@ -138,8 +143,10 @@ public class SimpleSerializeTest extends TestCase {
 
     public void testDeferOnPersonWithFlatDate() {
         Person person = buildPerson1();
-        JsonSerializer serializer = new JsonSerializer();
-        serializer.transform(new FlatDateTransformer(), Date.class);
+        JSONSerializer serializer = new JSONSerializer();
+        serializer
+                .transform(new FlatDateTransformer(), Date.class)
+                .exclude("loopClassOnes.loopClassTwo.loopClassOne");
         String json = serializer.serialize(person);
         logger.info(json);
         assertTrue(json.contains("\"birthDateMonth\":11,\"birthDateDay\":13,\"birthDateYear\":2007"));
@@ -148,7 +155,7 @@ public class SimpleSerializeTest extends TestCase {
     public void testDeferOnCandidate() {
 
         Candidate candidate = buildCandidate1();
-        JsonSerializer serializer = new JsonSerializer();
+        JSONSerializer serializer = new JSONSerializer();
         serializer.transform(new FlatDateTransformer(), Date.class);
         String json = serializer.serialize(candidate);
         logger.info(json);
@@ -165,9 +172,29 @@ public class SimpleSerializeTest extends TestCase {
         experienceList.add(buildExperience3());
         experienceList.add(buildExperience4()); 
 
-        JsonSerializer serializer = new JsonSerializer().transform( new FlatDateTransformer(), Date.class );
+        JSONSerializer serializer = new JSONSerializer().transform( new FlatDateTransformer(), Date.class );
         String json = serializer.serialize(experienceList);
         logger.info(json);
+    }
+
+    public void testIgnoreOfListChildInMap() {
+
+        Map someObject = new HashMap();
+        List someList = new ArrayList();
+
+        someList.add(buildPerson1());
+        someList.add(buildPerson1());
+
+        someObject.put("aList", someList);
+
+        JSONSerializer serializer = new JSONSerializer()
+                .exclude("aList.loopClassOnes.loopClassTwo")
+                .prettyPrint(true);
+
+            String json = serializer.deepSerialize(someObject);
+        logger.info(json);
+
+
     }
 
     public Experience builbExperience1() {
@@ -266,6 +293,8 @@ public class SimpleSerializeTest extends TestCase {
         return candidate;
     }
 
+    
+
     public Person buildPerson1() {
 
         Calendar c = Calendar.getInstance();
@@ -336,6 +365,13 @@ public class SimpleSerializeTest extends TestCase {
         accounts.put(account2.getAccountNumber(), account2);
 
         person.setAccounts(accounts);
+
+        List<LoopClassOne> loopClassOnes = new ArrayList<LoopClassOne>();
+        loopClassOnes.add(new LoopClassOne());
+        loopClassOnes.add(new LoopClassOne());
+        loopClassOnes.add(new LoopClassOne());
+        loopClassOnes.add(new LoopClassOne());
+        person.setLoopClassOnes(loopClassOnes);
 
         return person;
     }
