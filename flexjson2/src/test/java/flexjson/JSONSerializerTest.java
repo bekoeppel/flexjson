@@ -18,6 +18,7 @@ package flexjson;
 import flexjson.mock.*;
 import flexjson.transformer.DateTransformer;
 import flexjson.transformer.HtmlEncoderTransformer;
+import flexjson.model.ListContainer;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -293,6 +294,26 @@ public class JSONSerializerTest extends TestCase {
         assertStringValue("Charlie", peopleJson);
         assertNumber(charlie.getBirthdate().getTime(), peopleJson);
         assertStringValueMissing("java.util.Date", peopleJson);
+    }
+
+    public void testSimpleShallowWithListInMap() {
+        JSONSerializer serializer = new JSONSerializer();
+        Map wrapper = new HashMap();
+        wrapper.put("name","Joe Blow");
+        wrapper.put("people",people);
+        String peopleJson = serializer.serialize(wrapper);
+        logger.info(peopleJson);
+        assertFalse(peopleJson.contains("["));
+    }
+
+    public void testSimpleShallowWithListInObject() {
+        JSONSerializer serializer = new JSONSerializer();
+        ListContainer wrapper = new ListContainer();
+        wrapper.setName("Joe Blow");
+        wrapper.setPeople(people);
+        String peopleJson = serializer.serialize(wrapper);
+        logger.info(peopleJson);
+        assertFalse(peopleJson.contains("["));
     }
 
     public void testRootName() {

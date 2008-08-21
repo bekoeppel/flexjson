@@ -376,9 +376,10 @@ public class JSONSerializer {
             if (rootName == null || rootName.trim().equals("")) {
                 context.transform(target);
             } else {
-                Map<String, Object> map = new HashMap<String, Object>();
-                map.put(rootName, target);
-                context.transform(map);
+                context.writeOpenObject();
+                context.writeName(rootName);
+                context.transform(target);
+                context.writeCloseObject();
             }
 
         output = context.getOut().toString();

@@ -61,7 +61,7 @@ public class SimpleSerializeTest extends TestCase {
         JSONSerializer serializer = new JSONSerializer()
                 .transform(new StateTransformer(), State.class)
                 .transform(new StringArrayTransformer(), String[].class)
-                .exclude("myRootName.loopClassOnes.loopClassTwo.loopClassOne")
+                .exclude("loopClassOnes.loopClassTwo.loopClassOne")
                 .rootName("myRootName");
 
         String string = serializer.deepSerialize(person);
@@ -81,7 +81,7 @@ public class SimpleSerializeTest extends TestCase {
                 new JSONSerializer()
                         .transform(new StateTransformer(), State.class)
                         .transform(new StringArrayTransformer(), String[].class)
-                        .exclude("myRootName.loopClassOnes.loopClassTwo.loopClassOne")
+                        .exclude("loopClassOnes.loopClassTwo.loopClassOne")
                         .rootName("myRootName");
 
         serializer.deepSerialize(person, writer);
@@ -102,7 +102,7 @@ public class SimpleSerializeTest extends TestCase {
                 new JSONSerializer()
                         .transform(new StateTransformer(), State.class)
                         .transform(new StringArrayTransformer(), String[].class)
-                        .exclude("myRootName.loopClassOnes.loopClassTwo.loopClassOne")
+                        .exclude("loopClassOnes.loopClassTwo.loopClassOne")
                         .rootName("myRootName")
                         .prettyPrint(true);
 
