@@ -617,7 +617,7 @@ public class JSONSerializer {
                         Method method = object.getClass().getMethod("getHibernateLazyInitializer");
                         Object initializer = method.invoke( object );
                         Method pmethod = initializer.getClass().getMethod("getPersistentClass");
-                        return pmethod.invoke( initializer ).getClass();
+                        return  (Class<?>)pmethod.invoke( initializer );
                     }
                 }
             } catch (IllegalAccessException e) {
