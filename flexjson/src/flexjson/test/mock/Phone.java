@@ -26,6 +26,9 @@ public class Phone {
 
     private static final Pattern PHONE_PATTERN = Pattern.compile("\\(?(\\d{3})\\)?[\\s-](\\d{3})[\\s-](\\d{4})");
 
+    protected Phone() {
+    }
+
     public Phone( PhoneNumberType aType, String number) {
         this.type = aType;
         Matcher matcher = PHONE_PATTERN.matcher( number );
