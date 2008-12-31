@@ -526,24 +526,46 @@ public class JSONSerializer {
         }
 
         private void string(Object obj) {
-            add('"');
-            CharacterIterator it = new StringCharacterIterator( doTransform( obj ).toString() );
-            for (char c = it.first(); c != CharacterIterator.DONE; c = it.next()) {
-                if (c == '"') add("\\\"");
-                else if (c == '\\') add("\\\\");
-                // else if (c == '/') add("\\/");
-                else if (c == '\b') add("\\b");
-                else if (c == '\f') add("\\f");
-                else if (c == '\n') add("\\n");
-                else if (c == '\r') add("\\r");
-                else if (c == '\t') add("\\t");
-                else if (Character.isISOControl(c)) {
+            String value = doTransform( obj ).toString();
+            add('\"');
+            int last = 0;
+            int len = value.length();
+            for( int i = 0; i < len; i++ ) {
+                char c = value.charAt(i);
+                if (c == '"') {
+                    last = add(value, last, i, "\\\"");
+                } else if (c == '\\') {
+                    last = add(value, last, i, "\\\\");
+                } else if (c == '\b') {
+                    last = add(value, last, i, "\\b");
+                } else if (c == '\f') {
+                    last = add(value, last, i, "\\f");
+                } else if (c == '\n') {
+                    last = add(value, last, i, "\\n");
+                } else if (c == '\r') {
+                    last = add(value, last, i, "\\r");
+                } else if (c == '\t') {
+                    last = add(value, last, i, "\\t");
+                } else if (Character.isISOControl(c)) {
+                    last = add(value, last, i) + 1;
                     unicode(c);
-                } else {
-                    add(c);
                 }
             }
-            add('"');
+            if( last < value.length() ) {
+                add( value, last, value.length() );
+            }
+            add('\"');
+        }
+
+        private int add( String value, int begin, int end ) {
+            builder.append( value, begin, end );
+            return end;
+        }
+
+        private int add( String value, int begin, int end, String append ) {
+            builder.append( value, begin, end );
+            builder.append( append );
+            return end + 1;
         }
 
         private void date(Date date) {
