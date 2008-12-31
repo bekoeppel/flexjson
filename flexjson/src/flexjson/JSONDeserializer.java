@@ -83,7 +83,8 @@ import java.util.HashMap;
  * These super powers are things like X Ray Vision, Heat Vision, Flight, etc.  Each super power is represented
  * by a subclass of SuperPower.  If we serialize a Hero without class information embedded we'll need a way to
  * figure out which instance to instantiate when we deserialize.  In this example I'm going to use a Transformer
- * during deserialization to embed a special type information into the object.
+ * during serialization to embed a special type information into the object.  All this transformer does is strip
+ * off the package information on the class property.
  * </p>
  * <pre>
  * String json = new JSONSerializer()

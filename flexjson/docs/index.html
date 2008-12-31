@@ -441,12 +441,171 @@
         will include more out of the box Transformers in the future.
     </p>
 
+    <h2>Deserialization</h2>
+
+    <p>
+        Deserialization is the process of taking JSON text binding those values into Objects.  This process can be
+        quite complex as JSON text contains no typing information.  Mapping JSON data types onto static Java objects
+        is tricky.  Flexjson supports doing this through the JSONDeserializer class.
+    </p>
+    <p>
+        JSONDeserializer takes as input a json string and produces a static typed object graph from that
+        json representation.  By default it uses the class property in the json data in order to map the
+        untyped generic json data into a specific Java type.  This works quite well for JSON generated
+        from flexjson.  Let's just look at the simplest case using the class attributes in your json, and
+        how JSONSerializer and JSONDeserializer nicely pair together out of the box.
+    </p>
+    <p>
+        Say we have a simple object like Hero (see the superhero package under the test and mock).
+        To create a json represenation of Hero we'd do the following:
+    </p>
+
+    <blockquote class="java">
+        Hero harveyBirdman = new Hero("Harvey Birdman", new SecretIdentity("Attorney At Law"), new SecretLair("Sebben & Sebben") );
+        String jsonHarvey = new JSONSerialize().serialize(hero);
+    </blockquote>
+    <p>
+        Now to reconsitute Harvey to fight for the law we'd use JSONDeserializer like so:
+    </p>
+    <blockquote class="java">
+        Hero hero = new JSONDeserializer&lt;Hero&gt;().deserialize( jsonHarvey );
+    </blockquote>
+
+    <h3>Deserialize Without the Training Wheels</h3>
+
+    <p>
+        Pretty easy when all the type information is included with the JSON data.  Now let's look at the more difficult
+        case of how we might reconstitute something missing type info.
+    </p>
+    <p>
+        Let's exclude the class attribute from our json like so:
+    </p>
+
+    <blockquote class="java">
+        String jsonHarvey = new JSONSerialize().exclude("*.class").serialize(hero);
+    </blockquote>
+    <p>
+        The big trick here is to replace that type information when we instantiate the deserializer.
+        To do that we'll use the flexjson.JSONDeserializer.use(String, Class) method like so:
+    </p>
+    <blockquote class="java">
+        Hero hero = new JSONDeserializer&lt;Hero&gt;().use( null, Hero.class ).deserialize( jsonHarvey );
+    </blockquote>
+    <p>
+        Like riding a horse with no saddle without our type information isn't it?  So what is happening here is we've
+        registered the Hero class onto a path in the json object graph.  We use null here to mean the root of the
+        json object.  If we were naming our root we'd include that name as the path to our root in the JSON.  The
+        flexjson.JSONDeserializer.use(String, Class) method  uses the object graph path to attach certain classes to
+        those locations.  So, when the deserializer is deserializing it knows where it is in the object graph.  It uses
+        that graph path to look up the java class it should use when reconstituting the object.
+    </p>
+    <p>
+        Notice that all we registered was Hero class how did it know to instantiate SecretLair and SecretIdentity too?
+        That's because flexjson uses the target type (in this case Hero) to figure out the other types by inspecting
+        that class.  Meaning that we didn't have to tell it about SecretLair or SecretIdentity because it can figure
+        that out by inspecting the types in the Hero class.  Pretty cool.
+    </p>
+
+    <h3>Polymorphism, Subclasses, and Interfaces</h3>
+
+    <p>
+        Where this fails is when we starting working with interfaces, abstract classes, and subclasses.
+        Our friend polymorphism has rained on our parade.  Why?  Well if you haven't realized by now
+        inspecting the type from our target class won't help us because either it's not a concrete class or we
+        can't tell the subclass by looking at the super class alone.  Next section we're going to stand up on our
+        bare back horse.  Ready?  Let's do it.
+    </p>
+    <p>
+        Before we showed how the flexjson.JSONDeserializer.use(String, Class) method would allow us to
+        plug in a single class for a given path.  That might work when you know exactly which class you want to
+        instantiate, but when the class type depends on external factors we really need a way to specify several
+        possibilities.  That's where the second version of {@link flexjson.JSONDeserializer#use(String, ClassLocator)}
+        comes into play.  A ClassLocator allows you to use a stradegy for finding which java Class
+        you want to attach at a particular object path.
+    </p>
+    <p>
+        flexjson.JSONDeserializer.use(String, ClassLocator) have access to the intermediate form of
+        the object as a Map.  Given the Map at the object path the ClassLocator figures out which Class
+        Flexjson will bind the parameters into that object.
+    </p>
+    <p>
+        Let's take a look at how this can be done using our Hero class.  All Heros have a list of super powers.
+        These super powers are things like X Ray Vision, Heat Vision, Flight, etc.  Each super power is represented
+        by a subclass of SuperPower.  If we serialize a Hero without class information embedded we'll need a way to
+        figure out which subclass to instantiate when we deserialize.  In this example I'm going to use a Transformer
+        during serialization to strip off the package on the class attribute.  This is not normally how you might
+        do this, but I'm being lazy and doing a quick example.
+    </p>
+
+    <blockquote class="java">
+        String json = new JSONSerializer()
+            .include("powers.class")
+            .transform( new SimpleTransformer(), "powers.class")
+            .exclude("*.class")
+            .serialize( superhero );
+        Hero hero = new JSONDeserializer&lt;Hero&gt;()
+            .use("powers.class", new PackageClassLocator())
+            .deserialize( json );
+    </blockquote>
+
+    <p>
+        That's a very contrived example because all I'm doing is stripping off the package and then adding back that
+        missing package in my ClassLocator.  A more typical case would be when there is some typing information included
+        in your JSON objects that can be used as a discrimintor between the various types of Classes you need.  The good
+        news is flexjson provides a ClassLocator out of the box that provides this so you don't have to rewrite this.
+    </p>
+
+    <p>
+        TypeLocator class uses a field in the JSON to select a particular class you want to use.  Here is a quick
+        example of this.  Say for example, in our JSON we have a field called "type" that is either a square, circle,
+        or triangle.  Based on the value of that field we want to use Square, Circle, or Triangle classes to be
+        instantiated.
+    </p>
+
+    <blockquote>
+        String json = new JSONSerializer().serialize( shapeList, "shapes" );
+
+        ShapeList shapes = new JSONDeserializer&lt;ShapeList&gt;()
+            .use("shapes", new TypeLocator&lt;String&gt;("type")
+                .add("square", Square.class) )
+                .add("circle", Circle.class) )
+                .add("triangle", Triangle.class) )
+            )
+            .deserialize( json )
+    </blockquote>
+
+    <p>
+        In this example the deserialization definition is a little longer, but not bad.  We're creating
+        a TypeLocator instance saying the field that controls the typing is called "type", and when the value is "square"
+        we want to use Square class, when it's "circle" use Circle class, and so on.  TypeLocator is a generic class that
+        lets you specify the datatype of the discriminator field.  In this case we're using strings, but you could use
+        integers just the same.
+    </p>
+
+    <p>
+        In this example I'm serializing a list of shapes, and I'm naming my list "shapes" which means my root isn't null
+        anymore.  This is just to show how paths work, and doesn't really have any relation to the use of TypeLocator.
+    </p>
+
+    <h3>Deserializing has Rules for your Java Objects</h3>
+
+    <p>
+        All objects that pass through the deserializer must have a no argument constructor.  The no argument
+        constructor does not have to be public.  That allows you to maintain some encapsulation.  JSONDeserializer
+        will bind parameters using setter methods of the objects instantiated if available.  If a setter method
+        is not available it will using reflection to set the value directly into the field.  You can use setter
+        methods transform the any data from json into the internal object structure you want.  That way the JSON
+        structure can be different from your Java object structure.  The works very much in the same way getters do
+        for the JSONSerializer.
+    </p>
+
     <h2>Thread safety and Reuse</h2>
 
     <p>
-        Finally, JSONSerializer instances can be reused to serialize many objects of the same type.  Once you 
-        instantiate the object you can reuse it across multiple threads so long as you don't call include or exclude
-        methods.  Typically this isn't an issue since you might follow this pattern of instantiation:
+        Finally, JSONSerializer and JSONDeserializer instances can be reused to serialize/deserialize many objects of
+        the same type.  Once you instantiate the object you can reuse it across multiple threads so long as you don't
+        call include or exclude, or use methods.  Typically this isn't an issue since you might follow this pattern of
+        instantiation:
     </p>
 
     <blockquote class="java">
