@@ -107,9 +107,6 @@ import java.util.HashMap;
  * can be different from your Java object structure.  The works very much in the same way getters do for
  * the {@link flexjson.JSONSerializer}.
  * </p>
- * <p>
- *
- * </p>
  */
 public class JSONDeserializer<T> {
 
