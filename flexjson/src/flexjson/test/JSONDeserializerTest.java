@@ -79,11 +79,9 @@ public class JSONDeserializerTest extends TestCase {
 
     public void testNoHintsButClassesForCollection() {
         Hero superman = new FixtureCreator().createSuperman();
-        String json = new JSONSerializer().include("powers").include("powers.class").exclude("*.class").serialize( superman );
+        String json = new JSONSerializer().include("powers.class").exclude("*.class").serialize( superman );
         Hero jsonSuperMan = new JSONDeserializer<Hero>()
                 .use(null, Hero.class)
-                .use("lair", SecretLair.class )
-                .use("secretIdentity", SecretIdentity.class)
                 .deserialize( json );
         assertHeroHasPowers(jsonSuperMan);
     }
