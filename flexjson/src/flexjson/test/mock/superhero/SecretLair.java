@@ -14,4 +14,19 @@ public class SecretLair {
     public String getName() {
         return name;
     }
+
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        SecretLair that = (SecretLair) o;
+
+        if (name != null ? !name.equals(that.name) : that.name != null) return false;
+
+        return true;
+    }
+
+    public int hashCode() {
+        return (name != null ? name.hashCode() : 0);
+    }
 }

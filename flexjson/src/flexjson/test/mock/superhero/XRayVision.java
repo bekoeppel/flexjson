@@ -14,4 +14,19 @@ public class XRayVision implements SuperPower {
     public float getPower() {
         return power;
     }
+
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        XRayVision that = (XRayVision) o;
+
+        if (Float.compare(that.power, power) != 0) return false;
+
+        return true;
+    }
+
+    public int hashCode() {
+        return (power != +0.0f ? Float.floatToIntBits(power) : 0);
+    }
 }

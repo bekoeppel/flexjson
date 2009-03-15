@@ -35,4 +35,27 @@ public class Hero {
     public List<SuperPower> getPowers() {
         return powers;
     }
+
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Hero hero = (Hero) o;
+
+        if (identity != null ? !identity.equals(hero.identity) : hero.identity != null) return false;
+        if (lair != null ? !lair.equals(hero.lair) : hero.lair != null) return false;
+        if (name != null ? !name.equals(hero.name) : hero.name != null) return false;
+        if (powers != null ? !powers.equals(hero.powers) : hero.powers != null) return false;
+
+        return true;
+    }
+
+    public int hashCode() {
+        int result;
+        result = (lair != null ? lair.hashCode() : 0);
+        result = 31 * result + (identity != null ? identity.hashCode() : 0);
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (powers != null ? powers.hashCode() : 0);
+        return result;
+    }
 }

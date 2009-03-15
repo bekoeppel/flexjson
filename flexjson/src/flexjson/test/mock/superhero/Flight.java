@@ -15,4 +15,18 @@ public class Flight implements SuperPower {
         return velocity;
     }
 
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Flight flight = (Flight) o;
+
+        if (Float.compare(flight.velocity, velocity) != 0) return false;
+
+        return true;
+    }
+
+    public int hashCode() {
+        return (velocity != +0.0f ? Float.floatToIntBits(velocity) : 0);
+    }
 }

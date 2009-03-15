@@ -7,12 +7,12 @@ import junit.textui.TestRunner;
 import flexjson.*;
 import flexjson.test.mock.Person;
 import flexjson.test.mock.Employee;
-import flexjson.test.mock.superhero.Hero;
-import flexjson.test.mock.superhero.SuperPower;
-import flexjson.test.mock.superhero.SecretLair;
-import flexjson.test.mock.superhero.SecretIdentity;
+import flexjson.test.mock.Pair;
+import flexjson.test.mock.superhero.*;
 
 import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 
 public class JSONDeserializerTest extends TestCase {
 
@@ -106,6 +106,51 @@ public class JSONDeserializerTest extends TestCase {
                 .use("powers", new SimpleClassLocator("flexjson.test.mock.superhero") )
                 .deserialize( json );
        assertHeroHasPowers( jsonSuperMan );
+    }
+
+    public void testListSerialization() {
+        FixtureCreator fixtures = new FixtureCreator();
+        Person ben = fixtures.createBen();
+        Person charlie = fixtures.createCharlie();
+        Person pedro = fixtures.createPedro();
+        List<Person> list = new ArrayList<Person>(3);
+        list.add( ben );
+        list.add( charlie );
+        list.add( pedro );
+
+        String json = new JSONSerializer().serialize( list );
+        List<Person> people = new JSONDeserializer<List<Person>>().deserialize( json );
+        assertEquals( ArrayList.class, people.getClass() );
+    }
+
+    public void testGenericTypeDeserialization() {
+        FixtureCreator fixtures = new FixtureCreator();
+        Pair<Hero,Villian> archenemies = new Pair<Hero,Villian>( fixtures.createSuperman(), fixtures.createLexLuthor() );
+        String json = new JSONSerializer().exclude("*.class").serialize( archenemies );
+        Pair<Hero,Villian> deserialArchEnemies = new JSONDeserializer<Pair<Hero,Villian>>()
+                .use( null, Pair.class )
+                .use( "first", Hero.class )
+                .use( "second", Villian.class )
+                .deserialize( json );
+
+        assertEquals( archenemies.getFirst().getClass(), deserialArchEnemies.getFirst().getClass() );
+        assertEquals( archenemies.getSecond().getClass(), deserialArchEnemies.getSecond().getClass() );
+
+        assertEquals( archenemies.getFirst().getIdentity(), deserialArchEnemies.getFirst().getIdentity() );
+        assertEquals( archenemies.getFirst().getLair(), deserialArchEnemies.getFirst().getLair() );
+        assertEquals( archenemies.getFirst().getName(), deserialArchEnemies.getFirst().getName() );
+
+        assertEquals( archenemies.getSecond().getName(), deserialArchEnemies.getSecond().getName() );
+        assertEquals( archenemies.getSecond().getLair(), deserialArchEnemies.getSecond().getLair() );
+
+    }
+
+    public void testMixedCase() {
+        String json = "{\"Birthdate\":196261875187,\"Firstname\":\"Charlie\",\"Home\":{\"City\":\"Atlanta\",\"State\":\"Ga\",\"Street\":\"4132 Pluto Drive\",\"Zipcode\":{\"zipcode\":\"33913\"}},\"lastname\":\"Hubbard\",\"Work\":{\"City\":\"Neptune\",\"State\":\"Milkiway\",\"Street\":\"44 Planetary St.\",\"Zipcode\":{\"Zipcode\":\"30328-0764\"}}}";
+        Person charlie = new JSONDeserializer<Person>().use( null, Person.class ).deserialize( json );
+        assertEquals( "Charlie", charlie.getFirstname() );
+        assertEquals( "Hubbard", charlie.getLastname() );
+        assertEquals( "Atlanta", charlie.getHome().getCity() );
     }
 
     public void setUp() {

@@ -2,6 +2,8 @@ package flexjson;
 
 import java.util.Map;
 import java.util.HashMap;
+import java.lang.reflect.Type;
+import java.lang.reflect.Method;
 
 /**
  * <p>

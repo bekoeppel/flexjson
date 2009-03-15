@@ -12,7 +12,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 
-public class ObjectBinder<T> {
+public class ObjectBinder {
 
     private List<DateFormat> dateFormats;
     private LinkedList<Object> objectStack = new LinkedList<Object>();
@@ -23,40 +23,47 @@ public class ObjectBinder<T> {
     public ObjectBinder() {
         factories = new HashMap<Class,ObjectFactory>();
         factories.put( Set.class, new ObjectFactory() {
-            public Object instantiate(Object value) {
+            public Object instantiate(Object value, Type targetType) {
                 if( value instanceof Collection ) {
-                    return bindCollection((Collection)value, new HashSet() );
+                    return bindCollection((Collection)value, new HashSet(), targetType);
                 } else {
-                    HashSet set = new HashSet();
+                    HashSet<Object> set = new HashSet<Object>();
                     set.add( bind( value ) );
                     return set;
                 }
             }
         } );
         factories.put( List.class, new ObjectFactory() {
-            public Object instantiate(Object value) {
+            public Object instantiate(Object value, Type targetType) {
                 if( value instanceof Collection ) {
-                    return bindCollection((Collection)value, new ArrayList() );
+                    return bindCollection((Collection)value, new ArrayList(), targetType);
                 } else {
-                    ArrayList set = new ArrayList();
+                    ArrayList<Object> set = new ArrayList<Object>();
                     set.add( bind( value ) );
                     return set;
                 }
             }
         });
         factories.put( SortedSet.class, new ObjectFactory() {
-            public Object instantiate(Object value) {
+            public Object instantiate(Object value, Type targetType) {
                 if( value instanceof Collection ) {
-                    return bindCollection( (Collection)value, new TreeSet() );
+                    return bindCollection( (Collection)value, new TreeSet(), targetType);
                 } else {
-                    TreeSet set = new TreeSet();
+                    TreeSet<Object> set = new TreeSet<Object>();
                     set.add( bind( value ) );
                     return set;
                 }
             }
         });
+        factories.put( Map.class, new ObjectFactory() {
+            public Object instantiate(Object value, Type targetType) {
+                // todo we should handle different types of Map classes here.
+                ParameterizedType ptype = (ParameterizedType) targetType;
+                return bindMap( (Map)value, new HashMap(), ptype.getActualTypeArguments()[0], ptype.getActualTypeArguments()[1] );
+            }
+        });
         factories.put( Float.class, new ObjectFactory() {
-            public Object instantiate(Object value) {
+            public Object instantiate(Object value, Type targetType) {
                 if( value instanceof Number ) {
                     return ((Number)value).floatValue();
                 } else {
@@ -65,7 +72,7 @@ public class ObjectBinder<T> {
             }
         });
         factories.put( Short.class, new ObjectFactory() {
-            public Object instantiate(Object value) {
+            public Object instantiate(Object value, Type targetType) {
                 if( value instanceof Number ) {
                     return ((Number)value).shortValue();
                 } else {
@@ -74,7 +81,7 @@ public class ObjectBinder<T> {
             }
         });
         factories.put( Long.class, new ObjectFactory() {
-            public Object instantiate(Object value) {
+            public Object instantiate(Object value, Type targetType) {
                 if( value instanceof Number ) {
                     return ((Number)value).longValue();
                 } else {
@@ -83,7 +90,7 @@ public class ObjectBinder<T> {
             }
         });
         factories.put( Byte.class, new ObjectFactory() {
-            public Object instantiate(Object value) {
+            public Object instantiate(Object value, Type targetType) {
                 if( value instanceof Number ) {
                     return ((Number)value).byteValue();
                 } else {
@@ -92,7 +99,7 @@ public class ObjectBinder<T> {
             }
         });
         factories.put( Character.class, new ObjectFactory() {
-            public Object instantiate(Object value) {
+            public Object instantiate(Object value, Type targetType) {
                 return value.toString().charAt(0);
             }
         });
@@ -111,20 +118,42 @@ public class ObjectBinder<T> {
         // Wed Oct 15 10:27:02 EDT 2008
     }
 
-    private <T extends Collection<Object>> T bindCollection(Collection value, T target) {
+    private <T extends Collection<Object>> T bindCollection(Collection value, T target, Type targetType) {
+        Type valueType = null;
+        if( targetType instanceof ParameterizedType ) {
+            valueType = ((ParameterizedType)targetType).getActualTypeArguments()[0];
+        }
         for( Object obj : value ) {
-            target.add( bind( obj ) );
+            target.add( bind( obj, valueType ) );
         }
         return target;
     }
 
     public Object bind( Object input ) {
+        return this.bind( input, null );
+    }
+
+    public Object bind( Object input, Type targetType ) {
         if( input == null ) {
             return null;
-        } else if( input instanceof Map) {
-            return bindObject( (Map)input );
+        } else if( input instanceof Map ) {
+            Class targetClass = findClassName( (Map)input, getTargetClass(targetType) );
+            if( targetClass.isAssignableFrom( Map.class ) ) {
+                return factories.get( Map.class ).instantiate( input, targetType );
+            } else {
+                return bindObject( (Map)input, targetClass);
+            }
         } else if( input instanceof List) {
-            return bindArray( (List)input );
+            if( targetType instanceof ParameterizedType ) {
+                return convert( input, targetType );
+            } else {
+                Object inner = ((List)input).get(0);
+                if( inner instanceof Map ) {
+                    return convert( input, new JSONParameterizedType( List.class, findClassName( (Map)inner, null ) ) );
+                } else {
+                    return convert( input, targetType );
+                }
+            }
         } else if( input instanceof Number ) {
             return input;
         } else if( input instanceof String ) {
@@ -134,8 +163,17 @@ public class ObjectBinder<T> {
         } else if( input instanceof Boolean ) {
             return input;
         } else {
-            throw new IllegalArgumentException("Do not know how to bind types " + input.getClass().getName() );
+            throw new IllegalArgumentException("Missing classname for path " + currentPath + ".  Cannot covert to object." );
         }
+    }
+
+    private Map bindMap(Map input, Map result, Type keyType, Type valueType) {
+        for( Object inputKey : input.keySet() ) {
+            Object key = bind( inputKey, keyType );
+            Object value = bind( input.get(inputKey), valueType );
+            result.put( key, value );
+        }
+        return result;
     }
 
     public ObjectBinder use( String path, ClassLocator locator ) {
@@ -148,31 +186,32 @@ public class ObjectBinder<T> {
         return use( path, new StaticClassLocator( clazz ) );
     }
 
-    private Object bindObject( Map map ) {
-        return bindObject( map, instantiate( findClassName( map, null ) ) ); // todo handle a given type if the user provides one.
+    private Object bindObject(Map map, Type targetType) {
+        return bindObject( map, instantiate( findClassName( map, getTargetClass(targetType) ) ), targetType);
     }
 
-    private Object convert(Object value, Class targetType) {
+    private Object convert(Object value, Type targetType) {
         try {
-            if( !targetType.isInterface() && !Modifier.isAbstract( targetType.getModifiers() ) ) {
-                if( value.getClass().isAssignableFrom( targetType ) ) {
+            Class targetClass = getTargetClass( targetType );
+            if( !targetClass.isInterface() && !Modifier.isAbstract( targetClass.getModifiers() ) ) {
+                if( value.getClass().isAssignableFrom( targetClass ) ) {
                     return value;
-                } else if( Date.class.isAssignableFrom(targetType) ) {
-                    return convertToDate(value, targetType);
-                } else if( targetType.isEnum() ) {
-                    return convertToEnum( value, targetType );
-                } else if( value instanceof Map  && !Map.class.isAssignableFrom(targetType) ) {
-                    return bindObject( (Map)value, instantiate( findClassName( (Map)value, targetType ) ) );
+                } else if( Date.class.isAssignableFrom(targetClass) ) {
+                    return convertToDate(value, targetClass);
+                } else if( targetClass.isEnum() ) {
+                    return convertToEnum( value, targetClass );
+                } else if( value instanceof Map  && !Map.class.isAssignableFrom(targetClass) ) {
+                    return bindObject( (Map)value, instantiate( findClassName( (Map)value, targetClass ) ), targetType);
                 } else {
-                    ObjectFactory factory = findFactoryFor( targetType );
+                    ObjectFactory factory = findFactoryFor( targetClass );
                     if( factory != null ) {
-                        return factory.instantiate( value );
+                        return factory.instantiate( value, targetType);
                     } else {
-                        Constructor constructor = targetType.getConstructor( value.getClass() );
+                        Constructor constructor = targetClass.getConstructor( value.getClass() );
                         return constructor.newInstance( value );
                     }
                 }
-            } else if( targetType.isPrimitive() ) {
+            } else if( targetClass.isPrimitive() ) {
                 if( value instanceof Number ) {
                     Number num = (Number) value;
                     if( targetType == int.class ) {
@@ -191,11 +230,11 @@ public class ObjectBinder<T> {
                 }
                 return value;
             } else {
-                ObjectFactory factory = findFactoryFor( targetType );
+                ObjectFactory factory = findFactoryFor( targetClass );
                 if( factory != null ) {
-                    return factory.instantiate( value );
+                    return factory.instantiate( value, targetType );
                 } else {
-                    throw new JSONException( "Cannot instantiate abstract class or interface " + targetType.getName() + " at " + currentPath );
+                    throw new JSONException( "Cannot instantiate abstract class or interface " + targetClass.getName() + " at " + currentPath );
                 }
             }
         } catch (InvocationTargetException e) {
@@ -206,6 +245,24 @@ public class ObjectBinder<T> {
             throw new JSONException( currentPath.toString(), e );
         } catch (InstantiationException e) {
             throw new JSONException( currentPath.toString(), e );
+        }
+    }
+
+    private Class getTargetClass(Type targetType) {
+        if( targetType == null ) {
+            return null;
+        } else if( targetType instanceof Class ) {
+            return (Class)targetType;
+        } else if( targetType instanceof ParameterizedType ) {
+            return (Class)((ParameterizedType)targetType).getRawType();
+        } else if( targetType instanceof GenericArrayType ) {
+            return Array.class;
+        } else if( targetType instanceof WildcardType ) {
+            return null; // nothing you can do about these.  User will have to specify this with use()
+        } else if( targetType instanceof TypeVariable ) {
+            return null; // nothing you can do about these.  User will have to specify this with use()
+        } else {
+            throw new JSONException("Unknown type " + targetType.getClass() + " for " + currentPath );
         }
     }
 
@@ -284,28 +341,32 @@ public class ObjectBinder<T> {
         }
     }
 
-    public Object bindObject(Map map, Object target) {
+    private Object bindObject(Map map, Object target, Type targetType) {
         try {
             objectStack.add( target );
             BeanInfo info = Introspector.getBeanInfo( target.getClass() );
             for( PropertyDescriptor descriptor : info.getPropertyDescriptors() ) {
-                if( map.containsKey( descriptor.getName() ) ) {
-                    Object value = map.get( descriptor.getName() );
+                Object value = findFieldInJson( map, descriptor );
+                if( value != null ) {
                     currentPath.enqueue( descriptor.getName() );
-                    Method method = descriptor.getWriteMethod();
-                    if( method != null ) {
-                        Class[] types = method.getParameterTypes();
+                    Method setMethod = descriptor.getWriteMethod();
+                    if( setMethod != null ) {
+                        Type[] types = setMethod.getGenericParameterTypes();
                         if( types.length == 1 ) {
-                            Class paramType = types[0];
-                            method.invoke( objectStack.getLast(), convert( value, paramType ) );
+                            Type paramType = types[0];
+                            setMethod.invoke( objectStack.getLast(), convert( value, resolveParameterizedTypes( paramType, targetType ) ) );
                         } else {
-                            throw new JSONException("Expected a parameter for method " + target.getClass().getName() + "." + method.getName() + " but got " + types.length );
+                            throw new JSONException("Expected a parameter for method " + target.getClass().getName() + "." + setMethod.getName() + " but got " + types.length );
                         }
                     } else {
                         try {
                             Field field = target.getClass().getDeclaredField( descriptor.getName() );
                             field.setAccessible( true );
-                            field.set( target, convert(value, field.getType() ) );
+                            if( value instanceof Map ) {
+                                field.set( target, convert(value, findClassName( (Map)value, getTargetClass( field.getGenericType() ) ) ) );
+                            } else {
+                                field.set( target, convert( value, field.getGenericType() ) );
+                            }
                         } catch (NoSuchFieldException e) {
                             // ignore must not be there.
                         }
@@ -321,6 +382,17 @@ public class ObjectBinder<T> {
         } catch (IntrospectionException e) {
             throw new JSONException(currentPath + ":Could not inspect " + target.getClass().getName(), e );
         }
+    }
+
+    private Type resolveParameterizedTypes(Type genericType, Type targetType) {
+        if( genericType instanceof Class ) {
+            return genericType;
+        } else if( genericType instanceof ParameterizedType ) {
+            return genericType;
+        } else if( genericType instanceof TypeVariable ) {
+            return targetType;
+        }
+        throw new JSONException("TODO!"); // todo
     }
 
     private Date convertToDate(Object value, Class targetType) throws InstantiationException, IllegalAccessException {
@@ -346,11 +418,21 @@ public class ObjectBinder<T> {
         }
     }
 
-    private Object bindArray( List input ) {
-        return input;
-    }
-
     private JSONException cannotConvertValueToTargetType(Object value, Class targetType) {
         return new JSONException( currentPath + ":  Can not convert " + value.getClass().getName() + " into " + targetType.getClass().getName() );
+    }
+
+    private Object findFieldInJson( Map map, PropertyDescriptor descriptor ) {
+        Object value = map.get( descriptor.getName() );
+        if( value == null ) {
+            String field = descriptor.getName();
+            value = map.get( upperCase(field) );
+        }
+
+        return value;
+    }
+
+    private String upperCase(String field) {
+        return Character.toUpperCase( field.charAt(0) ) + field.substring(1);
     }
 }
