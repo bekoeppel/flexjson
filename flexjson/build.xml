@@ -1,6 +1,6 @@
 <project basedir="." default="info" name="flexjson">
 
-    <property name="version" value="1.7"/>
+    <property name="version" value="1.8"/>
 
     <property name="builddir" value="${basedir}/classes"/>
     <property name="srcdir" value="${basedir}/src"/>
