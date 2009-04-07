@@ -262,9 +262,26 @@ public class ObjectBinder {
         } else if( targetType instanceof TypeVariable ) {
             return null; // nothing you can do about these.  User will have to specify this with use()
         } else {
-            throw new JSONException("Unknown type " + targetType.getClass() + " for " + currentPath );
+            throw new JSONException("Unknown type " + targetType + " for " + currentPath );
         }
     }
+
+    private Type resolveParameterizedTypes(Type genericType, Type targetType) {
+        if( genericType instanceof Class ) {
+            return genericType;
+        } else if( genericType instanceof ParameterizedType ) {
+            return genericType;
+        } else if( genericType instanceof TypeVariable ) {
+            return targetType;
+        } else if( genericType instanceof WildcardType ) {
+            return targetType;
+        } else if( genericType instanceof GenericArrayType ) {
+            return ((GenericArrayType)genericType).getGenericComponentType();
+        } else {
+            throw new JSONException("Unknown generic type " + genericType + " for " + currentPath + ".");
+        }
+    }
+
 
     protected Class findClassName( Map map, Class targetType ) throws JSONException {
         return useMostSpecific( targetType, findClassInMap( map, findClassByPath( map ) ) );
@@ -356,7 +373,7 @@ public class ObjectBinder {
                             Type paramType = types[0];
                             setMethod.invoke( objectStack.getLast(), convert( value, resolveParameterizedTypes( paramType, targetType ) ) );
                         } else {
-                            throw new JSONException("Expected a parameter for method " + target.getClass().getName() + "." + setMethod.getName() + " but got " + types.length );
+                            throw new JSONException("Expected a single parameter for method " + target.getClass().getName() + "." + setMethod.getName() + " but got " + types.length );
                         }
                     } else {
                         try {
@@ -382,17 +399,6 @@ public class ObjectBinder {
         } catch (IntrospectionException e) {
             throw new JSONException(currentPath + ":Could not inspect " + target.getClass().getName(), e );
         }
-    }
-
-    private Type resolveParameterizedTypes(Type genericType, Type targetType) {
-        if( genericType instanceof Class ) {
-            return genericType;
-        } else if( genericType instanceof ParameterizedType ) {
-            return genericType;
-        } else if( genericType instanceof TypeVariable ) {
-            return targetType;
-        }
-        throw new JSONException("TODO!"); // todo
     }
 
     private Date convertToDate(Object value, Class targetType) throws InstantiationException, IllegalAccessException {

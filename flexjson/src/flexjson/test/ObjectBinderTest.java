@@ -12,6 +12,8 @@ import flexjson.test.mock.Address;
 import flexjson.test.mock.Phone;
 import flexjson.test.mock.PhoneNumberType;
 import flexjson.ObjectBinder;
+import flexjson.ClassLocator;
+import flexjson.locators.StaticClassLocator;
 
 public class ObjectBinderTest extends TestCase {
 
@@ -70,6 +72,12 @@ public class ObjectBinderTest extends TestCase {
     }
 
     public void testObjectWithEmbeddedCollections() {
+        List<Phone> phones = new ArrayList<Phone>();
+        phones.add( new Phone(PhoneNumberType.HOME, "404 123 5555") );
+        phones.add( new Phone(PhoneNumberType.WORK, "404 321 5555") );
+        phones.add( new Phone(PhoneNumberType.FAX, "404 678 5555") );
+
+
         Map zipcode = new HashMap();
         zipcode.put("zipcode", "30117");
 
@@ -97,14 +105,9 @@ public class ObjectBinderTest extends TestCase {
         map.put("home", home );
         map.put("work", work );
 
-        List<Phone> phones = new ArrayList<Phone>();
-        phones.add( new Phone(PhoneNumberType.HOME, "404 123 5555") );
-        phones.add( new Phone(PhoneNumberType.WORK, "404 321 5555") );
-        phones.add( new Phone(PhoneNumberType.FAX, "404 678 5555") );
+        map.put("phones", createPhoneMap(phones) );
 
-        map.put("phones", phones);
-
-        ObjectBinder binder = new ObjectBinder();
+        ObjectBinder binder = new ObjectBinder().use("phones", new StaticClassLocator(Phone.class) );
         Person person = (Person)binder.bind( map );
 
         assertTrue( "Make sure our array has stuff in it.", !person.getPhones().isEmpty() );
@@ -114,6 +117,19 @@ public class ObjectBinderTest extends TestCase {
         }
 
         assertEquals( "Make sure our array has stuff in it.", 3, person.getPhones().size() );
+    }
+
+    private List<Map<String,Object>> createPhoneMap(List<Phone> phones) {
+        List<Map<String,Object>> phoneMap = new ArrayList<Map<String,Object>>();
+        for( Phone phone : phones ) {
+            Map<String,Object> maps = new HashMap<String,Object>();
+            maps.put("type", phone.getType().toString() );
+            maps.put("areaCode", phone.getAreaCode() );
+            maps.put("exchange", phone.getExchange() );
+            maps.put("number", phone.getNumber() );
+            phoneMap.add( maps );
+        }
+        return phoneMap;
     }
 
     private void validatePhone(Phone expected, Phone actual ) {

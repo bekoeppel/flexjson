@@ -30,27 +30,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/flexjson/test/TestClass3.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/flexjson/test/mock/superhero/HeatVision.java" afterPath="$PROJECT_DIR$/src/flexjson/test/mock/superhero/HeatVision.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/flexjson.iws" afterPath="$PROJECT_DIR$/flexjson.iws" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/flexjson/test/mock/superhero/XRayVision.java" afterPath="$PROJECT_DIR$/src/flexjson/test/mock/superhero/XRayVision.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/flexjson/JSONDeserializer.java" afterPath="$PROJECT_DIR$/src/flexjson/JSONDeserializer.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/flexjson/test/mock/superhero/Invincible.java" afterPath="$PROJECT_DIR$/src/flexjson/test/mock/superhero/Invincible.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/flexjson/test/JsonSerializationAndDeserializationTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/flexjson/test/mock/superhero/Villian.java" afterPath="$PROJECT_DIR$/src/flexjson/test/mock/superhero/Villian.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/flexjson/test/JSONDeserializerTest.java" afterPath="$PROJECT_DIR$/src/flexjson/test/JSONDeserializerTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/flexjson/test/mock/superhero/SecretLair.java" afterPath="$PROJECT_DIR$/src/flexjson/test/mock/superhero/SecretLair.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/flexjson/test/TestClass2.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/flexjson/test/mock/Pair.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/flexjson/test/ObjectBinderTest.java" afterPath="$PROJECT_DIR$/src/flexjson/test/ObjectBinderTest.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/flexjson/ObjectBinder.java" afterPath="$PROJECT_DIR$/src/flexjson/ObjectBinder.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/flexjson/test/mock/superhero/Flight.java" afterPath="$PROJECT_DIR$/src/flexjson/test/mock/superhero/Flight.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/flexjson/JSONParameterizedType.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/flexjson.ipr" afterPath="$PROJECT_DIR$/flexjson.ipr" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/flexjson/test/mock/superhero/SecretIdentity.java" afterPath="$PROJECT_DIR$/src/flexjson/test/mock/superhero/SecretIdentity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/flexjson/ObjectFactory.java" afterPath="$PROJECT_DIR$/src/flexjson/ObjectFactory.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/flexjson/test/TestClass.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/flexjson/test/mock/superhero/Hero.java" afterPath="$PROJECT_DIR$/src/flexjson/test/mock/superhero/Hero.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/flexjson.iml" afterPath="$PROJECT_DIR$/flexjson.iml" />
     </list>
   </component>
   <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
@@ -185,28 +167,19 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="JSONDeserializerTest.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/flexjson/test/JSONDeserializerTest.java">
+      <file leaf-file-name="FastString.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/flexjson/test/FastString.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="112" column="14" selection-start="5717" selection-end="5717" vertical-scroll-proportion="0.4509804">
+            <state line="157" column="39" selection-start="5046" selection-end="5046" vertical-scroll-proportion="0.06443914">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TypeLocator.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/flexjson/locators/TypeLocator.java">
+      <file leaf-file-name="ObjectBinder.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/flexjson/ObjectBinder.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="27" column="21" selection-start="718" selection-end="718" vertical-scroll-proportion="0.8598131">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Person.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/flexjson/test/mock/Person.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="23" column="13" selection-start="736" selection-end="736" vertical-scroll-proportion="-1.0093458">
+            <state line="1" column="29" selection-start="18" selection-end="18" vertical-scroll-proportion="0.028639618">
               <folding />
             </state>
           </provider>
@@ -215,25 +188,34 @@
       <file leaf-file-name="JSONParameterizedType.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/flexjson/JSONParameterizedType.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="10" column="20" selection-start="234" selection-end="234" vertical-scroll-proportion="0.3364486">
+            <state line="10" column="21" selection-start="235" selection-end="235" vertical-scroll-proportion="0.24884793">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Pair.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/flexjson/test/mock/Pair.java">
+      <file leaf-file-name="ObjectBinderTest.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/flexjson/test/ObjectBinderTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="36" column="0" selection-start="668" selection-end="668" vertical-scroll-proportion="1.3457944">
+            <state line="112" column="14" selection-start="3715" selection-end="3715" vertical-scroll-proportion="0.02764977">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ObjectBinder.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/flexjson/ObjectBinder.java">
+      <file leaf-file-name="Phone.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/flexjson/test/mock/Phone.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="151" column="53" selection-start="6617" selection-end="6617" vertical-scroll-proportion="0.05882353">
+            <state line="23" column="27" selection-start="793" selection-end="801" vertical-scroll-proportion="0.028639618">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Person.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/flexjson/test/mock/Person.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="30" column="16" selection-start="901" selection-end="901" vertical-scroll-proportion="0.02764977">
               <folding />
             </state>
           </provider>
@@ -242,25 +224,7 @@
       <file leaf-file-name="JSONDeserializer.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/flexjson/JSONDeserializer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="125" column="53" selection-start="6316" selection-end="6316" vertical-scroll-proportion="0.48286605">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ClassLocator.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/flexjson/ClassLocator.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="5" column="0" selection-start="74" selection-end="156" vertical-scroll-proportion="0.18691589">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TestClass.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/flexjson/test/TestClass.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="15" column="18" selection-start="331" selection-end="331" vertical-scroll-proportion="0.18691589">
+            <state line="125" column="53" selection-start="6316" selection-end="6316" vertical-scroll-proportion="1.1682028">
               <folding />
             </state>
           </provider>
@@ -269,7 +233,7 @@
       <file leaf-file-name="JsonSerializationAndDeserializationTest.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/flexjson/test/JsonSerializationAndDeserializationTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="13" column="13" selection-start="230" selection-end="230" vertical-scroll-proportion="0.19607843">
+            <state line="13" column="13" selection-start="230" selection-end="230" vertical-scroll-proportion="0.14319809">
               <folding />
             </state>
           </provider>
@@ -369,6 +333,62 @@
           <option name="myItemId" value="PsiDirectory:/Users/charlie/projects/flexjson/trunk/flexjson/src" />
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
         </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:/Users/charlie/projects/flexjson/trunk/flexjson/src/flexjson" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="flexjson" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="flexjson" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:/Users/charlie/projects/flexjson/trunk/flexjson" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:/Users/charlie/projects/flexjson/trunk/flexjson/src" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:/Users/charlie/projects/flexjson/trunk/flexjson/src/flexjson" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:/Users/charlie/projects/flexjson/trunk/flexjson/src/flexjson/test" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="flexjson" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="flexjson" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:/Users/charlie/projects/flexjson/trunk/flexjson" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:/Users/charlie/projects/flexjson/trunk/flexjson/src" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:/Users/charlie/projects/flexjson/trunk/flexjson/src/flexjson" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:/Users/charlie/projects/flexjson/trunk/flexjson/src/flexjson/locators" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
       </PATH>
     </subPane>
   </component>
@@ -414,44 +434,46 @@
     <RUBY_DOC NAME="DEFAULTS" VALUE="true" />
     <RUBY_DOC NAME="NUMBER" VALUE="0" />
   </component>
-  <component name="RunManager" selected="JUnit.JsonSerializationAndDeserializationTest">
-    <tempConfiguration default="false" name="JsonSerializationAndDeserializationTest" type="JUnit" factoryName="JUnit" enabled="false" merge="false">
-      <pattern value="flexjson.test.*" />
+  <component name="RunManager" selected="JUnit.flexjson.test in flexjson">
+    <tempConfiguration default="false" name="flexjson.test in flexjson" type="JUnit" factoryName="JUnit" enabled="false" merge="false">
       <module name="flexjson" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" value="" />
+      <option name="ALTERNATIVE_JRE_PATH" />
       <option name="PACKAGE_NAME" value="flexjson.test" />
-      <option name="MAIN_CLASS_NAME" value="flexjson.test.JsonSerializationAndDeserializationTest" />
-      <option name="METHOD_NAME" value="" />
-      <option name="TEST_OBJECT" value="class" />
-      <option name="VM_PARAMETERS" value="" />
-      <option name="PARAMETERS" value="" />
-      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="package" />
+      <option name="VM_PARAMETERS" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="ENV_VARIABLES" />
       <option name="PASS_PARENT_ENVS" value="true" />
       <option name="ADDITIONAL_CLASS_PATH" />
       <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="wholeProject" />
+        <value defaultName="singleModule" />
       </option>
       <envs />
-      <RunnerSettings RunnerId="Debug">
-        <option name="DEBUG_PORT" value="55160" />
-        <option name="TRANSPORT" value="0" />
-        <option name="LOCAL" value="true" />
-      </RunnerSettings>
       <RunnerSettings RunnerId="Run" />
-      <ConfigurationWrapper RunnerId="Debug" />
       <ConfigurationWrapper RunnerId="Run" />
       <method>
         <option name="Make" value="true" />
       </method>
     </tempConfiguration>
-    <configuration default="true" type="Remote" factoryName="Remote">
-      <option name="USE_SOCKET_TRANSPORT" value="true" />
-      <option name="SERVER_MODE" value="false" />
-      <option name="SHMEM_ADDRESS" value="javadebug" />
-      <option name="HOST" value="localhost" />
-      <option name="PORT" value="5005" />
+    <configuration default="true" type="Application" factoryName="Application" enabled="false" merge="false">
+      <option name="MAIN_CLASS_NAME" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="" />
+      <envs />
+      <method>
+        <option name="Make" value="true" />
+      </method>
     </configuration>
     <configuration default="true" type="RubyRunConfigurationType" factoryName="Ruby test">
       <RTEST_RUN_CONFIG_SETTINGS_ID NAME="RUBY_ARGS" VALUE="-e STDOUT.sync=true;STDERR.sync=true;load($0=ARGV.shift)" />
@@ -469,6 +491,28 @@
       <RTEST_RUN_CONFIG_SETTINGS_ID NAME="TEST_TEST_TYPE" VALUE="TEST_SCRIPT" />
       <RTEST_RUN_CONFIG_SETTINGS_ID NAME="INHERITANCE_CHECK_DISABLED" VALUE="false" />
     </configuration>
+    <configuration default="true" type="JUnit" factoryName="JUnit" enabled="false" merge="false">
+      <module name="" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="VM_PARAMETERS" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="ADDITIONAL_CLASS_PATH" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="wholeProject" />
+      </option>
+      <envs />
+      <method>
+        <option name="Make" value="true" />
+      </method>
+    </configuration>
     <configuration default="true" type="Applet" factoryName="Applet">
       <module name="" />
       <option name="MAIN_CLASS_NAME" />
@@ -480,22 +524,6 @@
       <option name="VM_PARAMETERS" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
-    </configuration>
-    <configuration default="true" type="Application" factoryName="Application" enabled="false" merge="false">
-      <option name="MAIN_CLASS_NAME" />
-      <option name="VM_PARAMETERS" />
-      <option name="PROGRAM_PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="ENABLE_SWING_INSPECTOR" value="false" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <module name="" />
-      <envs />
-      <method>
-        <option name="Make" value="true" />
-      </method>
     </configuration>
     <configuration default="true" type="RSpecRunConfigurationType" factoryName="RSpec">
       <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="RUBY_ARGS" VALUE="-e STDOUT.sync=true;STDERR.sync=true;load($0=ARGV.shift)" />
@@ -544,27 +572,12 @@
         <option name="Make" value="true" />
       </method>
     </configuration>
-    <configuration default="true" type="JUnit" factoryName="JUnit" enabled="false" merge="false">
-      <module name="" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="METHOD_NAME" />
-      <option name="TEST_OBJECT" value="class" />
-      <option name="VM_PARAMETERS" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="ADDITIONAL_CLASS_PATH" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="wholeProject" />
-      </option>
-      <envs />
-      <method>
-        <option name="Make" value="true" />
-      </method>
+    <configuration default="true" type="Remote" factoryName="Remote">
+      <option name="USE_SOCKET_TRANSPORT" value="true" />
+      <option name="SERVER_MODE" value="false" />
+      <option name="SHMEM_ADDRESS" value="javadebug" />
+      <option name="HOST" value="localhost" />
+      <option name="PORT" value="5005" />
     </configuration>
     <configuration default="false" name="JSONDeserializerTest" type="Application" factoryName="Application" enabled="false" merge="false">
       <option name="MAIN_CLASS_NAME" value="flexjson.test.JSONDeserializerTest" />
@@ -660,7 +673,7 @@
       <item index="0" class="java.lang.String" itemvalue="Application.JSONDeserializerTest" />
       <item index="1" class="java.lang.String" itemvalue="JUnit.JSONSerializerTest" />
       <item index="2" class="java.lang.String" itemvalue="JUnit.PathTest" />
-      <item index="3" class="java.lang.String" itemvalue="JUnit.JsonSerializationAndDeserializationTest" />
+      <item index="3" class="java.lang.String" itemvalue="JUnit.flexjson.test in flexjson" />
     </list>
   </component>
   <component name="ScopeViewComponent">
@@ -759,11 +772,11 @@
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="3" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.27302906" order="1" />
       <window_info id="Maven projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="3" />
-      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32860824" order="8" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32275862" order="3" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32827586" order="8" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32275862" order="3" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24950364" order="2" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" order="0" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.47862068" order="4" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.47862068" order="4" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="9" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="10" />
       <window_info id="Duplicates" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="13" />
@@ -791,7 +804,7 @@
     <option name="PERFORM_EDIT_IN_BACKGROUND" value="true" />
     <option name="PERFORM_ADD_REMOVE_IN_BACKGROUND" value="true" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="More improvements for Deserialization." />
+    <option name="LAST_COMMIT_MESSAGE" value="Upped the version 1.8" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="REFORMAT_BEFORE_FILE_COMMIT" value="false" />
@@ -809,6 +822,7 @@
     <MESSAGE value="Changed version to 1.7" />
     <MESSAGE value="Initial Version" />
     <MESSAGE value="More improvements for Deserialization." />
+    <MESSAGE value="Upped the version 1.8" />
   </component>
   <component name="VssConfiguration">
     <option name="CLIENT_PATH" value="" />
@@ -874,30 +888,23 @@
     <option name="myLastEditedConfigurable" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/flexjson/test/mock/superhero/HeatVision.java">
+    <entry file="file://$PROJECT_DIR$/src/flexjson/test/JSONDeserializerTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="16" column="37" selection-start="317" selection-end="317" vertical-scroll-proportion="0.5981308">
+        <state line="112" column="14" selection-start="5717" selection-end="5717" vertical-scroll-proportion="0.039215688">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/flexjson/test/mock/superhero/Flight.java">
+    <entry file="file://$PROJECT_DIR$/src/flexjson/JSONSerializer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="17" column="37" selection-start="324" selection-end="324" vertical-scroll-proportion="0.635514">
+        <state line="756" column="0" selection-start="28968" selection-end="29241" vertical-scroll-proportion="0.039215688">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/flexjson/test/mock/superhero/Hero.java">
+    <entry file="file://$PROJECT_DIR$/src/flexjson/test/TestClass.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="46" column="52" selection-start="1182" selection-end="1182" vertical-scroll-proportion="1.317757">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/flexjson/test/mock/superhero/Villian.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="14" column="45" selection-start="329" selection-end="329" vertical-scroll-proportion="0.44859812">
+        <state line="15" column="18" selection-start="331" selection-end="331" vertical-scroll-proportion="0.027842227">
           <folding />
         </state>
       </provider>
@@ -909,65 +916,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/flexjson/test/mock/superhero/Invincible.java">
+    <entry file="file://$PROJECT_DIR$/build.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="8" selection-start="192" selection-end="192" vertical-scroll-proportion="0.3364486">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/flexjson/test/mock/superhero/XRayVision.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="2" column="13" selection-start="52" selection-end="52" vertical-scroll-proportion="-0.34579438">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/flexjson/test/TestClass.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="18" selection-start="331" selection-end="331" vertical-scroll-proportion="0.18691589">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/flexjson/test/JsonSerializationAndDeserializationTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="13" selection-start="230" selection-end="230" vertical-scroll-proportion="0.19607843">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/flexjson/locators/TypeLocator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="27" column="21" selection-start="718" selection-end="718" vertical-scroll-proportion="0.8598131">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/flexjson/test/mock/Person.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="23" column="13" selection-start="736" selection-end="736" vertical-scroll-proportion="-1.0093458">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/flexjson/JSONParameterizedType.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="10" column="20" selection-start="234" selection-end="234" vertical-scroll-proportion="0.3364486">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/flexjson/ObjectBinder.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="151" column="53" selection-start="6617" selection-end="6617" vertical-scroll-proportion="0.05882353">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/flexjson/JSONDeserializer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="125" column="53" selection-start="6316" selection-end="6316" vertical-scroll-proportion="0.48286605">
+        <state line="2" column="0" selection-start="54" selection-end="54" vertical-scroll-proportion="0.08275862">
           <folding />
         </state>
       </provider>
@@ -979,9 +930,72 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/flexjson/test/JSONDeserializerTest.java">
+    <entry file="jar:///System/Library/Frameworks/JavaVM.framework/Versions/CurrentJDK/Home/../Classes/classes.jar!/sun/reflect/generics/reflectiveObjects/GenericArrayTypeImpl.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="112" column="14" selection-start="5717" selection-end="5717" vertical-scroll-proportion="0.4509804">
+        <state line="5" column="13" selection-start="176" selection-end="176" vertical-scroll-proportion="0.115384616">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///System/Library/Frameworks/JavaVM.framework/Versions/CurrentJDK/Home/../Classes/classes.jar!/java/lang/reflect/ParameterizedType.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="5" column="62" selection-start="204" selection-end="204" vertical-scroll-proportion="0.11136891">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/flexjson/JSONParameterizedType.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="10" column="21" selection-start="235" selection-end="235" vertical-scroll-proportion="0.24884793">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/flexjson/test/ObjectBinderTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="112" column="14" selection-start="3715" selection-end="3715" vertical-scroll-proportion="0.02764977">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/flexjson/test/mock/Phone.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="23" column="27" selection-start="793" selection-end="801" vertical-scroll-proportion="0.028639618">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/flexjson/test/mock/Person.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="30" column="16" selection-start="901" selection-end="901" vertical-scroll-proportion="0.02764977">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/flexjson/JSONDeserializer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="125" column="53" selection-start="6316" selection-end="6316" vertical-scroll-proportion="1.1682028">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/flexjson/test/JsonSerializationAndDeserializationTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="13" column="13" selection-start="230" selection-end="230" vertical-scroll-proportion="0.14319809">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/flexjson/test/FastString.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="157" column="39" selection-start="5046" selection-end="5046" vertical-scroll-proportion="0.06443914">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/flexjson/ObjectBinder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1" column="29" selection-start="18" selection-end="18" vertical-scroll-proportion="0.028639618">
           <folding />
         </state>
       </provider>
