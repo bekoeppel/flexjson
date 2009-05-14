@@ -45,17 +45,16 @@ public class ObjectTransformer extends AbstractTransformer {
                         Object value = accessor.invoke(object, (Object[]) null);
                         if (!context.getVisits().contains(value)) {
 
-                            Transformer transformer = context.getTransformer(value);
+                            TransformerWrapper transformer = (TransformerWrapper)context.getTransformer(value);
 
-                            if (transformer instanceof Defer) {
-                                typeContext.setPropertyName(name);
-                                transformer.transform(value);
-                            } else {
+                            if(!transformer.isInline()) {
                                 if (!typeContext.isFirst()) context.writeComma();
                                 typeContext.setFirst(false);
                                 context.writeName(name);
-                                transformer.transform(value);
                             }
+                            typeContext.setPropertyName(name);
+                            
+                            transformer.transform(value);
 
                         }
 
@@ -70,17 +69,17 @@ public class ObjectTransformer extends AbstractTransformer {
                             if (!context.getVisits().contains(field.get(object))) {
 
                                 Object value = field.get(object);
-                                Transformer transformer = context.getTransformer(value);
+                                
+                                TransformerWrapper transformer = (TransformerWrapper)context.getTransformer(value);
 
-                                if (transformer instanceof Defer) {
-                                    typeContext.setPropertyName(field.getName());
-                                    transformer.transform(value);
-                                } else {
+                                if(!transformer.isInline()) {
                                     if (!typeContext.isFirst()) context.writeComma();
                                     typeContext.setFirst(false);
                                     context.writeName(field.getName());
-                                    transformer.transform(value);
                                 }
+                                typeContext.setPropertyName(field.getName());
+
+                                transformer.transform(value);
 
                             }
                         }

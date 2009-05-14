@@ -10,13 +10,21 @@ import java.util.Date;
  * This is a transformer that flattens a date inline with it's object context.
  * If it is not in an Object context then it creates its own.
  */
-public class FlatDateTransformer extends AbstractTransformer implements Defer {
+public class FlatDateTransformer extends AbstractTransformer {
+
+    String prefix = "";
+
+    public FlatDateTransformer(String prefix) {
+        this.prefix = prefix;
+    }
 
     public void transform(Object o) {
 
         boolean setContext = false;
 
         TypeContext typeContext = getContext().peekTypeContext();
+        String propertyName = typeContext != null ? typeContext.getPropertyName() : "";
+        if(prefix.trim().equals("")) prefix = propertyName;
 
         if (typeContext == null || typeContext.getBasicType() != BasicType.OBJECT) {
             typeContext = getContext().writeOpenObject();
@@ -47,13 +55,15 @@ public class FlatDateTransformer extends AbstractTransformer implements Defer {
     }
 
     private String fieldName(String suffix) {
-        TypeContext typeContext = getContext().peekTypeContext();
-        String propertyName =  typeContext.getPropertyName();
-        if( propertyName == null || propertyName.trim().equals("")) {
+        if( prefix.trim().equals("")) {
             return suffix.toLowerCase();
         } else {
-            return propertyName + suffix;
+            return prefix + suffix;
         }
+    }
 
+    @Override
+    public Boolean isInline() {
+        return Boolean.TRUE;
     }
 }

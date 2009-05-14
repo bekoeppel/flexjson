@@ -17,6 +17,7 @@ package flexjson;
 
 import flexjson.transformer.Transformer;
 import flexjson.transformer.TypeTransformerMap;
+import flexjson.transformer.TransformerWrapper;
 
 import java.io.Writer;
 import java.util.ArrayList;
@@ -405,6 +406,7 @@ public class JSONSerializer {
      * @return Hit you back with the JSONSerializer for method chain goodness.
      */
     public JSONSerializer transform(Transformer transformer, String... fields) {
+        transformer = new TransformerWrapper(transformer); 
         for (String field : fields) {
             if (field.length() == 0) {
                 pathTransformerMap.put(new Path(), transformer);
@@ -425,6 +427,8 @@ public class JSONSerializer {
      */
     public JSONSerializer transform(Transformer transformer, Class... types) {
 
+        transformer = new TransformerWrapper(transformer);
+        
         for (Class type : types) {
             typeTransformerMap.put(type, transformer);
         }

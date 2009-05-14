@@ -15,10 +15,9 @@
  */
 package flexjson.transformer;
 
-import flexjson.BasicType;
-import flexjson.TypeContext;
-import flexjson.Path;
 import flexjson.JSONContext;
+import flexjson.Path;
+import flexjson.TypeContext;
 
 import java.util.Map;
 
@@ -32,22 +31,23 @@ public class MapTransformer extends AbstractTransformer {
         TypeContext typeContext = getContext().writeOpenObject();
         for (Object key : value.keySet()) {
 
-            path.enqueue((String)key);
+            path.enqueue((String) key);
 
-            if(context.isIncluded((String)key, value.get(key))) {
+            if (context.isIncluded((String) key, value.get(key))) {
 
-                Transformer transformer = getContext().getTransformer(value.get(key));
+                TransformerWrapper transformer = (TransformerWrapper)context.getTransformer(value.get(key));
 
-                if (transformer instanceof Defer) {
-                    typeContext.setPropertyName(key.toString());
-                    transformer.transform(value.get(key));
-                } else {
+
+                if(!transformer.isInline()) {
                     if (!typeContext.isFirst()) getContext().writeComma();
                     typeContext.setFirst(false);
                     getContext().writeName(key.toString());
-                    transformer.transform(value.get(key));
                 }
                 
+                typeContext.setPropertyName(key.toString());
+
+                transformer.transform(value.get(key));
+
             }
 
             path.pop();

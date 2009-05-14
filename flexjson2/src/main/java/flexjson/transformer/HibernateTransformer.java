@@ -15,11 +15,6 @@ public class HibernateTransformer extends ObjectTransformer {
             Object initializer = method.invoke( object );
             Method pmethod = initializer.getClass().getMethod("getPersistentClass");
             return (Class<?>)pmethod.invoke( initializer );
-//            Class[] classes = object.getClass().getInterfaces();
-//            for( Class clazz : classes ) {
-//                if( clazz.getName().equals("org.hibernate.proxy.HibernateProxy") ) {
-//                }
-//            }
         } catch (IllegalAccessException e) {
         } catch (NoSuchMethodException e) {
         } catch (InvocationTargetException e) {

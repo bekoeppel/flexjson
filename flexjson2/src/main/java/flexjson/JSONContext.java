@@ -44,6 +44,7 @@ public class JSONContext {
     private SerializationType serializationType = SerializationType.SHALLOW;
 
     private ChainedSet visits = new ChainedSet(Collections.EMPTY_SET);
+    private LinkedList<Object> objectStack = new LinkedList<Object>();
 
     private Path path = new Path();
 
@@ -336,6 +337,10 @@ public class JSONContext {
 
     public void setVisits(ChainedSet visits) {
         this.visits = visits;
+    }
+
+    public LinkedList<Object> getObjectStack() {
+        return objectStack;
     }
 
     public String getRootName() {

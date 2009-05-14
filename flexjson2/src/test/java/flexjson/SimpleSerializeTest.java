@@ -132,31 +132,31 @@ public class SimpleSerializeTest extends TestCase {
         logger.info(string);
     }
 
-    public void testDeferOnDate() {
+    public void testInlineOnDate() {
         Date birthDate = buildPerson1().getBirthDate();
         JSONSerializer serializer = new JSONSerializer();
-        serializer.transform(new FlatDateTransformer(), Date.class);
+        serializer.transform(new FlatDateTransformer(""), Date.class);
         String json = serializer.serialize(birthDate);
         logger.info(json);
         assertEquals(json, "{\"month\":11,\"day\":13,\"year\":2007}");
     }
 
-    public void testDeferOnPersonWithFlatDate() {
+    public void testInlineOnPersonWithFlatDate() {
         Person person = buildPerson1();
         JSONSerializer serializer = new JSONSerializer();
         serializer
-                .transform(new FlatDateTransformer(), Date.class)
+                .transform(new FlatDateTransformer("birthDate"), Date.class)
                 .exclude("loopClassOnes.loopClassTwo.loopClassOne");
         String json = serializer.serialize(person);
         logger.info(json);
         assertTrue(json.contains("\"birthDateMonth\":11,\"birthDateDay\":13,\"birthDateYear\":2007"));
     }
 
-    public void testDeferOnCandidate() {
+    public void testInlineOnCandidate() {
 
         Candidate candidate = buildCandidate1();
         JSONSerializer serializer = new JSONSerializer();
-        serializer.transform(new FlatDateTransformer(), Date.class);
+        serializer.transform(new FlatDateTransformer("dateOfBirth"), Date.class);
         String json = serializer.serialize(candidate);
         logger.info(json);
         assertTrue(json.contains("\"dateOfBirthMonth\":11,\"dateOfBirthDay\":13,\"dateOfBirthYear\":2007,"));
@@ -172,7 +172,7 @@ public class SimpleSerializeTest extends TestCase {
         experienceList.add(buildExperience3());
         experienceList.add(buildExperience4()); 
 
-        JSONSerializer serializer = new JSONSerializer().transform( new FlatDateTransformer(), Date.class );
+        JSONSerializer serializer = new JSONSerializer().transform( new FlatDateTransformer(""), Date.class );
         String json = serializer.serialize(experienceList);
         logger.info(json);
     }

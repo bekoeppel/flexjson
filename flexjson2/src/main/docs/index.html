@@ -397,54 +397,88 @@
     </p>
 
     <h2>Transformers More Than Meets the Eye</h2>
-
     <p>
-        In 1.5 an exciting new feature was added.  Let's say we're have some JSON text data and we're going to place it
-        into the page, but this data contains unfriendly HTML.  By that I mean you have the possibility of having things
-        like &lt;, &gt;, or &amp;.  We need to replace those parts of our text with &amp;lt;, &amp;gt;, &amp;amp;.  How
-        do you do it?  Well in prior versions you'd need to put special getters/setters on your domain model to perform
-        the conversion, or you'd have to do it on the client.  Oh yes I'm sure there are much more bizarre things you could
-        do, but these are the "cleanest" solutions.
+        FlexJSON 2.0 has been completely rewritten to make Transformers central to how processing Java into JSON works.
+        With this core restructuring, Transformers have much more flexibility and power.
+
+        <h3>What is a transformer?</h3>
+        <p>
+            Transformers are classes that are used to handle the actual transformation of Java objects into JSON.
+        </p>
+        <h3>Basic Transformer</h3>
+        <p>
+            FlexJSON comes with several basic Transformers that are used to meet the majority of your Java-to-JSON needs.<br/>
+            <strong>FlexJSON comes with the following default Transformers:</strong>
+            <ul>
+                <li><strong>ArrayTransformer</strong> - used to produce JSON from a Java array</li>
+                <li><strong>BasicDateTransformer</strong> - will translate the value of Date object's getTime() into JSON</li>
+                <li><strong>BooleanTransformer</strong> - will translate a primitive boolean or a Boolean object into JSON</li>
+                <li><strong>CharacterTransformer</strong> - will translate a primitive char or a Character object into JSON</li>
+                <li><strong>ClassTransformer</strong> - will translate a class the value of the Class object's getName() into JSON</li>
+                <li><strong>DateTransformer</strong> - will translate a Date objet into JSON based on a date pattern that is passed into the constructor of the DateTransformer</li>
+                <li><strong>EnumTransformer</strong> - will translate then Enum's getName() into JSON</li>
+                <li><strong>HibernateTransformer</strong> - will properly return the correct object when the JSON translation encounters a org.hibernate.proxy.HibernateProxy</li>
+                <li><strong>HtmlEncoderTransformer</strong> - encodes a string for display in HTML. This transformer will not work on HTML because it will encode &lt; and &gt;. The value is written to JSON output.</li>
+                <li><strong>IterableTransformer</strong> - will translate a List, Set, Collection, Queue, etc... into JSON</li>
+                <li><strong>MapTransformer</strong> - will translate a Map into JSON</li>
+                <li><strong>NullTransformer</strong> - will translate <strong>null</strong> values into JSON</li>
+                <li><strong>NumberTransformer</strong> - will translate BigDecimal, BigInteger, Byte, Double, Float, Integer, Long, Short, etc.. into JSON</li>
+                <li><strong>ObjectTransformer</strong> - this Transformer works more as a distribution point and passes oebjects on to their more specific type and path transformers to produce the appropriate JSON.</li>
+                <li><strong>StringTransformer</strong> - will translate a String object to JSON</li>
+            </ul>
+        </p>
+    <h3>How Transformer Work</h3>
+    JSONContext, Transformer, AbstractTransformer, ObjectTransformer
+    <h3>Custom Transformers</h3>
     </p>
 
-    <p>
-        Transformers address this problem by letting you specify a transformer object to particpate in serialization
-        with Flexjson.  Flexjson includes a very simple HTMLEncoder to do entity replacement for you.  Here's how it works.
-    </p>
+    <!--<p>-->
+        <!--In 1.5 an exciting new feature was added.  Let's say we're have some JSON text data and we're going to place it-->
+        <!--into the page, but this data contains unfriendly HTML.  By that I mean you have the possibility of having things-->
+        <!--like &lt;, &gt;, or &amp;.  We need to replace those parts of our text with &amp;lt;, &amp;gt;, &amp;amp;.  How-->
+        <!--do you do it?  Well in prior versions you'd need to put special getters/setters on your domain model to perform-->
+        <!--the conversion, or you'd have to do it on the client.  Oh yes I'm sure there are much more bizarre things you could-->
+        <!--do, but these are the "cleanest" solutions.-->
+    <!--</p>-->
 
-    <blockquote class="java">
-        public String doSomething( Object arg1, ... ) {
+    <!--<p>-->
+        <!--Transformers address this problem by letting you specify a transformer object to particpate in serialization-->
+        <!--with Flexjson.  Flexjson includes a very simple HTMLEncoder to do entity replacement for you.  Here's how it works.-->
+    <!--</p>-->
 
-            EMail mail = ...load an email...;
+    <!--<blockquote class="java">-->
+        <!--public String doSomething( Object arg1, ... ) {-->
 
-            return new JSONSerializer().transform( new HTMLEncoder(), "to", "cc", "bcc", "from").serialize(p);
-        }
-    </blockquote>
+            <!--EMail mail = ...load an email...;-->
 
-    <p>
-        In the above code the transform() method registers the HTMLEncoder transformer with serializer for 4 fields.  Email
-        messages usually have something like the following in the recepient fields: "Plug 1" &lt;plug1@delasoul.com&gt;.
-        Unfortunately, HTML doesn't like the &lt; and &gt; in them so you need to HTML encode them.  The transform method
-        supports the dot notation, but it doesn't support wildcards.  This makes the algorithm for finding the Transformer
-        instance faster.
-    </p>
+            <!--return new JSONSerializer().transform( new HTMLEncoder(), "to", "cc", "bcc", "from").serialize(p);-->
+        <!--}-->
+    <!--</blockquote>-->
 
-    <p>
-        Transformers are very interesting in that you can use them for all sorts of problems.  Say you accept Markdown
-        notation on your new wiki software.  You store the Markdown text in the DB, and later render the HTML using the
-        Transformer architecture.
-    </p>
+    <!--<p>-->
+        <!--In the above code the transform() method registers the HTMLEncoder transformer with serializer for 4 fields.  Email-->
+        <!--messages usually have something like the following in the recepient fields: "Plug 1" &lt;plug1@delasoul.com&gt;.-->
+        <!--Unfortunately, HTML doesn't like the &lt; and &gt; in them so you need to HTML encode them.  The transform method-->
+        <!--supports the dot notation, but it doesn't support wildcards.  This makes the algorithm for finding the Transformer-->
+        <!--instance faster.-->
+    <!--</p>-->
 
-    <p>
-        Say you only want to accept some of the HTML tags from the user for security reasons.  Transformers could filter
-        out any nefarious data from your objects when sending it through JSON.  Transformers are very useful, and Flexjson
-        will include more out of the box Transformers in the future.
-    </p>
+    <!--<p>-->
+        <!--Transformers are very interesting in that you can use them for all sorts of problems.  Say you accept Markdown-->
+        <!--notation on your new wiki software.  You store the Markdown text in the DB, and later render the HTML using the-->
+        <!--Transformer architecture.-->
+    <!--</p>-->
+
+    <!--<p>-->
+        <!--Say you only want to accept some of the HTML tags from the user for security reasons.  Transformers could filter-->
+        <!--out any nefarious data from your objects when sending it through JSON.  Transformers are very useful, and Flexjson-->
+        <!--will include more out of the box Transformers in the future.-->
+    <!--</p>-->
 
     <h2>Thread safety and Reuse</h2>
 
     <p>
-        Finally, JSONSerializer instances can be reused to serialize many objects of the same type.  Once you 
+        Finally, JSONSerializer instances can be reused to serialize many objects of the same type.  Once you
         instantiate the object you can reuse it across multiple threads so long as you don't call include or exclude
         methods.  Typically this isn't an issue since you might follow this pattern of instantiation:
     </p>
