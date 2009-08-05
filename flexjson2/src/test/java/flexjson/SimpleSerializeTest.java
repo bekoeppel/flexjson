@@ -164,6 +164,18 @@ public class SimpleSerializeTest extends TestCase {
         
     }
 
+    public void testInlineOnCandidateWithoutPrefix() {
+
+        Candidate candidate = buildCandidate1();
+        JSONSerializer serializer = new JSONSerializer();
+        serializer.transform(new FlatDateTransformer(""), Date.class);
+        String json = serializer.serialize(candidate);
+        logger.info(json);
+        assertTrue(json.contains("\"dateOfBirthMonth\":11,\"dateOfBirthDay\":13,\"dateOfBirthYear\":2007,"));
+        assertFalse(json.contains(",,"));
+
+    }
+
     public void testDeferOnExperience() {
 
         List<Experience> experienceList = new ArrayList<Experience>();

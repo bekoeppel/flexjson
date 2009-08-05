@@ -427,54 +427,263 @@
                 <li><strong>StringTransformer</strong> - will translate a String object to JSON</li>
             </ul>
         </p>
-    <h3>How Transformer Work</h3>
-    JSONContext, Transformer, AbstractTransformer, ObjectTransformer
-    <h3>Custom Transformers</h3>
+    <h3>How Transformers Work</h3>
+
+    <p>
+        In order to understand where Transformers fit in it is important to understand what the JSONSerializer and the JSONContext do as well.
+    </p>
+    <h4>JSONSerializer</h4>
+    <p>
+        The JSONSerializer works as a configuraiton object. Once serialize/deepSerialize is called on the JSONSerializer it retrieves a ThreadLocal version of a JSONContext and configures it for use.
+    </p>
+    <h4>JSONContext</h4>
+    <p>
+        The JSONContext facilitates several aspects of the transformation process and keeps the Transformers as simple as possible.
+    </p>
+    <p>
+        The JSONContext performs the following major functions:
+        <ol>
+            <li>Initializes the transformation process.</li>
+            <li>Handles the traversal of the Java Objects being translated.</li>
+            <li>Calls the correct Transformer for the object being translated.</li>
+            <li>Hosts and outputs the resulting JSON</li>
+            <li>Maintainins state and information about the object(s) being transformed.</li>
+            <li>Provides common utility methods for tailoring the JSON output.</li>
+        </ol>
+    </p>
+    <h4>Transformers</h4>
+    <p>
+        In the end the Transfomer is responsible for deciding how to translate the passed in object to JSON, making the appropriate calls on the JSONContext object to output the JSON,
+        and/or passing the object along the transformation process.
     </p>
 
-    <!--<p>-->
-        <!--In 1.5 an exciting new feature was added.  Let's say we're have some JSON text data and we're going to place it-->
-        <!--into the page, but this data contains unfriendly HTML.  By that I mean you have the possibility of having things-->
-        <!--like &lt;, &gt;, or &amp;.  We need to replace those parts of our text with &amp;lt;, &amp;gt;, &amp;amp;.  How-->
-        <!--do you do it?  Well in prior versions you'd need to put special getters/setters on your domain model to perform-->
-        <!--the conversion, or you'd have to do it on the client.  Oh yes I'm sure there are much more bizarre things you could-->
-        <!--do, but these are the "cleanest" solutions.-->
-    <!--</p>-->
+    <h3>Simple Transfomer</h3>
+    <p>
+        The StringTransformer provides a simple example of a Transformer.
+    </p>
+    <blockquote class="java">
+        package flexjson.transformer;
 
-    <!--<p>-->
-        <!--Transformers address this problem by letting you specify a transformer object to particpate in serialization-->
-        <!--with Flexjson.  Flexjson includes a very simple HTMLEncoder to do entity replacement for you.  Here's how it works.-->
-    <!--</p>-->
+        public class StringTransformer extends AbstractTransformer {
 
-    <!--<blockquote class="java">-->
-        <!--public String doSomething( Object arg1, ... ) {-->
+            public void transform(Object object) {
+                getContext().writeQuoted((String) object);
+            }
 
-            <!--EMail mail = ...load an email...;-->
+        }
+    </blockquote>
+    <p>
+        In the StringTranformer the Object passed in is a String which gets quoted by calling a method (getContext().writeQuoted()) on the JSONContext. The JSONContext takes care of all the string escaping that needs to occur. Pretty simple eh?
+    </p>
+    <p>
+        As a side note you will also notice that the Transformer extends AbstractTranformer. It is recommended that custom transformers extend the AbstractTransformer although it is not required. Feel free to take a look in the AbstractTransformer to see what it does. There isn't much to it.
+    </p>
+    <h3>Transforming a Collection</h3>
+    <p>
+        In this example we'll take a look at the IterableTransformer which transforms collections.
+    </p>
+    <blockquote class="java">
+        public class IterableTransformer extends AbstractTransformer {
 
-            <!--return new JSONSerializer().transform( new HTMLEncoder(), "to", "cc", "bcc", "from").serialize(p);-->
-        <!--}-->
-    <!--</blockquote>-->
+            public void transform(Object object) {
+                Iterable iterable = (Iterable) object;
+                TypeContext typeContext = getContext().writeOpenArray();
+                for (Object item : iterable) {
+                    if (!typeContext.isFirst()) getContext().writeComma();
+                    typeContext.setFirst(false);
+                    getContext().transform(item);
+                }
+                getContext().writeCloseArray();
+            }
 
-    <!--<p>-->
-        <!--In the above code the transform() method registers the HTMLEncoder transformer with serializer for 4 fields.  Email-->
-        <!--messages usually have something like the following in the recepient fields: "Plug 1" &lt;plug1@delasoul.com&gt;.-->
-        <!--Unfortunately, HTML doesn't like the &lt; and &gt; in them so you need to HTML encode them.  The transform method-->
-        <!--supports the dot notation, but it doesn't support wildcards.  This makes the algorithm for finding the Transformer-->
-        <!--instance faster.-->
-    <!--</p>-->
+        }
+    </blockquote>
+    <p>
+        You will notice that this transformer makes use of a TypeContext. The TypeContext is just a way to keep track of whether the current  context is an ARRAY (Collection or Array) or a BASIC (Any Object other than Collection or Array) object. Additional information on the current object context is also held in the TypeContext. Behind the scenes in the JSONContext.writeOpenArray() method the JSONContext creates the TypeContext as BasicType.ARRAY, pushes it on the typeContextStack, and then returns the type context from the writeOpenArray() method. This context is then made available to all downstream transformations via the getContext().peekTypeContext() method.
+    </p>
+    <h3>Customer Transformer using Inline functionality</h3>
+    <p>
+    	This example of the FlatDateTransformer (found in the FlexJSON unit tests) is more complex than the last. What it illustrates is the flexibility that Transformers have when needing to meet various requirements. 
+    </p>
+    <p>	
+    	Let's take some time to understand what the FlatDateTransformer does and then we'll discuss how it does it. In this particular case a java.util.Date is transformed into 3 separate properties on a JSON object. If we were to pass a Date object into this transformer the resulting JSON would look like: 
+    </p>
+    <blockquote class="java">
+	    {"month":11,"day":13,"year":2007}
+    </blockquote>
+    <p>
+    	This transformer "inlines" the Date properties with the other properties of the current object. For example, if I had an object named <i>Task</i> with a Date property (named doOn) along side <i>name</i> and <i>description</i> this Transformer would render the date inline with the other properties when the JSON is generated.
+    </p>
+    <blockquote class="java" >
+    	public class Task {
+    		private String name;
+    		private String description;
+    		private Date doOn;
+    		// setter/getters left out for brevity
+    	}
+    </blockquote>
+    <p>
+    	Would result in:
+    </p>
+    <blockquote class="java">
+    {"name":"some name","description":"some description",
+    	"doOnMonth":11,"doOnDay":13,"doOnYear":2007}
+    </blockquote>
+    <p>
+    	As you can see the doOnMonth, doOnDay, and doOnYear are next to the other properties rather than in a nested JSON object. You may also notice that each one was automatically prefixed with the Date properties' name of doOn. This brings me to the <i>prefix</i> property that can be passed into the FlatDateTransformer. The prefix allows us to alter the generated property name to whatever we like when <i>inlining</i>. Lets look at our Task example again but this time we'll provide a prefix.
+    </p>
+    <blockquote class="java" >
+    	public class Task {
+    		private String name;
+    		private String description;
+    		private Date doOn;
+    		// setter/getters left out for brevity
+    	}
+    </blockquote>
+    <p>
+    	If we did not specify a prefix in the JSONSerializer it automatically picks up the name of the property being transformed in Java and uses it to prefix the month, day, and year JSON properties. However, if we were to specify our own in the JSONSerializer it would look different.
+    </p>
+    <blockquote class="java" >
+    	JSONSerializer serializer = new JSONSerializer()
+    		.transform(new FlatDateTransformer("shazam"), "doOn");
+    	Task task = new Task();
+    	// set properties
+    	serializer.deepSerialize(task);
+    </blockquote>
+    <p>
+    would result in:
+    </p>
+    <blockquote class="java">
+    {"name":"some name","description":"some description",
+    	"shazamMonth":11,"shazamDay":13,"shazamYear":2007
+    }
+    </blockquote>
+    <p>
+    	In summary the FlatDateTransformer is a clear example on how to make use of the <i>inline</i> functionality to take greater control over the generated JSON. In order to accomplish this the FlatDateTransformer extends the AbstractTransformer and overrides the <i>isInline</i> method.
+    </p>
+    <blockquote class="java">
+            @Override
+            public Boolean isInline() {
+                return Boolean.TRUE;
+            }
+    </blockquote>
+    <p>
+    	If <i>isInline()</i> is overridden and returns <i>Boolean.TRUE</i> it tells the JSONContext that we will be handling the writing of our own property name. This allows us full control over the generated JSON instead of relying on the standard reflection to lookup the property name or key name and use it as the JSON property name. As a result we need to handle every aspect of the JSON generation for this object now.
+    </p>
+    <p>
+    	Once the <i>transform()</i> method is called on the FlatDateTransformer it first checks to see if a TypeContext exists. If a type context exists it checks to see if a property name exists on the TypeContext and sets it. Afterwards it checks to see if a prefix has been specified. If a prefix does not exist it is replaced with the propertyName. Otherwise prefix is left as is.</p>
+    <blockquote class="java">
+    	TypeContext typeContext = getContext().peekTypeContext();
+        String propertyName = typeContext != null ? typeContext.getPropertyName() : "";
+        if(prefix.trim().equals("")) prefix = propertyName;
+    </blockquote>
+    <p>
+    	Afterwards the TypeContext is checked. If the JSONContext does not yet contain a JSONContext or is not currently in a BasicType that is equal to BasicType.OBJECT then we will need to start writing a new JSON Object. Hence we call the writeOpenObject() method on the JSONContext. This creates a TypeContext that has a BasicType of OBJECT inside the writeOpenObject() method and pushes it onto the context stack in the JSONContext. If a TypeContext with a BasicType of OBJECT already exists on the stack then the properties are output as part of the currently generating JSON object.	
+    </p>
+    <blockquote class="java">
+	    if (typeContext == null || typeContext.getBasicType() != BasicType.OBJECT) {
+            typeContext = getContext().writeOpenObject();
+            setContext = true;
+        }
+    </blockquote>
+    <p>
+    	After this we just need to generate the JSON output.
+    </p>
+    <blockquote class="java">
+    	Date date = (Date) o;
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
 
-    <!--<p>-->
-        <!--Transformers are very interesting in that you can use them for all sorts of problems.  Say you accept Markdown-->
-        <!--notation on your new wiki software.  You store the Markdown text in the DB, and later render the HTML using the-->
-        <!--Transformer architecture.-->
-    <!--</p>-->
+        if (!typeContext.isFirst()) getContext().writeComma();
+        typeContext.setFirst(false);
+        getContext().writeName(fieldName("Month"));
+        getContext().transform(c.get(Calendar.MONTH));
 
-    <!--<p>-->
-        <!--Say you only want to accept some of the HTML tags from the user for security reasons.  Transformers could filter-->
-        <!--out any nefarious data from your objects when sending it through JSON.  Transformers are very useful, and Flexjson-->
-        <!--will include more out of the box Transformers in the future.-->
-    <!--</p>-->
+        getContext().writeComma();
+        getContext().writeName(fieldName("Day"));
+        getContext().transform(c.get(Calendar.DAY_OF_MONTH));
 
+        getContext().writeComma();
+        getContext().writeName(fieldName("Year"));
+        getContext().transform(c.get(Calendar.YEAR));
+    </blockquote>
+    <p>
+    	 All of this is fairly self explanatory. But, I'll draw special attention to the use of typeContext.isFirst(). This is used to check if the currently generating property is the first one to be created for this JSON object. If it is then we avoid writing the comma and then immediately set the typeContext.setFirst(false) so that all subsequent property creation for this JSON object prefixes a comma. If we did not perform the isFirst check we could easily wind up with JSON that looks like this:
+    </p>
+    <blockquote class="java">
+    {,"month":11,"day":13,"year":2007}
+   	 ^ notice the invalid comma at the beginning of the JSON
+    </blockquote>
+    <p>
+    	Finally, we close our JSON Object by checking if we created the TypeContext in this transformer.
+    </p>
+    <blockquote>
+		if (setContext) {
+            getContext().writeCloseObject();
+        }
+    </blockquote>
+    <p>
+    	Here is the full source for the FlatDateTransformer:
+    </p>
+    <blockquote class="java">
+        public class FlatDateTransformer extends AbstractTransformer {
+
+            String prefix = "";
+
+            public FlatDateTransformer(String prefix) {
+                this.prefix = prefix;
+            }
+
+            public void transform(Object o) {
+
+                boolean setContext = false;
+
+                TypeContext typeContext = getContext().peekTypeContext();
+                String propertyName = typeContext != null ? typeContext.getPropertyName() : "";
+                if(prefix.trim().equals("")) prefix = propertyName;
+
+                if (typeContext == null || typeContext.getBasicType() != BasicType.OBJECT) {
+                    typeContext = getContext().writeOpenObject();
+                    setContext = true;
+                }
+
+                Date date = (Date) o;
+                Calendar c = Calendar.getInstance();
+                c.setTime(date);
+
+                if (!typeContext.isFirst()) getContext().writeComma();
+                typeContext.setFirst(false);
+                getContext().writeName(fieldName("Month"));
+                getContext().transform(c.get(Calendar.MONTH));
+
+                getContext().writeComma();
+                getContext().writeName(fieldName("Day"));
+                getContext().transform(c.get(Calendar.DAY_OF_MONTH));
+
+                getContext().writeComma();
+                getContext().writeName(fieldName("Year"));
+                getContext().transform(c.get(Calendar.YEAR));
+
+                if (setContext) {
+                    getContext().writeCloseObject();
+                }
+
+            }
+
+            private String fieldName(String suffix) {
+                if( prefix.trim().equals("")) {
+                    return suffix.toLowerCase();
+                } else {
+                    return prefix + suffix;
+                }
+            }
+
+            @Override
+            public Boolean isInline() {
+                return Boolean.TRUE;
+            }
+        }
+    </blockquote>
     <h2>Thread safety and Reuse</h2>
 
     <p>
