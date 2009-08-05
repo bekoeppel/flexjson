@@ -405,6 +405,49 @@
         <p>
             Transformers are classes that are used to handle the actual transformation of Java objects into JSON.
         </p>
+        <h3>How to configure a transformer</h3>
+        <p>
+        	There are 2 ways you can configure a transformer. You can specify the property name (dot notation is respected) or you can specify a class.
+        </p>
+        <h4>Configuring a Transformer Using a String to Identify a Property</h4>
+        <p>
+        	This will only apply the transformer to the specified property/properties identified by the String varargs that are provided after the first parameter on the tranform method.
+        </p>
+        <blockquote class="java">
+           	JSONSerializer serializer = new JSONSerializer()
+           		.transform(new BasicDateTransformer(), "person.birthday");
+        </blockquote>
+        <p>or you can specify as many more properties to be handled by this Transformer as you want.</p>
+        <blockquote class="java">
+           	JSONSerializer serializer = new JSONSerializer()
+           		.transform(new BasicDateTransformer(), "person.birthday", "person.hireDate");
+        </blockquote>
+        <h4>Configuring a Transformer Using A Class Identifier</h4>
+        <p>Using a class will apply the transformer to any object of that type.</p>
+        <blockquote class="java">
+           	JSONSerializer serializer = new JSONSerializer()
+           		.transform(new BasicDateTransformer(), Date.class);
+        </blockquote>
+        <h4>Using String Identifiers with Class Identifiers</h4>
+        <p>
+        	It should be noted that there is a precedence to the use of combined transformer identifiers. The String property identifiers will override the class identifiers.
+        </p>
+        <blockquote class="java">
+			JSONSerializer serializer = new JSONSerializer()
+			.transform(new BasicDateTransformer(), Date.class)
+			.transform(new DateTransformer("MM/dd/yyyy"), "person.birthday");
+        </blockquote>
+        <p>
+        	The property identified by "person.birthday" would use the DateTransformer only. Any other Date objects would use the BasicDateTransformer.
+        </p>
+        <h4>Overriding FlexJSON default Transformers</h4>
+        <p>
+        	It is possible to override the default Transformers FlexJSON uses. If you wanted to override the default StringTransformer that FlexJSON uses for Strings you could write configure in the following manner:
+        </p>
+        <blockquote class="java">
+           	JSONSerializer serializer = new JSONSerializer()
+           		.transform(new MyCustomStringTransformer(), String.class);
+        </blockquote>
         <h3>Basic Transformer</h3>
         <p>
             FlexJSON comes with several basic Transformers that are used to meet the majority of your Java-to-JSON needs.<br/>
@@ -430,11 +473,11 @@
     <h3>How Transformers Work</h3>
 
     <p>
-        In order to understand where Transformers fit in it is important to understand what the JSONSerializer and the JSONContext do as well.
+        In order to understand the role that Transformers play it is important for us to understand what the JSONSerializer and the JSONContext do as well.
     </p>
     <h4>JSONSerializer</h4>
     <p>
-        The JSONSerializer works as a configuraiton object. Once serialize/deepSerialize is called on the JSONSerializer it retrieves a ThreadLocal version of a JSONContext and configures it for use.
+        The JSONSerializer works as a configuraiton object. Once serialize/deepSerialize is called on the JSONSerializer it retrieves a ThreadLocal version of a JSONContext and configures it for use specific to the calling Thread.
     </p>
     <h4>JSONContext</h4>
     <p>
@@ -476,7 +519,7 @@
         In the StringTranformer the Object passed in is a String which gets quoted by calling a method (getContext().writeQuoted()) on the JSONContext. The JSONContext takes care of all the string escaping that needs to occur. Pretty simple eh?
     </p>
     <p>
-        As a side note you will also notice that the Transformer extends AbstractTranformer. It is recommended that custom transformers extend the AbstractTransformer although it is not required. Feel free to take a look in the AbstractTransformer to see what it does. There isn't much to it.
+        As a side note you may notice that the Transformer extends AbstractTranformer. It is recommended that custom transformers extend the AbstractTransformer although it is not required. Feel free to take a look in the AbstractTransformer to see what it does. There isn't much to it.
     </p>
     <h3>Transforming a Collection</h3>
     <p>
