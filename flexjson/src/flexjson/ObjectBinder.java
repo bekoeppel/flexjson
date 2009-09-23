@@ -57,9 +57,12 @@ public class ObjectBinder {
         });
         factories.put( Map.class, new ObjectFactory() {
             public Object instantiate(Object value, Type targetType) {
-                // todo we should handle different types of Map classes here.
                 ParameterizedType ptype = (ParameterizedType) targetType;
-                return bindMap( (Map)value, new HashMap(), ptype.getActualTypeArguments()[0], ptype.getActualTypeArguments()[1] );
+                if( ptype != null ) {
+                    return bindMap( (Map)value, new HashMap(), ptype.getActualTypeArguments()[0], ptype.getActualTypeArguments()[1] );
+                } else {
+                    return bindMap( (Map)value, new HashMap(), null, null );
+                }
             }
         });
         factories.put( Float.class, new ObjectFactory() {
@@ -138,7 +141,7 @@ public class ObjectBinder {
             return null;
         } else if( input instanceof Map ) {
             Class targetClass = findClassName( (Map)input, getTargetClass(targetType) );
-            if( targetClass.isAssignableFrom( Map.class ) ) {
+            if( Map.class.isAssignableFrom( targetClass ) ) {
                 return factories.get( Map.class ).instantiate( input, targetType );
             } else {
                 return bindObject( (Map)input, targetClass);

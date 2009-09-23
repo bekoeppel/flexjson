@@ -13,6 +13,7 @@ import flexjson.test.mock.superhero.*;
 import java.util.Map;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class JSONDeserializerTest extends TestCase {
 
@@ -143,6 +144,17 @@ public class JSONDeserializerTest extends TestCase {
         assertEquals( archenemies.getSecond().getName(), deserialArchEnemies.getSecond().getName() );
         assertEquals( archenemies.getSecond().getLair(), deserialArchEnemies.getSecond().getLair() );
 
+    }
+
+    public void testGeneralMapDeserialization() {
+        FixtureCreator fixtures = new FixtureCreator();
+        String json = new JSONSerializer().exclude("*.class").serialize( fixtures.createCharlie() );
+        Map<String,Object> deserialized = new JSONDeserializer<Map<String,Object>>().use(null, HashMap.class).deserialize( json );
+
+        assertEquals( "Charlie", deserialized.get("firstname") );
+        assertEquals( "Hubbard", deserialized.get("lastname") );
+        assertTrue( Map.class.isAssignableFrom( deserialized.get("work").getClass() ) );
+        assertTrue( Map.class.isAssignableFrom( deserialized.get("home").getClass() ) );
     }
 
     public void testMixedCase() {
