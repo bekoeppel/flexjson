@@ -91,6 +91,14 @@
                 If you want to use those formats you'll need to use DateTransformer in a use() clause
                 supplying the path to the fields you want to translate.
             </li>
+            <li>
+                Bug 2899667: Object's with null values in the json weren't being deserialized properly because
+                of a parser bug.
+            </li>
+            <li>
+                Bug 2788719: Another issue with related to classes with interface variables not being
+                deserialized inside Collections.  Most of the rework done for 1.9 fixed these issues.
+            </li>
         </ul>
     </ul>
     <h2>Version 1.8</h2>
