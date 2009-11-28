@@ -8,7 +8,9 @@ import flexjson.JSONException;
 import java.lang.reflect.Type;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.ParameterizedType;
 import java.util.Map;
+import java.util.Collection;
 
 public class ClassLocatorObjectFactory implements ObjectFactory {
 
@@ -26,7 +28,18 @@ public class ClassLocatorObjectFactory implements ObjectFactory {
                 Constructor constructor = clazz.getDeclaredConstructor();
                 constructor.setAccessible(true);
                 Object target = constructor.newInstance();
-                return context.bindIntoObject( (Map)value,  target, clazz );
+                if( target instanceof Collection) {
+                    return context.bindIntoCollection( (Collection)value, (Collection<Object>)target, targetType );
+                } else if( target instanceof Map ) {
+                    ParameterizedType ptype = (ParameterizedType) targetType;
+                    if( ptype != null ) {
+                        return context.bindIntoMap( (Map)value, (Map<Object,Object>)target, ptype.getActualTypeArguments()[0], ptype.getActualTypeArguments()[1] );
+                    } else {
+                        return context.bindIntoMap(  (Map)value, (Map<Object,Object>)target, null, null );
+                    }
+                } else {
+                    return context.bindIntoObject( (Map)value,  target, clazz );
+                }
             } else {
                 return null;
             }

@@ -103,6 +103,19 @@ public class ObjectBinder {
         return target;
     }
 
+    public Object bindIntoMap(Map input, Map<Object, Object> result, Type keyType, Type valueType) {
+        for( Object inputKey : input.keySet() ) {
+            currentPath.enqueue("keys");
+            Object key = bind( inputKey, keyType );
+            currentPath.pop();
+            currentPath.enqueue("values");
+            Object value = bind( input.get(inputKey), valueType );
+            currentPath.pop();
+            result.put( key, value );
+        }
+        return result;
+    }
+
     public JSONException cannotConvertValueToTargetType(Object value, Class targetType) {
         return new JSONException( String.format("%s:  Can not convert %s into %s", currentPath, value.getClass().getName(), targetType.getClass().getName() ) );
     }

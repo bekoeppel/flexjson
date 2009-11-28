@@ -265,6 +265,7 @@ public class JSONDeserializerTest extends TestCase {
         String input = "{property: null, property2:5, property3:'abc'}";
 
         JSONDeserializer<Map<String, Object>> deserializer = new JSONDeserializer<Map<String, Object>>();
+        deserializer.use( null, HashMap.class );
         Map<String, Object> result = deserializer.deserialize(input);
 
         assertNotNull(result);
