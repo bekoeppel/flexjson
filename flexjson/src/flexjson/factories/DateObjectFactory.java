@@ -21,7 +21,8 @@ public class DateObjectFactory implements ObjectFactory {
         dateFormats.add(DateFormat.getDateTimeInstance( DateFormat.LONG, DateFormat.LONG ) );
         dateFormats.add(DateFormat.getDateTimeInstance( DateFormat.MEDIUM, DateFormat.MEDIUM ) );
         dateFormats.add(DateFormat.getDateTimeInstance( DateFormat.SHORT, DateFormat.SHORT ) );
-        dateFormats.add( new SimpleDateFormat("EEE MMM d hh:mm:ss z yyyy") );
+        dateFormats.add( new SimpleDateFormat("EEE MMM d hh:mm:ss a z yyyy") );
+        dateFormats.add( new SimpleDateFormat("EEE MMM d HH:mm:ss z yyyy") );
         dateFormats.add( new SimpleDateFormat("MM/dd/yy hh:mm:ss a"));
         dateFormats.add( new SimpleDateFormat("MM/dd/yy") );
     }
