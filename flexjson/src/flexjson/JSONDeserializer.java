@@ -175,10 +175,6 @@ public class JSONDeserializer<T> {
         return this;
     }
 
-    public JSONDeserializer<T> use( Class abstractType, Class concrete ) {
-        return use( abstractType, new ClassLocatorObjectFactory( new StaticClassLocator( concrete ) ) );
-    }
-
     public JSONDeserializer<T> use(ObjectFactory factory, String... paths) {
         for( String p : paths ) {
             use( p, factory );
