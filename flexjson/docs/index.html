@@ -562,7 +562,7 @@
         instantiated.
     </p>
 
-    <blockquote>
+    <blockquote class="java">
         String json = new JSONSerializer().serialize( shapeList, "shapes" );
 
         ShapeList shapes = new JSONDeserializer&lt;ShapeList&gt;()
@@ -586,6 +586,74 @@
         In this example I'm serializing a list of shapes, and I'm naming my list "shapes" which means my root isn't null
         anymore.  This is just to show how paths work, and doesn't really have any relation to the use of TypeLocator.
     </p>
+
+    <h3>Collections, Maps, and Generics</h3>
+
+    <p>
+        Collections and Maps are somewhat special cases of interfaces because they contain objects within them
+        that aren't accessible through setter and getter methods.  Normally, if you use generics and specify a
+        concrete class as the generic class contained then you won't have anything else to do.  However, mix
+        in an interface or abstract class and you'll have tell the deserializer the types contained within.
+    </p>
+
+    <p>
+        Starting with 1.9 you can specify both the concrete class used for the collection class as well as
+        the contained concrete class.  By appending "values" to the path of any collection you can configure
+        the concrete class of the contained class.
+    </p>
+
+    <p>
+        For example, say a Group object contains a Collection of Groupable instances where Groupable is an
+        interface.  We'll need to specify what concrete class to use for the Groupable.  For simplicity in
+        this example we'll assume all Groupable instances can be represented by a single concrete class.
+        If the path to the Group's instance variable members of type Collection&lt;Groupable&gt;.  So
+        we might do the following:
+    </p>
+
+    <blockquote class="java">
+        new JSONDeserializer().use( "group.members.values", ConcreteGroupable.class )
+    </blockquote>
+
+    <p>
+        The path "group.members" refers to the actual Collection instance.  If you wanted to specify
+        the Collection's implementation you could do the following:
+    </p>
+
+    <blockquote class="java">
+        new JSONDeserializer().use("group.members", LinkedList.class ).use( "group.members.values", ConcreteGroupable.class )
+    </blockquote>
+
+    <p>
+        Maps support specifying key by append "keys" to the path and the values by appending "values" just
+        like Collections.  You don't have to specify the keys of the Map if they are one of the JSON
+        native types like: String, or Double.
+    </p>
+
+    <h3>ObjectFactory</h3>
+
+    <p>
+        ObjectFactory are the underpinnings of the JSONDeserializer.  All object creation pass through some
+        type of ObjectFactory.  Starting with 1.9 you can specify your own implementation and attach these to
+        either paths or classes.  ObjectFactories can be thought of as companions to Transformers in JSONSerializer.
+    </p>
+
+    <p>
+        For example, say we want to export dates as yyyy.MM.dd using the DateTransformer.  We can do that easily
+        using transform() method on JSONSerializer.  Now let's read this back in by registering a DateTransformer
+        as an ObjectFactory for "person.birthdate".
+    </p>
+
+    <blockquote class="java">
+        new JSONDeserializer().use("person.birthdate", new DateTransformer("yyyy.MM.dd") ).deserialize( people );
+    </blockquote>
+
+    <p>
+        To use this pattern for all Dates you can register on the Date class.  For example:
+    </p>
+
+    <blockquote class="java">
+        new JSONDeserializer().use(Date.class, new DateTransformer("yyyy.MM.dd") ).deserialize( people );
+    </blockquote>
 
     <h3>Deserializing has Rules for your Java Objects</h3>
 

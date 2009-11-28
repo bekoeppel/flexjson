@@ -22,6 +22,8 @@ public class Network {
     String name;
     List people;
 
+    public Network() {
+    }
 
     public Network(String name, Person... peeps ) {
         this.name = name;

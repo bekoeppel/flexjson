@@ -1,9 +1,10 @@
 package flexjson;
 
+import flexjson.factories.ClassLocatorObjectFactory;
+import flexjson.locators.StaticClassLocator;
+
 import java.util.Map;
 import java.util.HashMap;
-import java.lang.reflect.Type;
-import java.lang.reflect.Method;
 
 /**
  * <p>
@@ -110,26 +111,74 @@ import java.lang.reflect.Method;
  * can be different from your Java object structure.  The works very much in the same way getters do for
  * the {@link flexjson.JSONSerializer}.
  * </p>
+ * <p>
+ * Collections and Maps have changed the path structure in order to specify concrete classes for both
+ * the Collection implementation and the contained values.  Normally you would use generics to specify
+ * the concrete class to load.  However, if you're contained class is an interface or abstract class
+ * then you'll need to define those concrete classes using paths.  To specify the concrete class for
+ * a Collection use the path to the collection.  To specify the contained instance's concrete class
+ * append "values" onto the path.  For example, if your collection path is "person.friends" you can
+ * specify the collection type using:
+ * </p>
+ * <pre>
+ * new JSONDeserializer().use("person.friends", ArrayList.class).use("person.friends.values", Frienemies.class)
+ * </pre>
+ * <p>
+ * Notice that append "values" onto the "person.friends" to specify the class to use inside the
+ * Collection.  Maps have both keys and values within them.  For Maps you can specify those by
+ * appending "keys" and "values" to the path.
+ * </p>
+ * <p>
+ * Now onto the advanced topics of the deserializer.  ObjectFactory interface is the underpinnings of the
+ * deserializer.  All object creation is controlled by ObjectFactories.  By default there are many
+ * ObjectFactories registered to handle all of the default types supported.  However, you can add your
+ * own implementations to handle specialized formats.  For example, say you've encoded your Dates using
+ * yyyy.MM.dd.  If you want to read these into java.util.Date objects you can register a
+ * {@link DateTransformer} to deserialize dates into Date objects.
+ * </p>
  */
 public class JSONDeserializer<T> {
 
-    private ObjectBinder binder;
+    private Map<Class,ObjectFactory> typeFactories = new HashMap<Class,ObjectFactory>();
+    private Map<Path,ObjectFactory> pathFactories = new HashMap<Path,ObjectFactory>();
 
     public JSONDeserializer() {
-        binder = new ObjectBinder();
     }
 
     public T deserialize( String input ) {
+        ObjectBinder binder = new ObjectBinder();
+        for( Class clazz : typeFactories.keySet() ) {
+            binder.use( clazz, typeFactories.get(clazz) );
+        }
+        for( Path p : pathFactories.keySet() ) {
+            binder.use( p, pathFactories.get( p ) );
+        }
         return (T)binder.bind( new JSONTokener( input ).nextValue() );
     }
 
     public JSONDeserializer<T> use( String path, ClassLocator locator ) {
-        binder.use( path, locator );
+        pathFactories.put( Path.parse(path), new ClassLocatorObjectFactory( locator ) );
         return this;
     }
 
     public JSONDeserializer<T> use( String path, Class clazz ) {
-        binder.use( path, clazz );
+        return use( path, new StaticClassLocator(clazz) );
+    }
+
+    public JSONDeserializer<T> use( Class clazz, ObjectFactory factory ) {
+        typeFactories.put( clazz, factory );
+        return this;
+    }
+
+    public JSONDeserializer<T> use( String path, ObjectFactory factory ) {
+        pathFactories.put( Path.parse( path ), factory );
+        return this;
+    }
+
+    public JSONDeserializer<T> use(ObjectFactory factory, String... paths) {
+        for( String p : paths ) {
+            use( p, factory );
+        }
         return this;
     }
 }

@@ -12,7 +12,8 @@ import flexjson.test.mock.Address;
 import flexjson.test.mock.Phone;
 import flexjson.test.mock.PhoneNumberType;
 import flexjson.ObjectBinder;
-import flexjson.ClassLocator;
+import flexjson.Path;
+import flexjson.factories.ClassLocatorObjectFactory;
 import flexjson.locators.StaticClassLocator;
 
 public class ObjectBinderTest extends TestCase {
@@ -107,7 +108,7 @@ public class ObjectBinderTest extends TestCase {
 
         map.put("phones", createPhoneMap(phones) );
 
-        ObjectBinder binder = new ObjectBinder().use("phones", new StaticClassLocator(Phone.class) );
+        ObjectBinder binder = new ObjectBinder().use(Path.parse("phones.values"), new ClassLocatorObjectFactory( new StaticClassLocator(Phone.class) ) );
         Person person = (Person)binder.bind( map );
 
         assertTrue( "Make sure our array has stuff in it.", !person.getPhones().isEmpty() );
