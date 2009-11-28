@@ -251,6 +251,30 @@ public class JSONDeserializerTest extends TestCase {
         assertEquals( "Ben", bro.getPeople()[1].getFirstname() );
     }
 
+    public void testDeserialization() {
+      JSONDeserializer<Map<String, Object>> deserializer = new JSONDeserializer<Map<String, Object>>();
+      String input = "{property: true, property2:5, property3:'abc'}";
+      Map<String, Object> result = deserializer.deserialize(input);
+      assertNotNull(result);
+      assertEquals(3, result.size());
+    }
+
+
+    // this test should be successful
+    public void testNullDeserialization() {
+        String input = "{property: null, property2:5, property3:'abc'}";
+
+        JSONDeserializer<Map<String, Object>> deserializer = new JSONDeserializer<Map<String, Object>>();
+        Map<String, Object> result = deserializer.deserialize(input);
+
+        assertNotNull(result);
+        // fails on this line, because the first property is not deserialized
+        assertEquals(3, result.size());
+        assertTrue(result.containsKey("property"));
+        assertNull("the value should be null", result.get("property"));
+    }
+
+
 
     public void setUp() {
     }

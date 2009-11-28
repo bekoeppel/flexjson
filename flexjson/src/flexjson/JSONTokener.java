@@ -491,7 +491,7 @@ public class JSONTokener {
     }
 
     private void putOnce(Map<String, Object> jsonObject, String key, Object value) {
-        if( key != null && value != null  ) {
+        if( key != null ) {
             if( !jsonObject.containsKey(key) ) {
                 jsonObject.put( key, value );
             } else {
