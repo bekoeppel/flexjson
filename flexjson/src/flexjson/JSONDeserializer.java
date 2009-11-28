@@ -129,11 +129,11 @@ import java.util.HashMap;
  * appending "keys" and "values" to the path.
  * </p>
  * <p>
- * Now onto the advanced topics of the deserializer.  ObjectFactory interface is the underpinnings of the
- * deserializer.  All object creation is controlled by ObjectFactories.  By default there are many
- * ObjectFactories registered to handle all of the default types supported.  However, you can add your
- * own implementations to handle specialized formats.  For example, say you've encoded your Dates using
- * yyyy.MM.dd.  If you want to read these into java.util.Date objects you can register a
+ * Now onto the advanced topics of the deserializer.  {@link flexjson.ObjectFactory} interface is the
+ * underpinnings of the deserializer.  All object creation is controlled by ObjectFactories.  By default
+ * there are many ObjectFactories registered to handle all of the default types supported.  However, you
+ * can add your own implementations to handle specialized formats.  For example, say you've encoded your
+ * Dates using yyyy.MM.dd.  If you want to read these into java.util.Date objects you can register a
  * {@link DateTransformer} to deserialize dates into Date objects.
  * </p>
  */
