@@ -22,7 +22,7 @@
 
     <target name="build" depends="clean" description="Builds the class files.">
         <mkdir dir="${builddir}"/>
-        <javac debug="true" destdir="${builddir}" srcdir="${srcdir}">
+        <javac debug="true" destdir="${builddir}" srcdir="${srcdir}" target="1.5">
             <classpath>
                 <fileset dir="${libdir}" includes="**/*.jar"/>
             </classpath>
