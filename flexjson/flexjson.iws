@@ -30,37 +30,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/flexjson.iws" afterPath="$PROJECT_DIR$/flexjson.iws" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/flexjson/Path.java" afterPath="$PROJECT_DIR$/src/flexjson/Path.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/flexjson/JSONDeserializer.java" afterPath="$PROJECT_DIR$/src/flexjson/JSONDeserializer.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/flexjson/factories/ClassLocatorObjectFactory.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docs/changelog.html" afterPath="$PROJECT_DIR$/docs/changelog.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/flexjson/factories/ListObjectFactory.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/flexjson/factories/StringObjectFactory.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/flexjson/factories/BeanObjectFactory.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/flexjson/factories/MapObjectFactory.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/flexjson/factories/ShortObjectFactory.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/flexjson/ObjectBinder.java" afterPath="$PROJECT_DIR$/src/flexjson/ObjectBinder.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/flexjson/factories/ArrayObjectFactory.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build.xml" afterPath="$PROJECT_DIR$/build.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/flexjson/factories/EnumObjectFactory.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/flexjson/factories/SetObjectFactory.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/flexjson/factories/BooleanObjectFactory.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/flexjson/ObjectFactory.java" afterPath="$PROJECT_DIR$/src/flexjson/ObjectFactory.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/flexjson/test/mock/Person.java" afterPath="$PROJECT_DIR$/src/flexjson/test/mock/Person.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/flexjson/test/mock/Group.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/flexjson/factories/LongObjectFactory.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/flexjson/factories/CharacterObjectFactory.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/flexjson/test/mock/Network.java" afterPath="$PROJECT_DIR$/src/flexjson/test/mock/Network.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/flexjson/factories/SortedSetObjectFactory.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/flexjson/factories/DateObjectFactory.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/flexjson/factories/ByteObjectFactory.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/flexjson/test/JSONDeserializerTest.java" afterPath="$PROJECT_DIR$/src/flexjson/test/JSONDeserializerTest.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/flexjson/factories" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/flexjson/test/ObjectBinderTest.java" afterPath="$PROJECT_DIR$/src/flexjson/test/ObjectBinderTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docs/index.html" afterPath="$PROJECT_DIR$/docs/index.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/flexjson/factories/FloatObjectFactory.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/flexjson/DateTransformer.java" afterPath="$PROJECT_DIR$/src/flexjson/DateTransformer.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/flexjson.iws" afterPath="$PROJECT_DIR$/flexjson.iws" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/flexjson.iml" afterPath="$PROJECT_DIR$/flexjson.iml" />
     </list>
   </component>
   <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
@@ -212,90 +184,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="changelog.html" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/docs/changelog.html">
+      <file leaf-file-name="JSONTokener.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/flexjson/JSONTokener.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="13" column="25" selection-start="353" selection-end="353" vertical-scroll-proportion="0.57992566">
-              <folding />
-            </state>
-          </provider>
-          <provider editor-type-id="HtmlPreview">
-            <state />
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="index.html" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/docs/index.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="38" column="0" selection-start="1679" selection-end="1679" vertical-scroll-proportion="0.6431227">
-              <folding />
-            </state>
-          </provider>
-          <provider editor-type-id="HtmlPreview">
-            <state />
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="build.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/build.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="2" column="0" selection-start="54" selection-end="54" vertical-scroll-proportion="0.03809524">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="JSONDeserializer.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/flexjson/JSONDeserializer.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="123" column="0" selection-start="6696" selection-end="6696" vertical-scroll-proportion="0.37572256">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ObjectFactory.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/flexjson/ObjectFactory.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="6" column="0" selection-start="171" selection-end="171" vertical-scroll-proportion="0.21752267">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ObjectBinder.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/flexjson/ObjectBinder.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="156" column="0" selection-start="7266" selection-end="7266" vertical-scroll-proportion="0.3323263">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="BeanObjectFactory.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/flexjson/factories/BeanObjectFactory.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="16" column="0" selection-start="499" selection-end="499" vertical-scroll-proportion="0.326284">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ArrayObjectFactory.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/flexjson/factories/ArrayObjectFactory.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="8" column="32" selection-start="177" selection-end="177" vertical-scroll-proportion="0.27745664">
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ListObjectFactory.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/flexjson/factories/ListObjectFactory.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="9" column="13" selection-start="193" selection-end="193" vertical-scroll-proportion="0.13872832">
+            <state line="500" column="0" selection-start="14378" selection-end="14378" vertical-scroll-proportion="0.02603037">
               <folding />
             </state>
           </provider>
@@ -304,10 +196,86 @@
       <file leaf-file-name="JSONDeserializerTest.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/flexjson/test/JSONDeserializerTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="172" column="0" selection-start="8781" selection-end="8781" vertical-scroll-proportion="0.8036254">
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
+            <state line="267" column="0" selection-start="13925" selection-end="13925" vertical-scroll-proportion="0.15695067">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MapObjectFactory.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/flexjson/factories/MapObjectFactory.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="14" column="150" selection-start="554" selection-end="622" vertical-scroll-proportion="0.21524663">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ClassLocatorObjectFactory.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/flexjson/factories/ClassLocatorObjectFactory.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="31" column="0" selection-start="1061" selection-end="1061" vertical-scroll-proportion="0.5650224">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="changelog.html" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/docs/changelog.html">
+          <provider editor-type-id="HtmlPreview">
+            <state />
+          </provider>
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="80" column="38" selection-start="3574" selection-end="3574" vertical-scroll-proportion="0.03125">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="index.html" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/docs/index.html">
+          <provider editor-type-id="HtmlPreview">
+            <state />
+          </provider>
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="300" column="18" selection-start="12700" selection-end="12700" vertical-scroll-proportion="0.03125">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="build.xml" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/build.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="24" column="80" selection-start="715" selection-end="715" vertical-scroll-proportion="0.66976744">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ObjectBinderTest.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/flexjson/test/ObjectBinderTest.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="54" column="0" selection-start="1713" selection-end="1713" vertical-scroll-proportion="0.02690583">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="DateObjectFactory.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/flexjson/factories/DateObjectFactory.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="46" column="35" selection-start="1890" selection-end="1890" vertical-scroll-proportion="0.96860987">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ObjectBinder.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/flexjson/ObjectBinder.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="105" column="44" selection-start="4303" selection-end="4303" vertical-scroll-proportion="0.02690583">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -411,42 +379,6 @@
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
         </PATH_ELEMENT>
       </PATH>
-      <PATH>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="flexjson" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="flexjson" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="PsiDirectory:/Users/charlie/projects/flexjson/trunk/flexjson" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="PsiDirectory:/Users/charlie/projects/flexjson/trunk/flexjson/release" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-        </PATH_ELEMENT>
-      </PATH>
-      <PATH>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="flexjson" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="flexjson" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="PsiDirectory:/Users/charlie/projects/flexjson/trunk/flexjson" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="PsiDirectory:/Users/charlie/projects/flexjson/trunk/flexjson/docs" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-        </PATH_ELEMENT>
-      </PATH>
     </subPane>
   </component>
   <component name="ProjectReloadState">
@@ -460,7 +392,7 @@
       <showLibraryContents />
       <hideEmptyPackages />
       <abbreviatePackageNames />
-      <showStructure ProjectPane="false" Scope="false" PackagesPane="false" Favorites="false" />
+      <showStructure Favorites="false" Scope="false" PackagesPane="false" ProjectPane="false" />
       <autoscrollToSource />
       <autoscrollFromSource />
       <sortByType />
@@ -493,30 +425,15 @@
     <RUBY_DOC NAME="NUMBER" VALUE="0" />
   </component>
   <component name="RunManager" selected="JUnit.flexjson.test in flexjson">
-    <configuration default="true" type="Application" factoryName="Application" enabled="false" merge="false">
-      <option name="MAIN_CLASS_NAME" />
-      <option name="VM_PARAMETERS" />
-      <option name="PROGRAM_PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+    <tempConfiguration default="false" name="JSONDeserializerTest.testNullDeserialization" type="JUnit" factoryName="JUnit" enabled="false" merge="false">
+      <pattern value="flexjson.test.*" />
+      <module name="flexjson" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="ENABLE_SWING_INSPECTOR" value="false" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <module name="" />
-      <envs />
-      <method>
-        <option name="Make" value="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="JUnit" factoryName="JUnit" enabled="false" merge="false">
-      <module name="" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="METHOD_NAME" />
-      <option name="TEST_OBJECT" value="class" />
+      <option name="PACKAGE_NAME" value="flexjson.test" />
+      <option name="MAIN_CLASS_NAME" value="flexjson.test.JSONDeserializerTest" />
+      <option name="METHOD_NAME" value="testNullDeserialization" />
+      <option name="TEST_OBJECT" value="method" />
       <option name="VM_PARAMETERS" />
       <option name="PARAMETERS" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
@@ -527,39 +444,16 @@
         <value defaultName="wholeProject" />
       </option>
       <envs />
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="62777" />
+        <option name="TRANSPORT" value="0" />
+        <option name="LOCAL" value="true" />
+      </RunnerSettings>
+      <ConfigurationWrapper RunnerId="Debug" />
       <method>
         <option name="Make" value="true" />
       </method>
-    </configuration>
-    <configuration default="true" type="TestNG" factoryName="TestNG" enabled="false" merge="false">
-      <module name="" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="SUITE_NAME" />
-      <option name="PACKAGE_NAME" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="METHOD_NAME" />
-      <option name="GROUP_NAME" />
-      <option name="TEST_OBJECT" value="CLASS" />
-      <option name="VM_PARAMETERS" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" />
-      <option name="OUTPUT_DIRECTORY" />
-      <option name="ANNOTATION_TYPE" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="ADDITIONAL_CLASS_PATH" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="wholeProject" />
-      </option>
-      <option name="PROPERTIES_FILE" />
-      <envs />
-      <properties />
-      <listeners />
-      <method>
-        <option name="Make" value="true" />
-      </method>
-    </configuration>
+    </tempConfiguration>
     <configuration default="true" type="RubyRunConfigurationType" factoryName="Ruby test">
       <RTEST_RUN_CONFIG_SETTINGS_ID NAME="RUBY_ARGS" VALUE="-e STDOUT.sync=true;STDERR.sync=true;load($0=ARGV.shift)" />
       <RTEST_RUN_CONFIG_SETTINGS_ID NAME="WORK DIR" VALUE="" />
@@ -601,6 +495,22 @@
       <option name="HOST" value="localhost" />
       <option name="PORT" value="5005" />
     </configuration>
+    <configuration default="true" type="Application" factoryName="Application" enabled="false" merge="false">
+      <option name="MAIN_CLASS_NAME" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="" />
+      <envs />
+      <method>
+        <option name="Make" value="true" />
+      </method>
+    </configuration>
     <configuration default="true" type="Applet" factoryName="Applet">
       <module name="" />
       <option name="MAIN_CLASS_NAME" />
@@ -612,6 +522,57 @@
       <option name="VM_PARAMETERS" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
+    </configuration>
+    <configuration default="true" type="TestNG" factoryName="TestNG" enabled="false" merge="false">
+      <module name="" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="SUITE_NAME" />
+      <option name="PACKAGE_NAME" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="GROUP_NAME" />
+      <option name="TEST_OBJECT" value="CLASS" />
+      <option name="VM_PARAMETERS" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" />
+      <option name="OUTPUT_DIRECTORY" />
+      <option name="ANNOTATION_TYPE" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="ADDITIONAL_CLASS_PATH" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="wholeProject" />
+      </option>
+      <option name="PROPERTIES_FILE" />
+      <envs />
+      <properties />
+      <listeners />
+      <method>
+        <option name="Make" value="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="JUnit" factoryName="JUnit" enabled="false" merge="false">
+      <module name="" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="VM_PARAMETERS" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="ADDITIONAL_CLASS_PATH" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="wholeProject" />
+      </option>
+      <envs />
+      <method>
+        <option name="Make" value="true" />
+      </method>
     </configuration>
     <configuration default="false" name="flexjson.test in flexjson" type="JUnit" factoryName="JUnit" enabled="false" merge="false">
       <module name="flexjson" />
@@ -636,13 +597,16 @@
         <option name="TRANSPORT" value="0" />
         <option name="LOCAL" value="true" />
       </RunnerSettings>
+      <RunnerSettings RunnerId="Run" />
       <ConfigurationWrapper RunnerId="Debug" />
+      <ConfigurationWrapper RunnerId="Run" />
       <method>
         <option name="Make" value="true" />
       </method>
     </configuration>
-    <list size="1">
-      <item index="0" class="java.lang.String" itemvalue="JUnit.flexjson.test in flexjson" />
+    <list size="2">
+      <item index="0" class="java.lang.String" itemvalue="JUnit.JSONDeserializerTest.testNullDeserialization" />
+      <item index="1" class="java.lang.String" itemvalue="JUnit.flexjson.test in flexjson" />
     </list>
   </component>
   <component name="ScopeViewComponent">
@@ -741,11 +705,11 @@
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="3" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.27225903" order="1" />
       <window_info id="Maven projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="3" />
-      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32814527" order="8" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32814527" order="8" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3216602" order="3" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24950364" order="2" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" order="0" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.4773022" order="4" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4773022" order="4" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="9" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="10" />
       <window_info id="Duplicates" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="13" />
@@ -773,7 +737,7 @@
     <option name="PERFORM_EDIT_IN_BACKGROUND" value="true" />
     <option name="PERFORM_ADD_REMOVE_IN_BACKGROUND" value="true" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added Untransformer" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added compatability for 1.5 with JDK 1.6 compliation." />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="REFORMAT_BEFORE_FILE_COMMIT" value="false" />
@@ -793,6 +757,14 @@
     <MESSAGE value="More improvements for Deserialization." />
     <MESSAGE value="Upped the version 1.8" />
     <MESSAGE value="Added Untransformer" />
+    <MESSAGE value="Added changes for 1.9:&#10;&#10;This is the biggest set of changes to the JSONDeserializer since it was written.  This&#10;refactoring makes the deserializer much more flexible in responding to alternate&#10;serialization formats using ObjectFactory.  ObjectFactories are the basis for all&#10;type binding between JSON and Java Objects.  ObjectFactories can be configured by&#10;path or Class.  Paths only apply that ObjectFactory to the object graph path.  Class&#10;apply to all Class types detected in that object graph. &#10;&#10;&#10;" />
+    <MESSAGE value="Fixed date pattern for AM/PM hours vs. military time." />
+    <MESSAGE value="Updated documentaion." />
+    <MESSAGE value="Added method for making interface -&gt; concrete class easier." />
+    <MESSAGE value="Rollback prior changes due to method overloading issues with adding that method." />
+    <MESSAGE value="Fix issues with JSONTokenizer that rejected values with null for an object's value." />
+    <MESSAGE value="Fixed several issues noted in bugs.  Null values were being ignored.  Providing collections classes for ClassLocators weren't being serialized properly." />
+    <MESSAGE value="Added compatability for 1.5 with JDK 1.6 compliation." />
   </component>
   <component name="VssConfiguration">
     <option name="CLIENT_PATH" value="" />
@@ -858,126 +830,116 @@
     <option name="myLastEditedConfigurable" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/flexjson/test/mock/Employee.java">
+    <entry file="file://$PROJECT_DIR$/src/flexjson/ObjectFactory.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="10" column="13" selection-start="162" selection-end="162" vertical-scroll-proportion="0.33236995">
+        <state line="6" column="0" selection-start="171" selection-end="171" vertical-scroll-proportion="0.16143498">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/flexjson/test/mock/Address.java">
+    <entry file="file://$PROJECT_DIR$/src/flexjson/test/FastString.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="17" column="13" selection-start="638" selection-end="638" vertical-scroll-proportion="0.10404624">
+        <state line="6" column="19" selection-start="95" selection-end="95" vertical-scroll-proportion="0.10762332">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/flexjson/factories/MapObjectFactory.java">
+    <entry file="file://$PROJECT_DIR$/src/flexjson/test/TestClass.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="25" column="52" selection-start="1126" selection-end="1126" vertical-scroll-proportion="0.68882173">
+        <state line="15" column="13" selection-start="326" selection-end="326" vertical-scroll-proportion="0.13015184">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/flexjson/locators/TypeLocator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="13" selection-start="365" selection-end="365" vertical-scroll-proportion="0.31213874">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/flexjson/test/ObjectBinderTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="18" column="13" selection-start="483" selection-end="483" vertical-scroll-proportion="-0.764574">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/flexjson/test/mock/Group.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="0" selection-start="230" selection-end="230" vertical-scroll-proportion="0.41618496">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/flexjson/factories/ListObjectFactory.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="13" selection-start="193" selection-end="193" vertical-scroll-proportion="0.13872832">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/flexjson/factories/BeanObjectFactory.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="16" column="0" selection-start="499" selection-end="499" vertical-scroll-proportion="0.326284">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/flexjson/ObjectBinder.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="156" column="0" selection-start="7266" selection-end="7266" vertical-scroll-proportion="0.3323263">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/flexjson/factories/ArrayObjectFactory.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="32" selection-start="177" selection-end="177" vertical-scroll-proportion="0.27745664">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/docs/changelog.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="25" selection-start="353" selection-end="353" vertical-scroll-proportion="0.57992566">
-          <folding />
-        </state>
-      </provider>
+    <entry file="file://$PROJECT_DIR$/docs/javadoc/flexjson/class-use/JSONDeserializer.html">
       <provider editor-type-id="HtmlPreview">
         <state />
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="2" column="0" selection-start="54" selection-end="54" vertical-scroll-proportion="0.03809524">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/flexjson/JSONDeserializer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="155" column="0" selection-start="8254" selection-end="8254" vertical-scroll-proportion="0.70498914">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/flexjson/JSONTokener.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="500" column="0" selection-start="14378" selection-end="14378" vertical-scroll-proportion="0.02603037">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/flexjson/test/JSONDeserializerTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="172" column="0" selection-start="8781" selection-end="8781" vertical-scroll-proportion="0.8036254">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+        <state line="267" column="0" selection-start="13925" selection-end="13925" vertical-scroll-proportion="0.15695067">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/flexjson/factories/MapObjectFactory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="14" column="150" selection-start="554" selection-end="622" vertical-scroll-proportion="0.21524663">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/flexjson/factories/ClassLocatorObjectFactory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="31" column="0" selection-start="1061" selection-end="1061" vertical-scroll-proportion="0.5650224">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/flexjson/test/ObjectBinderTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="54" column="0" selection-start="1713" selection-end="1713" vertical-scroll-proportion="0.02690583">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/flexjson/factories/DateObjectFactory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="46" column="35" selection-start="1890" selection-end="1890" vertical-scroll-proportion="0.96860987">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/flexjson/ObjectBinder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="105" column="44" selection-start="4303" selection-end="4303" vertical-scroll-proportion="0.02690583">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/docs/changelog.html">
+      <provider editor-type-id="HtmlPreview">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="80" column="38" selection-start="3574" selection-end="3574" vertical-scroll-proportion="0.03125">
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/docs/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="38" column="0" selection-start="1679" selection-end="1679" vertical-scroll-proportion="0.6431227">
-          <folding />
-        </state>
-      </provider>
       <provider editor-type-id="HtmlPreview">
         <state />
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/flexjson/JSONDeserializer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="123" column="0" selection-start="6696" selection-end="6696" vertical-scroll-proportion="0.37572256">
+        <state line="300" column="18" selection-start="12700" selection-end="12700" vertical-scroll-proportion="0.03125">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/flexjson/ObjectFactory.java">
+    <entry file="file://$PROJECT_DIR$/build.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="0" selection-start="171" selection-end="171" vertical-scroll-proportion="0.21752267">
+        <state line="24" column="80" selection-start="715" selection-end="715" vertical-scroll-proportion="0.66976744">
           <folding />
         </state>
       </provider>
