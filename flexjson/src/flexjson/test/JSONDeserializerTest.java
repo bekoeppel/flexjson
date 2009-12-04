@@ -119,6 +119,19 @@ public class JSONDeserializerTest extends TestCase {
         String json = new JSONSerializer().serialize(list);
         List<Person> people = new JSONDeserializer<List<Person>>().deserialize(json);
         assertEquals(ArrayList.class, people.getClass());
+
+        json = new JSONSerializer().exclude("*.class").serialize( list );
+        people = new JSONDeserializer<List<Person>>().use("values", Person.class).deserialize(json);
+
+        assertEquals(ArrayList.class, people.getClass() );
+        assertEquals(3, people.size());
+        assertEquals(Person.class, people.get(0).getClass());
+
+        List<Map> peopleMap = new JSONDeserializer<List<Map>>().deserialize(json);
+
+        assertEquals(ArrayList.class, peopleMap.getClass() );
+        assertEquals(3, peopleMap.size());
+        assertEquals(HashMap.class, peopleMap.get(0).getClass());
     }
 
     public void testGenericTypeDeserialization() {
