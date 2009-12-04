@@ -36,6 +36,11 @@
                 <include name="**/*.class"/>
                 <exclude name="**/test/*.class"/>
             </fileset>
+            <manifest>
+                <attribute name="Built-By" value="${user.name}"/>
+                <attribute name="Package-Title" value="flexjson"/>
+                <attribute name="Package-Version" value="${version}"/>
+            </manifest>
         </jar>
         <delete file="flexjson_test.jar" failonerror="false"/>
         <jar destfile="flexjson_test.jar">
