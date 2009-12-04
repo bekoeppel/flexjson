@@ -2,6 +2,7 @@ package flexjson.test.mock.superhero;
 
 public class HeatVision implements SuperPower {
     private float power;
+    private int strength = 10;
 
     protected HeatVision() {
     }
@@ -12,6 +13,14 @@ public class HeatVision implements SuperPower {
 
     public float getPower() {
         return power;
+    }
+
+    public int getStrength() {
+        return strength;
+    }
+
+    public void setStrength(int strength) {
+        this.strength = strength;
     }
 
     public boolean equals(Object o) {

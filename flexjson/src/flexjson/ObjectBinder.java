@@ -24,6 +24,8 @@ public class ObjectBinder {
         factories.put( Set.class, new SetObjectFactory() );
         factories.put( SortedSet.class, new SortedSetObjectFactory() );
         factories.put( Map.class, new MapObjectFactory() );
+        factories.put( Integer.class, new IntegerObjectFactory() );
+        factories.put( int.class, new IntegerObjectFactory() );
         factories.put( Float.class, new FloatObjectFactory() );
         factories.put( float.class, new FloatObjectFactory() );
         factories.put( Short.class, new ShortObjectFactory() );
