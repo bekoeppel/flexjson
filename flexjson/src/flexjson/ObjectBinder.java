@@ -28,6 +28,8 @@ public class ObjectBinder {
         factories.put( int.class, new IntegerObjectFactory() );
         factories.put( Float.class, new FloatObjectFactory() );
         factories.put( float.class, new FloatObjectFactory() );
+        factories.put( Double.class, new DoubleObjectFactory() );
+        factories.put( double.class, new DoubleObjectFactory() );
         factories.put( Short.class, new ShortObjectFactory() );
         factories.put( short.class, new ShortObjectFactory() );
         factories.put( Long.class, new LongObjectFactory() );
