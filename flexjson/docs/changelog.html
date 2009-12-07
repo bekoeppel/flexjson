@@ -21,6 +21,38 @@
 <body>
     <h1>Flexjson Change Log</h1>
     <h2>Version 1.9</h2>
+    <h3>Dec 7, 2009</h3>
+    <ul>
+        <li>Bug Fixes</li>
+        <li>
+            <p>
+                Fix for 2910131: Data types Double and double primitive were not recognized
+                by the JSONDeserializer object by default.  ObjectBinder now has a ObjectFactory
+                registered by default for both Double and double classes.
+            </p>
+        </li>
+        <li>
+            <p>
+                Fix for 2905865: Added version number to the manifest file in the jar file.
+            </p>
+        </li>
+        <li>
+            <p>
+                Fix for 2899667: Null properties in the json were not being passed
+                to the binding phase so null properties would be dropped when deserializing.
+                Changed the JSONTokenizer to NOT filter based on the value being null.
+            </p>
+        </li>
+        <li>
+            <p>
+                Fix for 2908854: Deserializing a non-generized Map (i.e. List&lt;Map&gt;) threw
+                a ClassCastException.  This is fixed by changing the ObjectFactory responsible
+                for maps to handle non-generized Maps, and fixes in the path expressions for 1.9
+                enable the user to specify the data types for keys and values.
+            </p>
+        </li>
+    </ul>
+    <h2>Version 1.9</h2>
     <h3>Nov 23, 2009</h3>
     <ul>
         <li>Enhancements</li>
