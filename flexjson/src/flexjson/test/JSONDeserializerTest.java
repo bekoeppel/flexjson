@@ -288,6 +288,17 @@ public class JSONDeserializerTest extends TestCase {
         assertNull("the value should be null", result.get("property"));
     }
 
+    public void testArraysAndClassLocators() {
+        ClassLocator locator = new ClassLocator() {
+            public Class locate(Map map, Path currentPath) throws ClassNotFoundException {
+                if( map.containsKey("actLevStart") ) return HashMap.class;
+                if( map.containsKey("class") ) return Class.forName( (String)map.get("class") );
+                return HashMap.class;
+            }
+        };
+        new JSONDeserializer().use("values", locator).deserialize( "[{'foo1': 'bar1', 'foo2': {'actLevStart': 1, 'actLevEnd': 2 }, 'foo3': {'someMapKey': 'someMapValue'}}]");
+    }
+
 
 
     public void setUp() {

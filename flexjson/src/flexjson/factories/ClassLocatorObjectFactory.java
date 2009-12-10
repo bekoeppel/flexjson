@@ -31,8 +31,8 @@ public class ClassLocatorObjectFactory implements ObjectFactory {
                 if( target instanceof Collection) {
                     return context.bindIntoCollection( (Collection)value, (Collection<Object>)target, targetType );
                 } else if( target instanceof Map ) {
-                    ParameterizedType ptype = (ParameterizedType) targetType;
-                    if( ptype != null ) {
+                    if( targetType instanceof ParameterizedType ) {
+                        ParameterizedType ptype = (ParameterizedType) targetType;
                         return context.bindIntoMap( (Map)value, (Map<Object,Object>)target, ptype.getActualTypeArguments()[0], ptype.getActualTypeArguments()[1] );
                     } else {
                         return context.bindIntoMap(  (Map)value, (Map<Object,Object>)target, null, null );
