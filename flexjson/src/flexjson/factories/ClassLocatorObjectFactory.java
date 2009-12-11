@@ -11,6 +11,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
 import java.util.Map;
 import java.util.Collection;
+import java.util.Collections;
 
 public class ClassLocatorObjectFactory implements ObjectFactory {
 
@@ -23,7 +24,7 @@ public class ClassLocatorObjectFactory implements ObjectFactory {
     public Object instantiate(ObjectBinder context, Object value, Type targetType, Class targetClass) {
         Class clazz = null;
         try {
-            clazz = locator.locate( (Map)value, context.getCurrentPath() );
+            clazz = locator.locate( value instanceof Map ? (Map)value : Collections.emptyMap(), context.getCurrentPath() );
             if( clazz != null ) {
                 Constructor constructor = clazz.getDeclaredConstructor();
                 constructor.setAccessible(true);

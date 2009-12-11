@@ -288,6 +288,24 @@ public class JSONDeserializerTest extends TestCase {
         assertNull("the value should be null", result.get("property"));
     }
 
+    public void testArrayAndClassLocatorsInsideMaps() {
+        ClassLocator locator = new ClassLocator() {
+            public Class locate(Map map, Path currentPath) throws ClassNotFoundException {
+                if( map.containsKey("actLevStart") ) return HashMap.class;
+                if( map.containsKey("class") ) return Class.forName( (String)map.get("class") );
+                if( map.isEmpty() ) return LinkedList.class;
+                return HashMap.class;
+            }
+        };
+        Map<String,Object> bound = new JSONDeserializer<Map<String,Object>>().use("values", locator)
+                .deserialize( "{'foo1': 'bar1', 'foo2': {'actLevStart': 1, 'actLevEnd': 2}," +
+                        "'foo3': {'someMapKey': 'someMapValue'}, 'foo4': [1, 2, 3]}" );
+
+        assertEquals( "bar1", bound.get("foo1") );
+        assertTrue( bound.get("foo2") instanceof Map );
+        assertTrue( bound.get("foo4") instanceof LinkedList );
+    }
+
     public void testArraysAndClassLocators() {
         ClassLocator locator = new ClassLocator() {
             public Class locate(Map map, Path currentPath) throws ClassNotFoundException {
@@ -296,7 +314,10 @@ public class JSONDeserializerTest extends TestCase {
                 return HashMap.class;
             }
         };
-        new JSONDeserializer().use("values", locator).deserialize( "[{'foo1': 'bar1', 'foo2': {'actLevStart': 1, 'actLevEnd': 2 }, 'foo3': {'someMapKey': 'someMapValue'}}]");
+        List<Map<String,Object>> list = new JSONDeserializer<List<Map<String,Object>>>().use("values", locator).deserialize( "[{'foo1': 'bar1', 'foo2': {'actLevStart': 1, 'actLevEnd': 2 }, 'foo3': {'someMapKey': 'someMapValue'}}]");
+
+        assertEquals( 1, list.size() );
+        assertEquals( 3, list.get(0).size() );
     }
 
 
