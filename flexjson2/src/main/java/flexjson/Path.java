@@ -78,4 +78,8 @@ public class Path {
     public int hashCode() {
         return path.hashCode();
     }
+
+    public static Path parse(String path) {
+        return path != null ? new Path( path.split("\\." ) ) : new Path();
+    }
 }

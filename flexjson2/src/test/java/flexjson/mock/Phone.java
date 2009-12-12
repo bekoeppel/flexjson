@@ -15,8 +15,10 @@
  */
 package flexjson.mock;
 
-import java.util.regex.Matcher;
+import flexjson.mock.PhoneNumberType;
+
 import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 public class Phone {
     private PhoneNumberType type;
@@ -26,15 +28,18 @@ public class Phone {
 
     private static final Pattern PHONE_PATTERN = Pattern.compile("\\(?(\\d{3})\\)?[\\s-](\\d{3})[\\s-](\\d{4})");
 
-    public Phone(PhoneNumberType aType, String number) {
+    protected Phone() {
+    }
+
+    public Phone( PhoneNumberType aType, String number) {
         this.type = aType;
-        Matcher matcher = PHONE_PATTERN.matcher(number);
-        if (matcher.matches()) {
+        Matcher matcher = PHONE_PATTERN.matcher( number );
+        if( matcher.matches() ) {
             this.areaCode = matcher.group(1);
             this.exchange = matcher.group(2);
             this.number = matcher.group(3);
         } else {
-            throw new IllegalArgumentException(number + " does not match one of these formats: (xxx) xxx-xxxx, xxx xxx-xxxx, or xxx xxx xxxx.");
+            throw new IllegalArgumentException( number + " does not match one of these formats: (xxx) xxx-xxxx, xxx xxx-xxxx, or xxx xxx xxxx.");
         }
     }
 

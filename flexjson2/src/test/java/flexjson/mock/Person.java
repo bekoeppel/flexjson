@@ -72,7 +72,7 @@ public class Person {
 
     public void setHome(Address home) {
         this.home = home;
-        this.home.setPerson(this);
+        if( home != null ) this.home.setPerson(this);
     }
 
     public Address getWork() {
@@ -81,7 +81,7 @@ public class Person {
 
     public void setWork(Address work) {
         this.work = work;
-        this.work.setPerson(this);
+        if( work != null ) this.work.setPerson(this);
     }
 
     public List getPhones() {

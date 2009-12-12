@@ -12,6 +12,161 @@
 </head>
 <body>
     <h1>Flexjson Change Log</h1>
+    <h2>Version 2.0b4</h2>
+    <h3>Dec 12, 2009</h3>
+    <ul>
+        <li>Enhancements</li>
+        <li>
+            <p>
+                <!-- todo -->
+            </p>
+        </li>
+        <li>
+            <p>
+                <!-- todo -->
+            </p>
+        </li>
+    </ul>
+    <h2>Version 1.9.1</h2>
+    <h3>Dec 7, 2009</h3>
+    <ul>
+        <li>Bug Fixes</li>
+        <li>
+            <p>
+                Fix for 2910131: Data types Double and double primitive were not recognized
+                by the JSONDeserializer object by default.  ObjectBinder now has a ObjectFactory
+                registered by default for both Double and double classes.
+            </p>
+        </li>
+        <li>
+            <p>
+                Fix for 2905865: Added version number to the manifest file in the jar file.
+            </p>
+        </li>
+        <li>
+            <p>
+                Fix for 2899667: Null properties in the json were not being passed
+                to the binding phase so null properties would be dropped when deserializing.
+                Changed the JSONTokenizer to NOT filter based on the value being null.
+            </p>
+        </li>
+        <li>
+            <p>
+                Fix for 2908854: Deserializing a non-generized Map (i.e. List&lt;Map&gt;) threw
+                a ClassCastException.  This is fixed by changing the ObjectFactory responsible
+                for maps to handle non-generized Maps, and fixes in the path expressions for 1.9
+                enable the user to specify the data types for keys and values.
+            </p>
+        </li>
+    </ul>
+    <h2>Version 1.9</h2>
+    <h3>Nov 23, 2009</h3>
+    <ul>
+        <li>Enhancements</li>
+        <ul>
+            <li>
+                This is the biggest set of changes to the JSONDeserializer since it was written.  The
+                refactoring makes the deserializer much more flexible in responding to alternate
+                serialization formats using ObjectFactory.  ObjectFactories are the basis for all type
+                binding between JSON and Java Objects.  ObjectFactories can be configured by path or
+                Class.  Paths only apply that ObjectFactory to the object graph path.  Class apply to
+                all Class types detected in that object graph.
+            </li>
+            <li>
+                Added ObjectFactory mapping on a path basis so you can control what gets instantiated
+                and how it works at a very low level.
+            </li>
+            <li>
+                <p>
+                    Refactored path listings for <span class="javaclass">Maps</span> and
+                    <span class="javaclass">Collections</span>.  In prior versions there was no way to
+                    specify both the concrete top of a Collection/Map AND the concrete class contained within.
+                    The path language was not verbose enough.  Now you can specify both the concrete collection
+                    AND the concrete class contained within.  if <span class="path">person.friends</span> is a
+                    path that points to <span class="javaclass">java.util.Map</span>.  For example,
+                </p>
+
+                <pre>
+    new JSONDeserializer&lt;Person&gt;()
+        .use( "person.friends", HashMap.class )
+        .use("person.friends.keys", Relation.class )
+        .use( "person.friends.values", Person.class )
+                </pre>
+
+                <p>
+                    By adding "keys" and "values" to the path <span class="path">person.friends</span>
+                    you can specify the actual concrete classes to use for the keys and values of the
+                    <span class="javaclass">Map</span>.  For <span class="javaclass">Collections</span> you can
+                    simply append "values" to specify the containing class.  For example:
+                </p>
+
+                <pre>
+    new JSONDeserializer&lt;List&lt;Person&gt;&gt;().use( "people", ArrayList.class ).use("people.values", Person.class )
+                </pre>
+            </li>
+            <li>
+                JSONDeserializer is now thread-safe provided you don't call use() methods from multiple threads.  This
+                means you can intialize a JSONDeserializer configure it by calling use() methods from one thread
+                then share that instance between many threads without fear of issue.  This changed from prior versions.
+            </li>
+            <li>
+                Added support to JSONDeserializer to bind into Array types.  Arrays were not supported very well in
+                prior versions.
+            </li>
+        </ul>
+    </ul>
+    <ul>
+        <li>Bug Fixes</li>
+        <ul>
+            <li>
+                Default DateFormats were in conflict with each other.  While we try and recognize as many
+                formats as we can the default formats didn't always throw a ParseException when they didn't
+                match.  So earlier formats would incorrectly interpret the date masking the other formats.
+
+                The fix was to remove the conflicting dates.  The following date patterns had to be removed:
+                yyyy/MM/dd HH:mm:ss, yyyy/MM/dd, dd/MM/yy HH:mm:ss, dd/MM/yy.  The addition of ObjectFactory
+                refactoring allows the user to supply the exact format using DateTransformer.  These dates
+                couldn't be parsed because the MM/dd/yy pattern would have incorrectly parsed those formats.
+                If you want to use those formats you'll need to use DateTransformer in a use() clause
+                supplying the path to the fields you want to translate.
+            </li>
+            <li>
+                Bug 2899667: Object's with null values in the json weren't being deserialized properly because
+                of a parser bug.
+            </li>
+            <li>
+                Bug 2788719: Another issue with related to classes with interface variables not being
+                deserialized inside Collections.  Most of the rework done for 1.9 fixed these issues.
+            </li>
+        </ul>
+    </ul>
+    <h2>Version 1.8</h2>
+    <h3>Aug 23, 2009</h3>
+    <ul>
+        <li>Bug Fixes</li>
+        <ul>
+            <li>Improved handling ParameterizedTypes with generics.</li>
+            <li>Fixed handling Maps embedded in objects.</li>
+            <li>Fixed handling of Maps without generic parameters.</li>
+            <li>Fixed bugs with generic Map handling when top level maps are the return types of JSONDeserializer.</li>
+            <li>Added better support for general Generic classes not just collections.</li>
+        </ul>
+    </ul>
+    <h2>Version 1.7</h2>
+    <h3>Dec 31, 2008</h3>
+    <ul>
+        <li>Enhancements</li>
+        <ul>
+            <li>Added a preliminary deserializer for reconstituting Java objects from JSON.</li>
+        </ul>
+    </ul>
+    <ul>
+        <li>Bug Fixes</li>
+        <ul>
+            <li>Hibernate object's classes weren't being properly written out correctly.</li>
+            <li>Performance problem with escaping Strings for JSON encoding.  Still more can be done.</li>
+        </ul>
+    </ul>
     <h2>Version 1.6</h2>
     <h3>Sept 26, 2007</h3>
     <ul>
