@@ -27,6 +27,26 @@
             </p>
         </li>
     </ul>
+    <h2>Version 1.9.2</h2>
+    <h3>Dec 16, 2009</h3>
+    <ul>
+        <li>Bug Fixes</li>
+        <li>
+            <p>
+                ClassLocatorObjectFactory assumes value objects are Map objects which isn't true if you register
+                a ClassLocator on a path that has Arrays in it. Since we don't have a Map object corresponding to
+                that path we pass an empty Map into the ClassLocator to indicate the value at this location isn't
+                a Map.
+            </p>
+        </li>
+        <li>
+            <p>
+                Fix for ClassLocators when using mixed maps.  ClassLocatorObjectFactory incorrectly casts targetType
+                to ParameterizedType without a check. Now it tests to see if it's a ParameterizedType before down
+                casting.
+            </p>
+        </li>
+    </ul>
     <h2>Version 1.9.1</h2>
     <h3>Dec 7, 2009</h3>
     <ul>
