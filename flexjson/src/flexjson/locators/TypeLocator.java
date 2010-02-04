@@ -2,6 +2,8 @@ package flexjson.locators;
 
 import flexjson.ClassLocator;
 import flexjson.Path;
+import flexjson.ObjectBinder;
+import flexjson.JSONException;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -25,7 +27,13 @@ public class TypeLocator<T> implements ClassLocator {
         return this;
     }
 
-    public Class locate(Map map, Path currentPath) throws ClassNotFoundException {
-        return types.get( map.get( fieldname ) );
+    public Class locate(ObjectBinder context, Path currentPath) throws ClassNotFoundException {
+        Object source = context.getSource();
+        if( source instanceof Map ) {
+            Map map = (Map)source;
+            return types.get( map.get( fieldname ) );
+        } else {
+            throw new JSONException( String.format("%s: Don't know how to locate types for source %s using fieldname %s.  TypeLocator requires the source object be a java.util.Map in order to work.", context.getCurrentPath(), source.getClass(), fieldname ) );
+        }
     }
 }

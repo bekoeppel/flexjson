@@ -2,6 +2,7 @@ package flexjson.locators;
 
 import flexjson.ClassLocator;
 import flexjson.Path;
+import flexjson.ObjectBinder;
 
 import java.util.Map;
 
@@ -18,7 +19,7 @@ public class StaticClassLocator implements ClassLocator {
         target = clazz;
     }
 
-    public Class locate(Map map, Path currentPath) {
+    public Class locate(ObjectBinder context, Path currentPath) {
         return target;
     }
 }

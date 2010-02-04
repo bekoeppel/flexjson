@@ -146,6 +146,26 @@ public class JSONDeserializer<T> {
     }
 
     public T deserialize( String input ) {
+        ObjectBinder binder = createObjectBinder();
+        return (T)binder.bind( new JSONTokener( input ).nextValue() );
+    }
+
+    public T deserialize( String input, Class root ) {
+        ObjectBinder binder = createObjectBinder();
+        return (T)binder.bind( new JSONTokener( input ).nextValue(), root );
+    }
+
+//    public T deserialize( String input, T target ) {
+//        ObjectBinder binder = createObjectBinder();
+//        Object inObj = new JSONTokener(input).nextValue();
+//        if( inObj instanceof Map ) {
+//            return (T)binder.bindIntoObject( (Map)inObj, target, target.getClass() );
+//        } else if( inObj instanceof Collection) {
+//            return (T)binder.bindIntoCollection( (Collection)inObj, target, target.getClass() );
+//        }
+//    }
+
+    private ObjectBinder createObjectBinder() {
         ObjectBinder binder = new ObjectBinder();
         for( Class clazz : typeFactories.keySet() ) {
             binder.use( clazz, typeFactories.get(clazz) );
@@ -153,7 +173,7 @@ public class JSONDeserializer<T> {
         for( Path p : pathFactories.keySet() ) {
             binder.use( p, pathFactories.get( p ) );
         }
-        return (T)binder.bind( new JSONTokener( input ).nextValue() );
+        return binder;
     }
 
     public JSONDeserializer<T> use( String path, ClassLocator locator ) {

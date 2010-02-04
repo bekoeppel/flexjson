@@ -78,9 +78,7 @@ public class JSONDeserializerTest extends TestCase {
     public void testNoHintsButClassesForCollection() {
         Hero superman = new FixtureCreator().createSuperman();
         String json = new JSONSerializer().include("powers.class").exclude("*.class").serialize(superman);
-        Hero jsonSuperMan = new JSONDeserializer<Hero>()
-                .use(null, Hero.class)
-                .deserialize(json);
+        Hero jsonSuperMan = new JSONDeserializer<Hero>().deserialize(json, Hero.class);
         assertHeroHasPowers(jsonSuperMan);
     }
 
@@ -98,11 +96,10 @@ public class JSONDeserializerTest extends TestCase {
                 .transform(new SimpleClassnameTransformer(), "powers.class")
                 .exclude("*.class").serialize(superman);
         Hero jsonSuperMan = new JSONDeserializer<Hero>()
-                .use(null, Hero.class)
                 .use("lair", SecretLair.class)
                 .use("secretIdentity", SecretIdentity.class)
                 .use("powers.values", new SimpleClassLocator("flexjson.test.mock.superhero"))
-                .deserialize(json);
+                .deserialize(json, Hero.class);
         assertHeroHasPowers(jsonSuperMan);
     }
 
@@ -139,10 +136,9 @@ public class JSONDeserializerTest extends TestCase {
         Pair<Hero, Villian> archenemies = new Pair<Hero, Villian>(fixtures.createSuperman(), fixtures.createLexLuthor());
         String json = new JSONSerializer().exclude("*.class").serialize(archenemies);
         Pair<Hero, Villian> deserialArchEnemies = new JSONDeserializer<Pair<Hero, Villian>>()
-                .use(null, Pair.class)
                 .use("first", Hero.class)
                 .use("second", Villian.class)
-                .deserialize(json);
+                .deserialize(json, Pair.class);
 
         assertEquals(archenemies.getFirst().getClass(), deserialArchEnemies.getFirst().getClass());
         assertEquals(archenemies.getSecond().getClass(), deserialArchEnemies.getSecond().getClass());
@@ -290,11 +286,18 @@ public class JSONDeserializerTest extends TestCase {
 
     public void testArrayAndClassLocatorsInsideMaps() {
         ClassLocator locator = new ClassLocator() {
-            public Class locate(Map map, Path currentPath) throws ClassNotFoundException {
-                if( map.containsKey("actLevStart") ) return HashMap.class;
-                if( map.containsKey("class") ) return Class.forName( (String)map.get("class") );
-                if( map.isEmpty() ) return LinkedList.class;
-                return HashMap.class;
+            public Class locate(ObjectBinder context, Path currentPath) throws ClassNotFoundException {
+                Object source = context.getSource();
+                if( source instanceof Map ) {
+                    Map map = (Map)source;
+                    if( map.containsKey("actLevStart") ) return HashMap.class;
+                    if( map.containsKey("class") ) return Class.forName( (String)map.get("class") );
+                    return HashMap.class;
+                } else if( source instanceof List ) {
+                    return LinkedList.class;
+                } else {
+                    return source.getClass();
+                }
             }
         };
         Map<String,Object> bound = new JSONDeserializer<Map<String,Object>>().use("values", locator)
@@ -308,16 +311,57 @@ public class JSONDeserializerTest extends TestCase {
 
     public void testArraysAndClassLocators() {
         ClassLocator locator = new ClassLocator() {
-            public Class locate(Map map, Path currentPath) throws ClassNotFoundException {
-                if( map.containsKey("actLevStart") ) return HashMap.class;
-                if( map.containsKey("class") ) return Class.forName( (String)map.get("class") );
-                return HashMap.class;
+            public Class locate(ObjectBinder context, Path currentPath) throws ClassNotFoundException {
+                Object source = context.getSource();
+                if( source instanceof Map ) {
+                    Map map = (Map)source;
+                    if( map.containsKey("actLevStart") ) return HashMap.class;
+                    if( map.containsKey("class") ) return Class.forName( (String)map.get("class") );
+                    return HashMap.class;
+                } else if( source instanceof List ) {
+                    return LinkedList.class;
+                } else {
+                    return source.getClass();
+                }
             }
         };
         List<Map<String,Object>> list = new JSONDeserializer<List<Map<String,Object>>>().use("values", locator).deserialize( "[{'foo1': 'bar1', 'foo2': {'actLevStart': 1, 'actLevEnd': 2 }, 'foo3': {'someMapKey': 'someMapValue'}}]");
 
         assertEquals( 1, list.size() );
         assertEquals( 3, list.get(0).size() );
+    }
+
+    public void testPrimitives() {
+        List<Date> dates = new ArrayList<Date>();
+        dates.add( new Date() );
+        dates.add( new Date(1970, 1, 12) );
+        dates.add( new Date(1986, 3, 21) );
+
+        String json = new JSONSerializer().serialize( dates );
+        List<Date> jsonDates = new JSONDeserializer<List<Date>>().use(null,ArrayList.class).use("values", Date.class ).deserialize( json );
+
+        assertEquals( jsonDates.size(), dates.size() );
+        assertEquals( Date.class, jsonDates.get(0).getClass() );
+
+        List<? extends Number> numbers = Arrays.asList( 1, 0.5, 100.4f, (short)5 );
+        json = new JSONSerializer().serialize( numbers );
+        List<Number> jsonNumbers = new JSONDeserializer<List<Number>>().deserialize( json );
+
+        assertEquals( numbers.size(), jsonNumbers.size() );
+        for( int i = 0; i < numbers.size(); i++ ) {
+            assertEquals( numbers.get(i).floatValue(), jsonNumbers.get(i).floatValue() );
+        }
+
+        List<Boolean> bools = Arrays.asList( true, false, true, false, false );
+        json = new JSONSerializer().serialize( bools );
+        List<Boolean> jsonBools = new JSONDeserializer<List<Boolean>>().deserialize( json );
+
+        assertEquals( bools.size(), jsonBools.size() );
+        for( int i = 0; i < bools.size(); i++ ) {
+            assertEquals( bools.get(i), jsonBools.get(i) );
+        }
+
+        assertEquals( numbers.size(), jsonNumbers.size() );
     }
 
 
@@ -355,7 +399,8 @@ public class JSONDeserializerTest extends TestCase {
             this.packageName = packageName;
         }
 
-        public Class locate(Map map, Path currentPath) throws ClassNotFoundException {
+        public Class locate(ObjectBinder context, Path currentPath) throws ClassNotFoundException {
+            Map map = (Map) context.getSource();
             return Class.forName(packageName + "." + map.get("class").toString());
         }
     }
