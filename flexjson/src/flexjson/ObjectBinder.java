@@ -329,4 +329,13 @@ public class ObjectBinder {
             throw new JSONException(String.format("%s: Don't know how to bind %s into class %s.  You might need to use an ObjectFactory instead of a plain class.", getCurrentPath().toString(), value, clazz.getName()) );
         }
     }
+
+    public Class findClassAtPath(Path currentPath) throws ClassNotFoundException {
+        ObjectFactory factory = pathFactories.get( currentPath );
+        if( factory instanceof ClassLocatorObjectFactory ) {
+            return ((ClassLocatorObjectFactory)factory).getLocator().locate( this, currentPath );
+        } else {
+            return null;
+        }
+    }
 }

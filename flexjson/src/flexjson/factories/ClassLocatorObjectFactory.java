@@ -61,4 +61,8 @@ public class ClassLocatorObjectFactory implements ObjectFactory {
         Object target = constructor.newInstance();
         return target;
     }
+
+    public ClassLocator getLocator() {
+        return locator;
+    }
 }

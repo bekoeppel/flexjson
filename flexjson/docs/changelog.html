@@ -20,6 +20,32 @@
 </head>
 <body>
     <h1>Flexjson Change Log</h1>
+    <h2>Version 1.9.3</h2>
+    <h3>Feb 4, 2010</h3>
+    <ul>
+        <li>Enhancements</li>
+        <li>
+            <p>
+                Added helper method on JSONDeserializer to specify the root object within deserialize().
+            </p>
+        </li>
+    </ul>
+    <ul>
+        <li>Bug Fixes</li>
+        <li>
+            <p>
+                Fixed issue with specifying member data types for root level arrays.
+            </p>
+        </li>
+        <li>
+            <p>
+                Fixed issue with registering an ObjectFactory for non-map type.  Changed
+                ObjectFactory.instantiate(Map,Object,Type,Class) method signature to
+                ObjectFactory.instantiate(ObjectBinder,Object,Type,Class) to keep ClassCastException
+                from being thrown when the factory is registered on a non-map type.
+            </p>
+        </li>
+    </ul>
     <h2>Version 1.9.2</h2>
     <h3>Dec 16, 2009</h3>
     <ul>

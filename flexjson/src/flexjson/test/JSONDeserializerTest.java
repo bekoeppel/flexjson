@@ -11,6 +11,7 @@ import flexjson.test.mock.superhero.*;
 import java.util.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.lang.reflect.Array;
 
 public class JSONDeserializerTest extends TestCase {
 
@@ -44,7 +45,7 @@ public class JSONDeserializerTest extends TestCase {
     }
 
     public void testSubClassDeserialize() {
-        Employee dilbert = new FixtureCreator().createDilber();
+        Employee dilbert = new FixtureCreator().createDilbert();
         String json = new JSONSerializer().include("phones", "hobbies").serialize(dilbert);
         Person jsonDilbert = new JSONDeserializer<Person>().deserialize(json);
         assertNotNull("Make sure we got back dilbert.", jsonDilbert);
@@ -364,7 +365,22 @@ public class JSONDeserializerTest extends TestCase {
         assertEquals( numbers.size(), jsonNumbers.size() );
     }
 
+    public void testArray() {
+       Person[] p = new Person[3];
+        FixtureCreator fixture = new FixtureCreator();
+        p[0] = fixture.createCharlie();
+        p[1] = fixture.createDilbert();
+        p[2] = fixture.createBen();
 
+        String json = new JSONSerializer().serialize( p );
+
+        Person[] jsonP = new JSONDeserializer<Person[]>().use("values", Person.class).deserialize(json, Array.class);
+
+        assertEquals( 3, jsonP.length );
+        assertEquals( "Charlie", jsonP[0].getFirstname() );
+        assertEquals( "Dilbert", jsonP[1].getFirstname() );
+        assertEquals( "Ben", jsonP[2].getFirstname() );
+    }
 
     public void setUp() {
     }
