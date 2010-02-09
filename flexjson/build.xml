@@ -52,7 +52,7 @@
         <mkdir dir="${basedir}/junit"/>
         <junit>
           <classpath>
-              <pathelement location="${libdir}/junit4.1/junit-4.1.jar"/>
+              <pathelement location="${libdir}/junit4.1/junit-*.jar"/>
               <pathelement location="flexjson.jar"/>
               <pathelement location="flexjson_test.jar"/>
           </classpath>
