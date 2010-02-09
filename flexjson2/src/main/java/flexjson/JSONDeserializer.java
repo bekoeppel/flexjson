@@ -12,7 +12,7 @@ import java.util.HashMap;
  * json representation.  By default it uses the class property in the json data in order to map the
  * untyped generic json data into a specific Java type.  However, you are limited to only json strings
  * with class information embedded when resolving it into a Java type.  But, for now let's just look at
- * the simplest case of class attributes in your json.  We'll look at how {@link flexjson.JSONSerializer} and
+ * the simplest case of class attributes in your json.  We'll look at how {@link JSONSerializer} and
  * JSONDeserializer pair together out of the box.
  * </p>
  * <p>
@@ -109,7 +109,7 @@ import java.util.HashMap;
  * is not available it will using reflection to set the value directly into the field.  You can use setter
  * methods transform the any data from json into the object structure you want.  That way json structure
  * can be different from your Java object structure.  The works very much in the same way getters do for
- * the {@link JSONDeserializer}.
+ * the {@link flexjson.JSONSerializer}.
  * </p>
  * <p>
  * Collections and Maps have changed the path structure in order to specify concrete classes for both
@@ -146,6 +146,26 @@ public class JSONDeserializer<T> {
     }
 
     public T deserialize( String input ) {
+        ObjectBinder binder = createObjectBinder();
+        return (T)binder.bind( new JSONTokener( input ).nextValue() );
+    }
+
+    public T deserialize( String input, Class root ) {
+        ObjectBinder binder = createObjectBinder();
+        return (T)binder.bind( new JSONTokener( input ).nextValue(), root );
+    }
+
+//    public T deserialize( String input, T target ) {
+//        ObjectBinder binder = createObjectBinder();
+//        Object inObj = new JSONTokener(input).nextValue();
+//        if( inObj instanceof Map ) {
+//            return (T)binder.bindIntoObject( (Map)inObj, target, target.getClass() );
+//        } else if( inObj instanceof Collection) {
+//            return (T)binder.bindIntoCollection( (Collection)inObj, target, target.getClass() );
+//        }
+//    }
+
+    private ObjectBinder createObjectBinder() {
         ObjectBinder binder = new ObjectBinder();
         for( Class clazz : typeFactories.keySet() ) {
             binder.use( clazz, typeFactories.get(clazz) );
@@ -153,7 +173,7 @@ public class JSONDeserializer<T> {
         for( Path p : pathFactories.keySet() ) {
             binder.use( p, pathFactories.get( p ) );
         }
-        return (T)binder.bind( new JSONTokener( input ).nextValue() );
+        return binder;
     }
 
     public JSONDeserializer<T> use( String path, ClassLocator locator ) {

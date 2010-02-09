@@ -9,9 +9,9 @@
     <url>http://flexjson.sourceforge.net/</url>
     <licenses>
         <license>
-          <name>The Apache Software License, Version 2.0</name>
-          <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-          <distribution>repo</distribution>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
         </license>
     </licenses>
     <scm>
@@ -22,7 +22,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>3.8.1</version>
+            <version>4.8.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -67,11 +67,33 @@
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
-                  <descriptors>
-                    <descriptor>src/main/assembly/descriptor.xml</descriptor>
-                  </descriptors>
+                    <descriptors>
+                        <descriptor>src/main/assembly/descriptor.xml</descriptor>
+                    </descriptors>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <version>${pom.version}</version>
+                            <url>${pom.url}</url>
+                            <Extension-Name>flexjson</Extension-Name>
+                            <Implementation-Version>${pom.version}</Implementation-Version>
+                        </manifestEntries>
+                    </archive>
                 </configuration>
             </plugin>
         </plugins>
     </build>
+    <!--<distributionManagement>-->
+        <!--<repository>-->
+          <!--<id>mycompany-repository</id>-->
+          <!--<name>MyCompany Repository</name>-->
+          <!--<url>scp://repository.mycompany.com/repository/maven2</url>-->
+        <!--</repository>-->
+      <!--</distributionManagement>-->
 </project>

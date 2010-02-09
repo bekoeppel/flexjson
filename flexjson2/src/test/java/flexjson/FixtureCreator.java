@@ -60,7 +60,7 @@ public class FixtureCreator {
         return pedro;
     }
 
-    public Employee createDilber() {
+    public Employee createDilbert() {
         return new Employee("Dilbert", "", new Date(), new Address( "123 Finland Dr", "Cubicleville", "Hell", new Zipcode("66666") ), new Address( "123 Finland Dr", "Cubicleville", "Hell", new Zipcode("66666") ), "Initech" );
     }
 

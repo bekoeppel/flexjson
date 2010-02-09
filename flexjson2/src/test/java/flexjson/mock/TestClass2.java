@@ -6,7 +6,9 @@ import java.util.Map;
 //import org.apache.commons.lang.builder.ToStringBuilder;
 
 import flexjson.JSON;
+import org.junit.Ignore;
 
+@Ignore
 public class TestClass2{
 	private String name="testName2";
 	private Map<String, TestClass3> mapOfJustice = new HashMap<String, TestClass3>();;

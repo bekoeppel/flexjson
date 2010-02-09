@@ -12,6 +12,7 @@ import java.lang.reflect.*;
 public class ObjectBinder {
 
     private LinkedList<Object> objectStack = new LinkedList<Object>();
+    private LinkedList<Object> jsonStack = new LinkedList<Object>();
     private Path currentPath = new Path();
     private Map<Class,ObjectFactory> factories;
     private Map<Path,ObjectFactory> pathFactories = new HashMap<Path,ObjectFactory>();
@@ -64,33 +65,25 @@ public class ObjectBinder {
         return this.bind( input, null );
     }
 
-    public Object bind( Object input, Type targetType ) {
-        if( input == null ) {
-            return null;
-        } else if( input instanceof Map ) {
-            Class targetClass = findClassName( (Map)input, getTargetClass(targetType) );
-            return findFactoryFor( targetClass ).instantiate( this, input, targetType, targetClass);
-        } else if( input instanceof List) {
-            if( targetType instanceof ParameterizedType ) {
-                return convert( input, targetType );
-            } else {
-                Object inner = ((List)input).get(0);
-                if( inner instanceof Map ) {
-                    return convert( input, new JSONParameterizedType( List.class, findClassName( (Map)inner, null ) ) );
-                } else {
-                    return convert( input, targetType );
-                }
-            }
-        } else if( input instanceof Number ) {
-            return input;
-        } else if( input instanceof String ) {
-            return input;
-        } else if( input instanceof Enum ) {
-            return input;
-        } else if( input instanceof Boolean ) {
-            return input;
+    public Object bind( Object source, Object target ) {
+        if( target instanceof Map ) {
+            bindIntoMap( (Map)source, (Map<Object,Object>)target, null, null );
+        } else if( target instanceof Collection ) {
+            bindIntoCollection( (Collection)source, (Collection<Object>)target, null );
         } else {
-            throw new IllegalArgumentException("Missing classname for path " + currentPath + ".  Cannot covert to object." );
+            bindIntoObject( (Map)source, target, target.getClass() );
+        }
+        return target;
+    }
+
+    public Object bind( Object input, Type targetType ) {
+        jsonStack.add( input );
+        try {
+            if( input == null ) return null;
+            Class targetClass = findClassName( input, getTargetClass( targetType ) );
+            return findFactoryFor( targetClass ).instantiate( this, input, targetType, targetClass );
+        } finally {
+            jsonStack.removeLast();
         }
     }
 
@@ -99,15 +92,21 @@ public class ObjectBinder {
         if( targetType instanceof ParameterizedType) {
             valueType = ((ParameterizedType)targetType).getActualTypeArguments()[0];
         }
+        jsonStack.add( value );
+        objectStack.add( target );
         getCurrentPath().enqueue("values");
         for( Object obj : value ) {
             target.add( bind( obj, valueType ) );
         }
         getCurrentPath().pop();
+        objectStack.removeLast();
+        jsonStack.removeLast();
         return target;
     }
 
     public Object bindIntoMap(Map input, Map<Object, Object> result, Type keyType, Type valueType) {
+        jsonStack.add( input );
+        objectStack.add( result );
         for( Object inputKey : input.keySet() ) {
             currentPath.enqueue("keys");
             Object key = bind( inputKey, keyType );
@@ -117,11 +116,9 @@ public class ObjectBinder {
             currentPath.pop();
             result.put( key, value );
         }
+        objectStack.removeLast();
+        jsonStack.removeLast();
         return result;
-    }
-
-    public JSONException cannotConvertValueToTargetType(Object value, Class targetType) {
-        return new JSONException( String.format("%s:  Can not convert %s into %s", currentPath, value.getClass().getName(), targetType.getClass().getName() ) );
     }
 
     public Object bindIntoObject(Map jsonOwner, Object target, Type targetType) {
@@ -137,7 +134,7 @@ public class ObjectBinder {
                         Type[] types = setMethod.getGenericParameterTypes();
                         if( types.length == 1 ) {
                             Type paramType = types[0];
-                            setMethod.invoke( objectStack.getLast(), convert( value, resolveParameterizedTypes( paramType, targetType ) ) );
+                            setMethod.invoke( objectStack.getLast(), bind( value, resolveParameterizedTypes( paramType, targetType ) ) );
                         } else {
                             throw new JSONException(currentPath + ":  Expected a single parameter for method " + target.getClass().getName() + "." + setMethod.getName() + " but got " + types.length );
                         }
@@ -146,9 +143,9 @@ public class ObjectBinder {
                             Field field = target.getClass().getDeclaredField( descriptor.getName() );
                             field.setAccessible( true );
                             if( value instanceof Map ) {
-                                field.set( target, convert(value, findClassName( (Map)value, getTargetClass( field.getGenericType() ) ) ) );
+                                field.set( target, bind(value, field.getGenericType() ) );
                             } else {
-                                field.set( target, convert( value, field.getGenericType() ) );
+                                field.set( target, bind( value, field.getGenericType() ) );
                             }
                         } catch (NoSuchFieldException e) {
                             // ignore must not be there.
@@ -167,14 +164,8 @@ public class ObjectBinder {
         }
     }
 
-    private Object convert(Object value, Type targetType) {
-        Class targetClass = getTargetClass( targetType );
-        ObjectFactory factory = findFactoryFor( targetClass );
-        if( factory != null ) {
-            return factory.instantiate(this, value, targetType, targetClass);
-        } else {
-            throw new JSONException( String.format( "%s:  Cannot instantiate abstract class or interface %s", currentPath, targetClass.getName() ) );
-        }
+    public JSONException cannotConvertValueToTargetType(Object value, Class targetType) {
+        return new JSONException( String.format("%s:  Can not convert %s into %s", currentPath, value.getClass().getName(), targetType.getClass().getName() ) );
     }
 
     private Class getTargetClass(Type targetType) {
@@ -212,9 +203,14 @@ public class ObjectBinder {
     }
 
 
-    public Class findClassName( Map map, Class targetType ) throws JSONException {
+    private Class findClassName( Object map, Class targetType ) throws JSONException {
         if( !pathFactories.containsKey( currentPath ) ) {
-            return useMostSpecific( targetType, findClassInMap( map, null ) );
+            Class mostSpecificType = useMostSpecific( targetType, map instanceof Map ? findClassInMap( (Map)map, null ) : null );
+            if( mostSpecificType == null ) {
+                return map.getClass();
+            } else {
+                return mostSpecificType;
+            }
         } else {
             return null;
         }
@@ -228,7 +224,7 @@ public class ObjectBinder {
         } else if( classFromTarget != null ) {
             return classFromTarget;
         } else {
-            return Map.class;
+            return null;
         }
     }
 
@@ -252,7 +248,7 @@ public class ObjectBinder {
     private ObjectFactory findFactoryFor(Class targetType) {
         ObjectFactory factory = pathFactories.get( currentPath );
         if( factory == null ) {
-            if( targetType.isArray() ) return factories.get(Array.class);
+            if( targetType != null && targetType.isArray() ) return factories.get(Array.class);
             return findFactoryByTargetClass(targetType);
         }
         return factory;
@@ -261,7 +257,7 @@ public class ObjectBinder {
     private ObjectFactory findFactoryByTargetClass(Class targetType) {
         ObjectFactory factory;
         factory = factories.get( targetType );
-        if( factory == null && targetType.getSuperclass() != null ) {
+        if( factory == null && targetType != null && targetType.getSuperclass() != null ) {
             for( Class intf : targetType.getInterfaces() ) {
                 factory = findFactoryByTargetClass( intf );
                 if( factory != null ) return factory;
@@ -302,4 +298,44 @@ public class ObjectBinder {
         return Character.toUpperCase( field.charAt(0) ) + field.substring(1);
     }
 
+    public Object getTarget() {
+        return objectStack.getLast();
+    }
+
+    public Object getSource() {
+        return jsonStack.getLast();
+    }
+
+    public Object bindPrimitive(Object value, Class clazz) {
+        if( value.getClass() == clazz ) {
+            return value;
+        } else if( value instanceof Number && clazz.equals(Double.class) ) {
+            return ((Number)value).doubleValue();
+        } else if( value instanceof Number && clazz.equals(Integer.class) ) {
+            return ((Number)value).intValue();
+        } else if( value instanceof Number && clazz.equals(Long.class) ) {
+            return ((Number)value).longValue();
+        } else if( value instanceof Number && clazz.equals(Short.class) ) {
+            return ((Number)value).shortValue();
+        } else if( value instanceof Number && clazz.equals(Byte.class) ) {
+            return ((Number)value).byteValue();
+        } else if( value instanceof Number && clazz.equals(Float.class) ) {
+            return ((Number)value).floatValue();
+        } else if( value instanceof Boolean && clazz.equals(Boolean.class) ) {
+            return value;
+        } else if( value instanceof Long && clazz == Date.class ) {
+            return new Date( (Long)value );
+        } else {
+            throw new JSONException(String.format("%s: Don't know how to bind %s into class %s.  You might need to use an ObjectFactory instead of a plain class.", getCurrentPath().toString(), value, clazz.getName()) );
+        }
+    }
+
+    public Class findClassAtPath(Path currentPath) throws ClassNotFoundException {
+        ObjectFactory factory = pathFactories.get( currentPath );
+        if( factory instanceof ClassLocatorObjectFactory ) {
+            return ((ClassLocatorObjectFactory)factory).getLocator().locate( this, currentPath );
+        } else {
+            return null;
+        }
+    }
 }

@@ -9,7 +9,9 @@ import java.util.List;
 //import com.ri3k.uiNegotiationPrototype.service.ProcessDataServiceImpl;
 
 import flexjson.JSON;
+import org.junit.Ignore;
 
+@Ignore
 public class TestClass{
 	private String name="testName";
 //	private ProcessDataService service = new ProcessDataServiceImpl();

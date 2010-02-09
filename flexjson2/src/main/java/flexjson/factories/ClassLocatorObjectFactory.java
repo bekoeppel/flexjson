@@ -11,7 +11,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
 import java.util.Map;
 import java.util.Collection;
-import java.util.Collections;
 
 public class ClassLocatorObjectFactory implements ObjectFactory {
 
@@ -24,22 +23,21 @@ public class ClassLocatorObjectFactory implements ObjectFactory {
     public Object instantiate(ObjectBinder context, Object value, Type targetType, Class targetClass) {
         Class clazz = null;
         try {
-            clazz = locator.locate( value instanceof Map ? (Map)value : Collections.emptyMap(), context.getCurrentPath() );
+            clazz = locator.locate( context, context.getCurrentPath() );
             if( clazz != null ) {
-                Constructor constructor = clazz.getDeclaredConstructor();
-                constructor.setAccessible(true);
-                Object target = constructor.newInstance();
-                if( target instanceof Collection) {
-                    return context.bindIntoCollection( (Collection)value, (Collection<Object>)target, targetType );
-                } else if( target instanceof Map ) {
+                if( Collection.class.isAssignableFrom(clazz) ) {
+                    return context.bindIntoCollection( (Collection)value, (Collection<Object>)createTargetObject(clazz), targetType );
+                } else if( Map.class.isAssignableFrom(clazz) ) {
                     if( targetType instanceof ParameterizedType ) {
                         ParameterizedType ptype = (ParameterizedType) targetType;
-                        return context.bindIntoMap( (Map)value, (Map<Object,Object>)target, ptype.getActualTypeArguments()[0], ptype.getActualTypeArguments()[1] );
+                        return context.bindIntoMap( (Map)value, (Map<Object,Object>)createTargetObject(clazz), ptype.getActualTypeArguments()[0], ptype.getActualTypeArguments()[1] );
                     } else {
-                        return context.bindIntoMap(  (Map)value, (Map<Object,Object>)target, null, null );
+                        return context.bindIntoMap(  (Map)value, (Map<Object,Object>)createTargetObject(clazz), null, null );
                     }
+                } else if( value instanceof Map ) {
+                    return context.bindIntoObject( (Map)value,  createTargetObject(clazz), clazz );
                 } else {
-                    return context.bindIntoObject( (Map)value,  target, clazz );
+                    return context.bindPrimitive( value, clazz );
                 }
             } else {
                 return null;
@@ -55,5 +53,16 @@ public class ClassLocatorObjectFactory implements ObjectFactory {
         } catch (InvocationTargetException e) {
             throw new JSONException( String.format("%s: Problem while invoking the no-arg constructor for %s", context.getCurrentPath(), clazz.getName() ), e );
         }
+    }
+
+    private Object createTargetObject(Class clazz) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+        Constructor constructor = clazz.getDeclaredConstructor();
+        constructor.setAccessible(true);
+        Object target = constructor.newInstance();
+        return target;
+    }
+
+    public ClassLocator getLocator() {
+        return locator;
     }
 }
