@@ -1,7 +1,10 @@
 package flexjson.test;
 
+import org.junit.Ignore;
+
 //import org.apache.commons.lang.builder.ToStringBuilder;
 
+@Ignore
 public class TestClass3 {
 	
 	private boolean found = false;
