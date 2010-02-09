@@ -81,7 +81,9 @@ public class ObjectBinder {
         try {
             if( input == null ) return null;
             Class targetClass = findClassName( input, getTargetClass( targetType ) );
-            return findFactoryFor( targetClass ).instantiate( this, input, targetType, targetClass );
+            ObjectFactory factory = findFactoryFor( targetClass );
+            if( factory == null ) throw new JSONException( currentPath + ": + Could not find a suitable ObjectFactory for " + targetClass );
+            return factory.instantiate( this, input, targetType, targetClass );
         } finally {
             jsonStack.removeLast();
         }
