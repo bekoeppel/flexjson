@@ -2,6 +2,8 @@ package flexjson;
 
 import flexjson.factories.*;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.*;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
@@ -45,6 +47,8 @@ public class ObjectBinder {
         factories.put( Date.class, new DateObjectFactory() );
         factories.put( String.class, new StringObjectFactory() );
         factories.put( Array.class, new ArrayObjectFactory() );
+        factories.put( BigDecimal.class, new BigDecimalFactory() );
+        factories.put( BigInteger.class, new BigIntegerFactory() );
     }
 
     public ObjectBinder use(Path path, ObjectFactory factory) {
