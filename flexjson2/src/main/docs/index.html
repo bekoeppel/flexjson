@@ -334,12 +334,13 @@
 
     <h2>Order of Evaluation</h2>
 
+    <div class="important">Order of evaluation has changed as of 1.5</div>
+
     <p>
-        <span class="important">Order of evaluation has changed as of 1.5</span>.  Now that we've discussed includes and
-        excludes let's talk about order of evaluation.  What happens if I include a field then I exclude that same
-        field later?  What will Flexjson do?  The answer is includes and excludes are evaluated in order they were added.
-        This is important with the introduction of wildcards.  Say I want to serialize just two fields of an object.  I
-        can do the following:
+        Now that we've discussed includes and excludes let's talk about order of evaluation.  What happens if I include
+        a field then I exclude that same field later?  What will Flexjson do?  The answer is includes and excludes are
+        evaluated in order they were added.  This is important with the introduction of wildcards.  Say I want to
+        serialize just two fields of an object.  I can do the following:
     </p>
 
     <blockquote class="java">
@@ -397,8 +398,9 @@
     </p>
 
     <h2>Transformers More Than Meets the Eye</h2>
+    <div class="important">Transformers are central to how Flexjson works in 2.0.</div>
     <p>
-        FlexJSON 2.0 has been completely rewritten to make Transformers central to how processing Java into JSON works.
+        Flexjson 2.0 has been completely rewritten to make Transformers central to how processing Java into JSON works.
         With this core restructuring, Transformers have much more flexibility and power.
 
         <h3>What is a transformer?</h3>
@@ -440,9 +442,9 @@
         <p>
         	The property identified by "person.birthday" would use the DateTransformer only. Any other Date objects would use the BasicDateTransformer.
         </p>
-        <h4>Overriding FlexJSON default Transformers</h4>
+        <h4>Overriding Flexjson default Transformers</h4>
         <p>
-        	It is possible to override the default Transformers FlexJSON uses. If you wanted to override the default StringTransformer that FlexJSON uses for Strings you could write configure in the following manner:
+        	It is possible to override the default Transformers Flexjson uses. If you wanted to override the default StringTransformer that Flexjson uses for Strings you could write configure in the following manner:
         </p>
         <blockquote class="java">
     JSONSerializer serializer = new JSONSerializer()
@@ -450,8 +452,8 @@
         </blockquote>
         <h3>Basic Transformer</h3>
         <p>
-            FlexJSON comes with several basic Transformers that are used to meet the majority of your Java-to-JSON needs.<br/>
-            <strong>FlexJSON comes with the following default Transformers:</strong>
+            Flexjson comes with several basic Transformers that are used to meet the majority of your Java-to-JSON needs.<br/>
+            <strong>Flexjson comes with the following default Transformers:</strong>
         </p>
         <ul>
             <li><strong>ArrayTransformer</strong> - used to produce JSON from a Java array</li>
@@ -477,7 +479,8 @@
     </p>
     <h4>JSONSerializer</h4>
     <p>
-        The JSONSerializer works as a configuraiton object. Once serialize/deepSerialize is called on the JSONSerializer it retrieves a ThreadLocal version of a JSONContext and configures it for use specific to the calling Thread.
+        The JSONSerializer works as a configuration object. Once serialize/deepSerialize is called on the JSONSerializer it retrieves a ThreadLocal version
+        of a JSONContext and configures it for use specific to the calling Thread.
     </p>
     <h4>JSONContext</h4>
     <p>
@@ -516,10 +519,12 @@
     }
     </blockquote>
     <p>
-        In the StringTranformer the Object passed in is a String which gets quoted by calling a method (getContext().writeQuoted()) on the JSONContext. The JSONContext takes care of all the string escaping that needs to occur. Pretty simple eh?
+        In the StringTranformer the Object passed in is a String which gets quoted by calling a method (getContext().writeQuoted()) on the JSONContext.
+        The JSONContext takes care of all the string escaping that needs to occur. Pretty simple eh?
     </p>
     <p>
-        As a side note you may notice that the Transformer extends AbstractTranformer. It is recommended that custom transformers extend the AbstractTransformer although it is not required. Feel free to take a look in the AbstractTransformer to see what it does. There isn't much to it.
+        As a side note you may notice that the Transformer extends AbstractTranformer. It is recommended that custom transformers extend the
+        AbstractTransformer although it is not required. Feel free to take a look in the AbstractTransformer to see what it does. There isn't much to it.
     </p>
     <h3>Transforming a Collection</h3>
     <p>
@@ -542,14 +547,20 @@
     }
     </blockquote>
     <p>
-        You will notice that this transformer makes use of a TypeContext. The TypeContext is just a way to keep track of whether the current  context is an ARRAY (Collection or Array) or a BASIC (Any Object other than Collection or Array) object. Additional information on the current object context is also held in the TypeContext. Behind the scenes in the JSONContext.writeOpenArray() method the JSONContext creates the TypeContext as BasicType.ARRAY, pushes it on the typeContextStack, and then returns the type context from the writeOpenArray() method. This context is then made available to all downstream transformations via the getContext().peekTypeContext() method.
+        You will notice that this transformer makes use of a TypeContext. The TypeContext is just a way to keep track of whether the current  context is an
+        ARRAY (Collection or Array) or a BASIC (Any Object other than Collection or Array) object. Additional information on the current object context is
+        also held in the TypeContext. Behind the scenes in the JSONContext.writeOpenArray() method the JSONContext creates the TypeContext as BasicType.ARRAY,
+        pushes it on the typeContextStack, and then returns the type context from the writeOpenArray() method. This context is then made available to all
+        downstream transformations via the getContext().peekTypeContext() method.
     </p>
     <h3>Customer Transformer using Inline functionality</h3>
     <p>
-    	This example of the FlatDateTransformer (found in the FlexJSON unit tests) is more complex than the last. What it illustrates is the flexibility that Transformers have when needing to meet various requirements. 
+    	This example of the FlatDateTransformer (found in the Flexjson unit tests) is more complex than the last. What it illustrates is the flexibility that
+        Transformers have when needing to meet various requirements.
     </p>
     <p>	
-    	Let's take some time to understand what the FlatDateTransformer does and then we'll discuss how it does it. In this particular case a java.util.Date is transformed into 3 separate properties on a JSON object. If we were to pass a Date object into this transformer the resulting JSON would look like: 
+    	Let's take some time to understand what the FlatDateTransformer does and then we'll discuss how it does it. In this particular case a java.util.Date
+        is transformed into 3 separate properties on a JSON object. If we were to pass a Date object into this transformer the resulting JSON would look like:
     </p>
     <blockquote class="java">
     {
@@ -559,7 +570,9 @@
     }
     </blockquote>
     <p>
-    	This transformer "inlines" the Date properties with the other properties of the current object. For example, if I had an object named <i>Task</i> with a Date property (named doOn) along side <i>name</i> and <i>description</i> this Transformer would render the date inline with the other properties when the JSON is generated.
+    	This transformer "inlines" the Date properties with the other properties of the current object. For example, if I had an object named <i>Task</i> with
+        a Date property (named doOn) along side <i>name</i> and <i>description</i> this Transformer would render the date inline with the other properties when
+        the JSON is generated.
     </p>
     <blockquote class="java" >
     public class Task {
@@ -582,7 +595,10 @@
     }
     </blockquote>
     <p>
-    	As you can see the doOnMonth, doOnDay, and doOnYear are next to the other properties rather than in a nested JSON object. You may also notice that each one was automatically prefixed with the Date properties' name of doOn. This brings me to the <i>prefix</i> property that can be passed into the FlatDateTransformer. The prefix allows us to alter the generated property name to whatever we like when <i>inlining</i>. Lets look at our Task example again but this time we'll provide a prefix.
+    	As you can see the doOnMonth, doOnDay, and doOnYear are next to the other properties rather than in a nested JSON object. You may also notice that each
+        one was automatically prefixed with the Date properties' name of doOn. This brings me to the <i>prefix</i> property that can be passed into the
+        FlatDateTransformer. The prefix allows us to alter the generated property name to whatever we like when <i>inlining</i>. Lets look at our Task example
+        again but this time we'll provide a prefix.
     </p>
     <blockquote class="java" >
     public class Task {
@@ -593,7 +609,8 @@
     }
     </blockquote>
     <p>
-    	If we did not specify a prefix in the JSONSerializer it automatically picks up the name of the property being transformed in Java and uses it to prefix the month, day, and year JSON properties. However, if we were to specify our own in the JSONSerializer it would look different.
+    	If we did not specify a prefix in the JSONSerializer it automatically picks up the name of the property being transformed in Java and uses it to prefix
+        the month, day, and year JSON properties. However, if we were to specify our own in the JSONSerializer it would look different.
     </p>
     <blockquote class="java" >
     	JSONSerializer serializer = new JSONSerializer()
@@ -615,7 +632,8 @@
     }
     </blockquote>
     <p>
-    	In summary the FlatDateTransformer is a clear example on how to make use of the <i>inline</i> functionality to take greater control over the generated JSON. In order to accomplish this the FlatDateTransformer extends the AbstractTransformer and overrides the <i>isInline</i> method.
+    	In summary the FlatDateTransformer is a clear example on how to make use of the <i>inline</i> functionality to take greater control over the generated
+        JSON. In order to accomplish this the FlatDateTransformer extends the AbstractTransformer and overrides the <i>isInline</i> method.
     </p>
     <blockquote class="java">
     @Override
@@ -624,17 +642,24 @@
     }
     </blockquote>
     <p>
-    	If <i>isInline()</i> is overridden and returns <i>Boolean.TRUE</i> it tells the JSONContext that we will be handling the writing of our own property name. This allows us full control over the generated JSON instead of relying on the standard reflection to lookup the property name or key name and use it as the JSON property name. As a result we need to handle every aspect of the JSON generation for this object now.
+    	If <i>isInline()</i> is overridden and returns <i>Boolean.TRUE</i> it tells the JSONContext that we will be handling the writing of our own property
+        name. This allows us full control over the generated JSON instead of relying on the standard reflection to lookup the property name or key name and use
+        it as the JSON property name. As a result we need to handle every aspect of the JSON generation for this object now.
     </p>
     <p>
-    	Once the <i>transform()</i> method is called on the FlatDateTransformer it first checks to see if a TypeContext exists. If a type context exists it checks to see if a property name exists on the TypeContext and sets it. Afterwards it checks to see if a prefix has been specified. If a prefix does not exist it is replaced with the propertyName. Otherwise prefix is left as is.</p>
+    	Once the <i>transform()</i> method is called on the FlatDateTransformer it first checks to see if a TypeContext exists. If a type context exists it
+        checks to see if a property name exists on the TypeContext and sets it. Afterwards it checks to see if a prefix has been specified. If a prefix does
+        not exist it is replaced with the propertyName. Otherwise prefix is left as is.</p>
     <blockquote class="java">
     TypeContext typeContext = getContext().peekTypeContext();
     String propertyName = typeContext != null ? typeContext.getPropertyName() : "";
     if(prefix.trim().equals("")) prefix = propertyName;
     </blockquote>
     <p>
-    	Afterwards the TypeContext is checked. If the JSONContext does not yet contain a JSONContext or is not currently in a BasicType that is equal to BasicType.OBJECT then we will need to start writing a new JSON Object. Hence we call the writeOpenObject() method on the JSONContext. This creates a TypeContext that has a BasicType of OBJECT inside the writeOpenObject() method and pushes it onto the context stack in the JSONContext. If a TypeContext with a BasicType of OBJECT already exists on the stack then the properties are output as part of the currently generating JSON object.	
+    	Afterwards the TypeContext is checked. If the JSONContext does not yet contain a JSONContext or is not currently in a BasicType that is equal to
+        BasicType.OBJECT then we will need to start writing a new JSON Object. Hence we call the writeOpenObject() method on the JSONContext. This creates
+        a TypeContext that has a BasicType of OBJECT inside the writeOpenObject() method and pushes it onto the context stack in the JSONContext. If a
+        TypeContext with a BasicType of OBJECT already exists on the stack then the properties are output as part of the currently generating JSON object.
     </p>
     <blockquote class="java">
     if (typeContext == null || typeContext.getBasicType() != BasicType.OBJECT) {
@@ -664,7 +689,10 @@
     getContext().transform(c.get(Calendar.YEAR));
     </blockquote>
     <p>
-    	 All of this is fairly self explanatory. But, I'll draw special attention to the use of typeContext.isFirst(). This is used to check if the currently generating property is the first one to be created for this JSON object. If it is then we avoid writing the comma and then immediately set the typeContext.setFirst(false) so that all subsequent property creation for this JSON object prefixes a comma. If we did not perform the isFirst check we could easily wind up with JSON that looks like this:
+    	 All of this is fairly self explanatory. But, I'll draw special attention to the use of typeContext.isFirst(). This is used to check if the currently
+        generating property is the first one to be created for this JSON object. If it is then we avoid writing the comma and then immediately set the
+        typeContext.setFirst(false) so that all subsequent property creation for this JSON object prefixes a comma. If we did not perform the isFirst check we
+        could easily wind up with JSON that looks like this:
     </p>
     <blockquote class="java">
     {,"month":11,"day":13,"year":2007}
@@ -788,7 +816,7 @@
     </p>
     <p>
         Say we have a simple object like Hero (see the superhero package under the test and mock).
-        To create a json represenation of Hero we'd do the following:
+        To create a json representation of Hero we'd do the following:
     </p>
 
     <blockquote class="java">
@@ -796,7 +824,7 @@
         String jsonHarvey = new JSONSerialize().serialize(hero);
     </blockquote>
     <p>
-        Now to reconsitute Harvey to fight for the law we'd use JSONDeserializer like so:
+        Now to reconstitute Harvey to fight for the law we'd use JSONDeserializer like so:
     </p>
     <blockquote class="java">
         Hero hero = new JSONDeserializer&lt;Hero&gt;().deserialize( jsonHarvey );
@@ -851,7 +879,7 @@
         plug in a single class for a given path.  That might work when you know exactly which class you want to
         instantiate, but when the class type depends on external factors we really need a way to specify several
         possibilities.  That's where the second version of {@link flexjson.JSONDeserializer#use(String, ClassLocator)}
-        comes into play.  A ClassLocator allows you to use a stradegy for finding which java Class
+        comes into play.  A ClassLocator allows you to use a strategy for finding which java Class
         you want to attach at a particular object path.
     </p>
     <p>
@@ -882,7 +910,7 @@
     <p>
         That's a very contrived example because all I'm doing is stripping off the package and then adding back that
         missing package in my ClassLocator.  A more typical case would be when there is some typing information included
-        in your JSON objects that can be used as a discrimintor between the various types of Classes you need.  The good
+        in your JSON objects that can be used as a discriminator between the various types of Classes you need.  The good
         news is flexjson provides a ClassLocator out of the box that provides this so you don't have to rewrite this.
     </p>
 
