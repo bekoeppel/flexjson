@@ -43,6 +43,9 @@ Using the instructions from the previous step encrypt your Sonatype password and
 
 The release plugin for maven is already configured in the flexjson pom file so all you need to do is execute the following two steps to complete the release.  The first step will create the release tag and update the pom with the correct release and snapshot versions.  The second step will sign and deploy the artifacts to the Sonatype open source repository.  This repository is synced every hour to the central Maven repositories.  If you don't supply the optional gpg.passphrase then you will be prompted for it.
 
+ # (Optional) Run a Prepare "dry run"
+   mvn -DdryRun=true release:prepare
+
  # Prepare the release
    mvn release:prepare
 
