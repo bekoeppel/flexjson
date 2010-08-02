@@ -1,1 +1,1 @@
-mvn -DdryRun=true clean javadoc:javadoc assembly:assembly release:prepare 
+mvn clean javadoc:javadoc assembly:assembly
