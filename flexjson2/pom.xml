@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <parent>
     <groupId>org.sonatype.oss</groupId>
     <artifactId>oss-parent</artifactId>
@@ -9,7 +8,7 @@
   <groupId>net.sf.flexjson</groupId>
   <artifactId>flexjson</artifactId>
   <packaging>jar</packaging>
-  <version>2.0-SNAPSHOT</version>
+  <version>2.0</version>
   <name>flexjson</name>
   <url>http://flexjson.sourceforge.net/</url>
   <licenses>
@@ -33,9 +32,9 @@
     </developer>
   </developers>
   <scm>
-    <url>http://flexjson.svn.sourceforge.net/viewvc/flexjson/trunk/flexjson2/</url>
-    <connection>scm:svn:https://flexjson.svn.sourceforge.net/svnroot/flexjson/trunk/flexjson2</connection>
-    <developerConnection>scm:svn:https://flexjson.svn.sourceforge.net/svnroot/flexjson/trunk/flexjson2</developerConnection>
+    <url>http://flexjson.svn.sourceforge.net/viewvc/flexjson/tags/flexjson-2.0</url>
+    <connection>scm:svn:https://flexjson.svn.sourceforge.net/svnroot/flexjson/tags/flexjson-2.0</connection>
+    <developerConnection>scm:svn:https://flexjson.svn.sourceforge.net/svnroot/flexjson/tags/flexjson-2.0</developerConnection>
   </scm>
   <reporting>
     <plugins>
