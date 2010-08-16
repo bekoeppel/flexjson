@@ -46,14 +46,30 @@ The release plugin for maven is already configured in the flexjson pom file so a
  # (Optional) Run a Prepare "dry run"
    mvn -DdryRun=true release:prepare
 
+   mvn release:clean
+
  # Prepare the release
-   mvn -Dusername=[your_scm_username] release:prepare
+   mvn -Dusername=[your_scm_username] -Dpassword=[your_scm_password] release:prepare
 
  # Perform
-   mvn release:perform -Dgpg.passphrase=thephrase
+   mvn release:perform -Dgpg.passphrase=thephrase[or enter it interactively]
 
+== Build Downloadable Distributions ==
 
-== Additional Infomration ==
+After completing the release to the maven repository it is time to build the downloadable distributions (bz2, gz, and zip). From the root of the project you just released perform the following steps:
+
+# cd into the checkout directory in the maven target directory
+cd target/checkout/
+
+# run the build.sh file or the following command this will build the distributions on the checked out version that was just released
+mvn clean javadoc:javadoc assembly:assembly
+
+# once the build is complete you can cd into the target directory and find the three distribution files (flexjson-2.x.tar.bz2, flexjson-2.x.tar.gz, and flexjson-2.x.tar.zip).
+cd target
+
+# if you have made any changes to the flexjson website you can unzip one of the distributions and copy the docs folder up to the sourceforge website
+
+== Additional Information ==
 
 Actual preparation for setting up a Sonatype repository for syncing with the Maven Centeral repository. This has already been handled but it is good information in order to undestand the bigger picture.
 
