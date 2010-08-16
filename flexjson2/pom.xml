@@ -34,8 +34,8 @@
   </developers>
   <scm>
     <url>http://flexjson.svn.sourceforge.net/viewvc/flexjson/trunk/flexjson2/</url>
-    <connection>scm:svn:https://flexjson.svn.sourceforge.net/svnroot/flexjson</connection>
-    <developerConnection>scm:svn:https://flexjson.svn.sourceforge.net/svnroot/flexjson</developerConnection>
+    <connection>scm:svn:https://flexjson.svn.sourceforge.net/svnroot/flexjson/trunk/flexjson2</connection>
+    <developerConnection>scm:svn:https://flexjson.svn.sourceforge.net/svnroot/flexjson/trunk/flexjson2</developerConnection>
   </scm>
   <reporting>
     <plugins>
