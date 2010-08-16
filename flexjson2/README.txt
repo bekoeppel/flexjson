@@ -47,7 +47,7 @@ The release plugin for maven is already configured in the flexjson pom file so a
    mvn -DdryRun=true release:prepare
 
  # Prepare the release
-   mvn release:prepare
+   mvn -Dusername=[your_scm_username] release:prepare
 
  # Perform
    mvn release:perform -Dgpg.passphrase=thephrase
