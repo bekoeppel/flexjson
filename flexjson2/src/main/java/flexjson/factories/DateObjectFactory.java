@@ -4,6 +4,8 @@ import flexjson.ObjectFactory;
 import flexjson.JSONException;
 import flexjson.ObjectBinder;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -34,13 +36,9 @@ public class DateObjectFactory implements ObjectFactory {
     public Object instantiate(ObjectBinder context, Object value, Type targetType, Class targetClass) {
         try {
             if( value instanceof Double ) {
-                Date d = (Date)((Class)targetType).newInstance();
-                d.setTime( ((Double)value).longValue() );
-                return d;
+                return instantiateDate( (Class)targetType, ((Double)value).longValue(), context );
             } else if( value instanceof Long ) {
-                Date d = (Date)((Class)targetType).newInstance();
-                d.setTime( (Long)value );
-                return d;
+                return instantiateDate( (Class)targetType, (Long)value, context );
             } else {
                 for( DateFormat format : dateFormats ) {
                     try {
@@ -54,7 +52,20 @@ public class DateObjectFactory implements ObjectFactory {
         } catch (IllegalAccessException e) {
             throw new JSONException( String.format("%s:  Error encountered trying to instantiate %s", context.getCurrentPath(), ((Class)targetType).getName() ), e);
         } catch (InstantiationException e) {
-            throw new JSONException( String.format("%s:  Error encountered trying to instantiate %s.  Make sure there is a public no-arg constructor.", context.getCurrentPath(), ((Class)targetType).getName() ), e);
+            throw new JSONException( String.format("%s:  Error encountered trying to instantiate %s.  Make sure there is a public constructor that accepts a single Long.", context.getCurrentPath(), ((Class)targetType).getName() ), e);
+        } catch (InvocationTargetException e) {
+            throw new JSONException( String.format("%s:  Error encountered trying to instantiate %s.  Make sure there is a public constructor that accepts a single Long.", context.getCurrentPath(), ((Class)targetType).getName() ), e);
+        }
+    }
+
+    private Date instantiateDate( Class targetType, Long value, ObjectBinder context ) throws IllegalAccessException, InstantiationException, InvocationTargetException {
+        try {
+            Constructor constructor = targetType.getConstructor(Long.TYPE);
+            return (Date)constructor.newInstance( value );
+        } catch (NoSuchMethodException e) {
+            Date d = (Date)targetType.newInstance();
+            d.setTime( value );
+            return d;
         }
     }
 }

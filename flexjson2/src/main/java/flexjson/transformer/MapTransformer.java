@@ -41,10 +41,18 @@ public class MapTransformer extends AbstractTransformer {
                 if(!transformer.isInline()) {
                     if (!typeContext.isFirst()) getContext().writeComma();
                     typeContext.setFirst(false);
-                    getContext().writeName(key.toString());
+                    if( key != null ) {
+                        getContext().writeName(key.toString());
+                    } else {
+                        getContext().writeName(null);
+                    }
                 }
-                
-                typeContext.setPropertyName(key.toString());
+
+                if( key != null ) {
+                    typeContext.setPropertyName(key.toString());
+                } else {
+                    typeContext.setPropertyName(null);
+                }
 
                 transformer.transform(value.get(key));
 

@@ -4,7 +4,6 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.framework.Test;
 import junit.textui.TestRunner;
-import flexjson.*;
 import flexjson.transformer.DateTransformer;
 import flexjson.transformer.Transformer;
 import flexjson.mock.Person;
@@ -384,6 +383,30 @@ public class JSONDeserializerTest extends TestCase {
         assertEquals( "Charlie", jsonP[0].getFirstname() );
         assertEquals( "Dilbert", jsonP[1].getFirstname() );
         assertEquals( "Ben", jsonP[2].getFirstname() );
+    }
+
+    public void testDeserializeIntoExistingObject() {
+        FixtureCreator creator = new FixtureCreator();
+        Person charlie = creator.createCharlie();
+        Person charlieClone = new Person( "Chauncy", "Beauragard", null, null, null );
+        Phone fakePhone = new Phone( PhoneNumberType.MOBILE, "303 555 1234");
+        charlieClone.getPhones().add( fakePhone );
+
+        String json = new JSONSerializer().include("hobbies").exclude("firstname", "lastname").serialize( charlie );
+        Person p = new JSONDeserializer<Person>().deserializeInto(json, charlieClone);
+
+        assertSame("Make sure the root object is the exact same reference as the one provided to the factory", charlieClone, p );
+        assertEquals( charlieClone.getFirstname(), p.getFirstname() );
+        assertEquals( charlieClone.getLastname(), p.getLastname() );
+        assertEquals( charlie.getBirthdate(), p.getBirthdate() );
+        assertEquals( charlie.getFirstBaseBallGame(), p.getFirstBaseBallGame() );
+        assertEquals( charlie.getWork(), p.getWork() );
+        assertEquals( charlie.getWork().getZipcode(), p.getWork().getZipcode() );
+        assertEquals( charlie.getHome(), p.getHome() );
+        assertEquals( charlie.getHobbies().size(), p.getHobbies().size() );
+        assertEquals( 1, p.getPhones().size() );
+        assertEquals( 2, charlie.getPhones().size() );
+        assertSame( fakePhone, p.getPhones().get(0) );
     }
 
     public void setUp() {

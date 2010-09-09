@@ -41,59 +41,21 @@ public class JSONSerializerTest extends TestCase {
 
     @SuppressWarnings({"unchecked"})
     public void setUp() {
-        Address home = new Address("4132 Pluto Drive", "Atlanta", "Ga", new Zipcode("33913"));
-        Address work = new Address("44 Planetary St.", "Neptune", "Milkiway", new Zipcode("30328-0764"));
+        FixtureCreator fixtureCreator = new FixtureCreator();
         pedroZip = new Zipcode("49404");
-        Address pedroHome = new Address(" 12 Acrelândia Way", "Rio de Janeiro", "Brazil", pedroZip);
-        Address pedroWork = new Address(" 12 Acrelândia Way", "Rio de Janeiro", "Brazil", pedroZip);
-
-        Phone pagerPhone = new Phone(PhoneNumberType.PAGER, "404 555-1234");
-        Phone cellPhone = new Phone(PhoneNumberType.MOBILE, "770 777 5432");
-        Phone pedroPhone = new Phone(PhoneNumberType.MOBILE, "123 555 2323");
-
-        Calendar pedroCal = Calendar.getInstance();
-        pedroCal.set(1980, Calendar.APRIL, 12, 11, 45);
-        pedro = new Person("Pedro", "Neves", pedroCal.getTime(), pedroHome, pedroWork);
-        pedro.getPhones().add(pedroPhone);
-
-        Calendar cal = Calendar.getInstance();
-        cal.set(1976, Calendar.MARCH, 21, 8, 11);
-        charlie = new Person("Charlie", "Hubbard", cal.getTime(), home, work);
-        charlie.getPhones().add(pagerPhone);
-        charlie.getPhones().add(cellPhone);
-
-        charlie.getHobbies().add("Shorting volatile stocks");
-        charlie.getHobbies().add("Fixing Horse Races");
-        charlie.getHobbies().add("Taking dives in the 3rd round");
-
-        Address benhome = new Address("8735 Hilton Way", "Chattanooga", "Tn", new Zipcode("82742"));
-        Address benwork = new Address("44 Planetary St.", "Neptune", "Milkiway", new Zipcode("12345"));
-
-        Calendar benCal = Calendar.getInstance();
-        benCal.set(1978, Calendar.JULY, 5, 8, 11);
-        ben = new Person("Ben", "Hubbard", benCal.getTime(), benhome, benwork);
-        ben.getHobbies().add("Purse snatching");
-        ben.getHobbies().add("Running sweat shops");
-        ben.getHobbies().add("Fixing prices");
-
-        colors = new HashMap();
-
-        colors.put("blue", "#0000ff");
-        colors.put("green", "#00ff00");
-        colors.put("black", "#000000");
-        colors.put("grey", "#888888");
-        colors.put("yellow", "#00ffff");
-        colors.put("purple", "#ff00ff");
-        colors.put("white", "#ffffff");
+        pedro = fixtureCreator.createPedro();
+        charlie = fixtureCreator.createCharlie();
+        ben = fixtureCreator.createBen();
+        colors = fixtureCreator.createColorMap();
 
         people = new ArrayList();
         people.add(charlie);
         people.add(ben);
         people.add(pedro);
 
-        dilbert = new Employee("Dilbert", "", new Date(), new Address("123 Finland Dr", "Cubicleville", "Hell", new Zipcode("66666")), new Address("123 Finland Dr", "Cubicleville", "Hell", new Zipcode("66666")), "Initech");
+        dilbert = fixtureCreator.createDilbert();
 
-        network = new Network("My Network", charlie, ben);
+        network = fixtureCreator.createNetwork("My Network", charlie, ben );
     }
 
     public void testObject() {
@@ -192,6 +154,15 @@ public class JSONSerializerTest extends TestCase {
         }
         assertTrue(colorsJson.startsWith("{"));
         assertTrue(colorsJson.endsWith("}"));
+
+        colors.put( null, "#aaaaaa" );
+        colors.put( "orange", null );
+
+        String json = serializer.serialize( colors );
+        assertTrue( "Assert null is present as a key", json.contains("null:") );
+        assertStringValue( "#aaaaaa", json );
+        assertAttribute( "orange", json );
+        assertTrue( "Assert null is present as a value", json.contains( ":null" ) );
     }
 
     public void testArray() {
@@ -505,7 +476,7 @@ public class JSONSerializerTest extends TestCase {
         String json = new JSONSerializer().transform(new DateTransformer("yyyy-MM-dd"), "birthdate").serialize(charlie);
 
         assertAttribute("birthdate", json);
-        assertStringValue("1976-03-21", json);
+        assertStringValue("1988-11-23", json);
     }
 
     private int occurs(String str, String json) {

@@ -72,4 +72,28 @@ public class Address {
     public Person getPerson() {
         return person;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Address address = (Address) o;
+
+        if (city != null ? !city.equals(address.city) : address.city != null) return false;
+        if (state != null ? !state.equals(address.state) : address.state != null) return false;
+        if (street != null ? !street.equals(address.street) : address.street != null) return false;
+        if (zipcode != null ? !zipcode.equals(address.zipcode) : address.zipcode != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = street != null ? street.hashCode() : 0;
+        result = 31 * result + (city != null ? city.hashCode() : 0);
+        result = 31 * result + (state != null ? state.hashCode() : 0);
+        result = 31 * result + (zipcode != null ? zipcode.hashCode() : 0);
+        return result;
+    }
 }

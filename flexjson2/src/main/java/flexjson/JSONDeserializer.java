@@ -1,6 +1,7 @@
 package flexjson;
 
 import flexjson.factories.ClassLocatorObjectFactory;
+import flexjson.factories.ExistingObjectFactory;
 import flexjson.locators.StaticClassLocator;
 
 import java.util.Map;
@@ -145,35 +146,57 @@ public class JSONDeserializer<T> {
     public JSONDeserializer() {
     }
 
+    /**
+     * Deserialize the given json formatted input into a Java object.
+     *
+     * @param input a json formatted string.
+     * @return an Java instance deserialized from the json input.
+     */
     public T deserialize( String input ) {
         ObjectBinder binder = createObjectBinder();
         return (T)binder.bind( new JSONTokener( input ).nextValue() );
     }
 
+    /**
+     * Deserialize the given json input, and use the given Class as
+     * the type of the initial object to deserialize into.  This object
+     * must implement a no-arg constructor.
+     *
+     * @param input a json formatted string.
+     * @param root a Class used to create the initial object.
+     * @return the object created from the given json input.
+     */
     public T deserialize( String input, Class root ) {
         ObjectBinder binder = createObjectBinder();
         return (T)binder.bind( new JSONTokener( input ).nextValue(), root );
     }
 
-//    public T deserialize( String input, T target ) {
-//        ObjectBinder binder = createObjectBinder();
-//        Object inObj = new JSONTokener(input).nextValue();
-//        if( inObj instanceof Map ) {
-//            return (T)binder.bindIntoObject( (Map)inObj, target, target.getClass() );
-//        } else if( inObj instanceof Collection) {
-//            return (T)binder.bindIntoCollection( (Collection)inObj, target, target.getClass() );
-//        }
-//    }
+    /**
+     * Deserialize the given json input, and use the given ObjectFactory to
+     * create the initial object to deserialize into.
+     *
+     * @param input a json formatted string.
+     * @param factory an ObjectFactory used to create the initial object.
+     * @return the object created from the given json input.
+     */
+    public T deserialize( String input, ObjectFactory factory ) {
+        use( (String)null, factory );
+        ObjectBinder binder = createObjectBinder();
+        return (T)binder.bind( new JSONTokener( input ).nextValue() );
+    }
 
-    private ObjectBinder createObjectBinder() {
-        ObjectBinder binder = new ObjectBinder();
-        for( Class clazz : typeFactories.keySet() ) {
-            binder.use( clazz, typeFactories.get(clazz) );
-        }
-        for( Path p : pathFactories.keySet() ) {
-            binder.use( p, pathFactories.get( p ) );
-        }
-        return binder;
+    /**
+     * Deserialize the given input into the existing object target.
+     * Values in the json input will overwrite values in the
+     * target object.  This means if a value is included in json
+     * a new object will be created and set into the existing object. 
+     *
+     * @param input a json formatted string.
+     * @param target an instance to set values into from the json string.
+     * @return will return a reference to target.
+     */
+    public T deserializeInto( String input, T target ) {
+        return deserialize( input, new ExistingObjectFactory(target) );
     }
 
     public JSONDeserializer<T> use( String path, ClassLocator locator ) {
@@ -201,4 +224,16 @@ public class JSONDeserializer<T> {
         }
         return this;
     }
+
+    private ObjectBinder createObjectBinder() {
+        ObjectBinder binder = new ObjectBinder();
+        for( Class clazz : typeFactories.keySet() ) {
+            binder.use( clazz, typeFactories.get(clazz) );
+        }
+        for( Path p : pathFactories.keySet() ) {
+            binder.use( p, pathFactories.get( p ) );
+        }
+        return binder;
+    }
+
 }

@@ -3,8 +3,11 @@ package flexjson;
 import flexjson.mock.*;
 import flexjson.mock.superhero.*;
 
+import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class FixtureCreator {
     public Person createCharlie() {
@@ -15,8 +18,11 @@ public class FixtureCreator {
         Phone cellPhone = new Phone( PhoneNumberType.MOBILE, "770 777 5432");
 
         Calendar cal = Calendar.getInstance();
-        cal.set(1976, Calendar.MARCH, 21, 8, 11);
+        cal.set(1988, Calendar.NOVEMBER, 23, 8, 11);
         Person charlie = new Person("Charlie", "Hubbard", cal.getTime(), home, work );
+        cal = Calendar.getInstance();
+        cal.set( 1993, Calendar.JUNE, 6, 8, 11);
+        charlie.setFirstBaseBallGame( new Timestamp( cal.getTime().getTime() ) );
         charlie.getPhones().add( pagerPhone );
         charlie.getPhones().add( cellPhone );
 
@@ -32,8 +38,11 @@ public class FixtureCreator {
         Address benwork = new Address("44 Planetary St.", "Neptune", "Milkiway", new Zipcode("12345") );
 
         Calendar benCal = Calendar.getInstance();
-        benCal.set(1978, Calendar.JULY, 5, 8, 11);
+        benCal.set(1986, Calendar.AUGUST, 8, 8, 11);
         Person ben = new Person("Ben", "Hubbard", benCal.getTime(), benhome, benwork );
+        benCal = Calendar.getInstance();
+        benCal.set( 1995, Calendar.MAY, 21, 8, 11);
+        ben.setFirstBaseBallGame( new Timestamp( benCal.getTime().getTime() ) );
         ben.getHobbies().add( "Purse snatching" );
         ben.getHobbies().add( "Running sweat shops" );
         ben.getHobbies().add( "Fixing prices" );
@@ -70,5 +79,19 @@ public class FixtureCreator {
 
     public Villian createLexLuthor() {
         return new Villian("Lex Luthor", createSuperman(), new SecretLair("Legion of Doom") );
+    }
+
+    public Map<String,String> createColorMap() {
+        Map<String,String> colors = new HashMap<String,String>();
+
+        colors.put("blue", "#0000ff");
+        colors.put("green", "#00ff00");
+        colors.put("black", "#000000");
+        colors.put("grey", "#888888");
+        colors.put("yellow", "#00ffff");
+        colors.put("purple", "#ff00ff");
+        colors.put("white", "#ffffff");
+
+        return colors;
     }
 }
