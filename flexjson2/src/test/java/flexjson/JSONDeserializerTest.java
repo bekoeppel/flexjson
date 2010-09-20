@@ -388,7 +388,7 @@ public class JSONDeserializerTest extends TestCase {
     public void testDeserializeIntoExistingObject() {
         FixtureCreator creator = new FixtureCreator();
         Person charlie = creator.createCharlie();
-        Person charlieClone = new Person( "Chauncy", "Beauragard", null, null, null );
+        Person charlieClone = new Person( "Chauncy", "Beauregard", null, null, null );
         Phone fakePhone = new Phone( PhoneNumberType.MOBILE, "303 555 1234");
         charlieClone.getPhones().add( fakePhone );
 

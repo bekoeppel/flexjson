@@ -1026,6 +1026,49 @@
         for the JSONSerializer.
     </p>
 
+    <h3>Deserializing into an Existing Object and Merging</h3>
+
+    <div class="important">This is supported out of the box as of 2.1</div>
+
+    <p>
+        The JSONDeserializer supports deserializing json into an already existing instance.  This allows you to
+        support a primitive version of merging so prior values will be overwritten with the values in the json
+        string, but anything not included in the json will remain untouched.  This follows fairly simplistic
+        rules, and doesn't do anything more complex than copy the data from json into your existing instance
+        object.  Here is an example:
+    </p>
+
+    <blockquote class="java">
+        Person charlie = new Person("Charlie", "Hubbard", cal.getTime(), home, work );
+        Person charlieClone = new Person( "Chauncy", "Beauregard", null, null, null );
+        Phone fakePhone = new Phone( PhoneNumberType.MOBILE, "303 555 1234");
+        charlieClone.getPhones().add( fakePhone );
+
+        String json = new JSONSerializer().include("hobbies").exclude("firstname", "lastname").serialize( charlie );
+        Person p = new JSONDeserializer&lt;Person&gt;().deserializeInto(json, charlieClone);
+    </blockquote>
+
+    <p>
+        The variable <b>p</b> will reference the same instance as <b>charlieClone</b>.  After deserializing into
+        that instance, some of the values in <b>p</b> will be overwritten with values from <b>charlie</b> instance.
+        However, we excluded the <b>firstname</b> and <b>lastname</b> fields so <b>p</b> will still have 
+        values "Chauncy" and "Beauregard" in it.  Those will not be touched by the deserializer.
+    </p>
+
+    <p>
+        This shows how existing instances can be populated with data from json without needing to manually
+        merge data from new objects to existing objects.  Thus keeping boiler plate code for copying
+        between two instances to a minimum.  You can think of refreshing objects from the server or data
+        stores as being a valid use case for this.
+    </p>
+
+    <p>
+        There are somethings to keep in mind. The return value will always be the exact same reference
+        passed as the 2nd parameter to deserializeInto().  If there is a valid field in the json it will
+        always overwrite what's in memory this includes null values too.  <b>This only supports 
+        deserializing into Java beans not collections.</b>
+    </p>
+
     <h2>Thread safety and Reuse</h2>
 
     <p>
@@ -1058,6 +1101,18 @@
     }
 
     </blockquote>
+
+    <h2>Android Support</h2>
+
+    <div class="important">This is supported out of the box as of 2.1</div>
+
+    <p>
+        Prior versions of the library did not work on Android because it used the very standard package
+        java.beans.Introspector.  Instead of waiting for Google to port that class over to become more
+        compliant with the Java specification starting in 2.1 Introspector has been replaced so that we
+        can enjoy using Flexjson on Android.  For more ideas and information about how Flexjson can
+        be used in Android see this <a href="http://wrongnotes.blogspot.com/flexjson-meet-android">post</a>. 
+    </p>
 
     <h2>The End</h2>
 

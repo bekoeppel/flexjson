@@ -12,18 +12,64 @@
 </head>
 <body>
     <h1>Flexjson Change Log</h1>
-    <h2>Version 2.0b4</h2>
+    <h2>Version 2.1</h2>
+    <h3>Sept 20, 2010</h3>
+    <ul>
+        <li>Enhancements</li>
+        <li>
+            <p>
+                Removed usage java.beans.Introspector and replaced it with a specialized solution so Flexjson
+                could be ported to Android.
+            </p>
+        </li>
+        <li>
+            <p>
+                Added a new ObjectFactory ExistingObjectFactory to support deserializing into an
+                existing object.
+            </p>
+        </li>
+        <li>
+            <p>
+                Added a shorthand method JSONDeserializer.deserializeInto() to deserialize into an existing 
+                object without needing to configure ExistingObjectFactory explicitly.
+            </p>
+        </li>
+    </ul>
+    <ul>
+        <li>Bug Fixes</li>
+        <li>
+            <p>
+                Fixed a bug related to deserializing into subclasses of Date like Timestamp that don't have
+                a no-arg constructor.  It now uses a constructor that takes a single long value argument.
+            </p>
+        </li>
+        <li>
+            <p>
+                Fixed bug 3062102: 2.0 regressed a problem serializing maps containing nulls for keys and
+                values.  Now Maps containing nulls (either key or value) will serialize correctly.
+            </p>
+        </li>
+        <li>
+            <p>
+
+            </p>
+        </li>
+    </ul>
+    <h2>Version 2.0</h2>
     <h3>Dec 12, 2009</h3>
     <ul>
         <li>Enhancements</li>
         <li>
             <p>
-                <!-- todo -->
+                Huge refactoring to enable Transformers to be registered anywhere in the object graph when
+                doing serialization.  Transformer's interfaces were changed to they are incompatible with
+                Transformers using the 1.x code base.
             </p>
         </li>
         <li>
             <p>
-                <!-- todo -->
+                Huge refactoring to enable ObjectBinder to be used anywhere in the object graph when doing
+                deserialization.
             </p>
         </li>
     </ul>
