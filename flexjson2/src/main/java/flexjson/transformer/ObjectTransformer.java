@@ -17,9 +17,6 @@ package flexjson.transformer;
 
 import flexjson.*;
 
-import java.beans.BeanInfo;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
@@ -34,10 +31,9 @@ public class ObjectTransformer extends AbstractTransformer {
                 context.setVisits(new ChainedSet(visits));
                 context.getVisits().add(object);
                 // traverse object
-                BeanInfo info = Introspector.getBeanInfo( resolveClass(object) );
-                PropertyDescriptor[] props = info.getPropertyDescriptors();
+                BeanAnalyzer analyzer = BeanAnalyzer.analyze( resolveClass(object) );
                 TypeContext typeContext = context.writeOpenObject();
-                for (PropertyDescriptor prop : props) {
+                for( BeanProperty prop : analyzer.getProperties() ) {
                     String name = prop.getName();
                     path.enqueue(name);
                     Method accessor = prop.getReadMethod();

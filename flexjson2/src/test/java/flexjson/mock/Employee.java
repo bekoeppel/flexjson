@@ -2,12 +2,6 @@ package flexjson.mock;
 
 import java.util.Date;
 
-/**
- * Created by IntelliJ IDEA.
- * User: charlie
- * Date: Jun 24, 2007
- * Time: 5:54:54 PM
- */
 public class Employee extends Person {
 
     String company;
@@ -26,5 +20,9 @@ public class Employee extends Person {
 
     public void setCompany(String company) {
         this.company = company;
+    }
+
+    public void setCompany(StringBuilder builder) {
+        this.company = builder.toString();
     }
 }

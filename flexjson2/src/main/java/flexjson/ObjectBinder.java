@@ -5,10 +5,6 @@ import flexjson.factories.*;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;
-import java.beans.BeanInfo;
-import java.beans.Introspector;
-import java.beans.IntrospectionException;
-import java.beans.PropertyDescriptor;
 import java.lang.reflect.*;
 
 public class ObjectBinder {
@@ -130,8 +126,8 @@ public class ObjectBinder {
     public Object bindIntoObject(Map jsonOwner, Object target, Type targetType) {
         try {
             objectStack.add( target );
-            BeanInfo info = Introspector.getBeanInfo( target.getClass() );
-            for( PropertyDescriptor descriptor : info.getPropertyDescriptors() ) {
+            BeanAnalyzer analyzer = BeanAnalyzer.analyze( target.getClass() );
+            for( BeanProperty descriptor : analyzer.getProperties() ) {
                 Object value = findFieldInJson( jsonOwner, descriptor );
                 if( value != null ) {
                     currentPath.enqueue( descriptor.getName() );
@@ -165,8 +161,6 @@ public class ObjectBinder {
             throw new JSONException(currentPath + ":  Could not access the no-arg constructor for " + target.getClass().getName(), e);
         } catch (InvocationTargetException ex ) {
             throw new JSONException(currentPath + ":  Exception while trying to invoke setter method.", ex );
-        } catch (IntrospectionException e) {
-            throw new JSONException(currentPath + ":  Could not inspect " + target.getClass().getName(), e );
         }
     }
 
@@ -290,10 +284,10 @@ public class ObjectBinder {
         }
     }
 
-    private Object findFieldInJson( Map map, PropertyDescriptor descriptor ) {
-        Object value = map.get( descriptor.getName() );
+    private Object findFieldInJson( Map map, BeanProperty property ) {
+        Object value = map.get( property.getName() );
         if( value == null ) {
-            String field = descriptor.getName();
+            String field = property.getName();
             value = map.get( upperCase(field) );
         }
 

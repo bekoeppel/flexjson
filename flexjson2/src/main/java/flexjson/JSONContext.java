@@ -362,7 +362,7 @@ public class JSONContext {
         this.pathExpressions = pathExpressions;
     }
 
-    public boolean isIncluded(PropertyDescriptor prop) {
+    public boolean isIncluded(BeanProperty prop) {
         PathExpression expression = matches( pathExpressions );
         if (expression != null) {
             return expression.isIncluded();
@@ -379,7 +379,6 @@ public class JSONContext {
         } else {
             return true;
         }
-
     }
 
     public boolean isIncluded(String key, Object value) {
