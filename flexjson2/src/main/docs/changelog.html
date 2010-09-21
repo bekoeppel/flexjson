@@ -34,6 +34,13 @@
                 object without needing to configure ExistingObjectFactory explicitly.
             </p>
         </li>
+        <li>
+            <p>
+                Added methods to parse json input from a java.io.Reader instance for JSONDeserializer.
+                This allows you to skip the overhead of creating a String then transforming that to the
+                stream.
+            </p>
+        </li>
     </ul>
     <ul>
         <li>Bug Fixes</li>
@@ -49,11 +56,6 @@
                 values.  Now Maps containing nulls (either key or value) will serialize correctly.
             </p>
         </li>
-        <li>
-            <p>
-
-            </p>
-        </li>
     </ul>
     <h2>Version 2.0</h2>
     <h3>Dec 12, 2009</h3>
@@ -62,14 +64,30 @@
         <li>
             <p>
                 Huge refactoring to enable Transformers to be registered anywhere in the object graph when
-                doing serialization.  Transformer's interfaces were changed to they are incompatible with
+                doing serialization.  JSONSerializer uses Transformers as the underpinnings for doing serialization.
+                JSONSerializer is built on top of a collection of Transformers that the user can override with
+                their own implementation.  Transformer's interfaces were changed to they are incompatible with
                 Transformers using the 1.x code base.
             </p>
         </li>
         <li>
             <p>
-                Huge refactoring to enable ObjectBinder to be used anywhere in the object graph when doing
-                deserialization.
+                Huge refactoring to add ObjectBinder to be used anywhere in the object graph when doing
+                deserialization.  It serves as the underpinnings for doing the mapping into Objects so
+                JSONDeserializer is built on top of a collection of ObjectBinders.  The user can override
+                any ObjectBinder with their own implementation.
+            </p>
+        </li>
+        <li>
+            <p>
+                JSONSerializer supports direct serialization to a java.io.Writer instead of using Strings.
+            </p>
+        </li>
+        <li>
+            <p>
+                JSONDeserializer added a method to specify the root class within the deserialize() method call
+                cutting down on the confusion around how to register an object on the root path using null.
+                Also makes code much clearer and cleaner.
             </p>
         </li>
     </ul>

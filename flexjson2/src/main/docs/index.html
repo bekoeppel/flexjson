@@ -34,23 +34,24 @@
     <a href="http://sourceforge.net/donate/index.php?group_id=194042"><img src="http://images.sourceforge.net/images/project-support.jpg" width="88" height="32" border="0" alt="Support Flexjson by Donating" /> </a>
 
     <p>
-        JavaScript Object Notation (aka JSON) is a very popular alternative to XML for transmitting data to the web browser.
-        Flexjson is a lightweight library for serializing Java objects into JSON.  What's different about
-        Flexjson is it's control over what gets serialized allowing both deep and shallow copies of objects.  Most JSON
-        serializers mimic object serialization libraries and try to serialize the entire object graph from the object being
-        turned into JSON.  This causes problems when you want a connected object model in your server, but you  can't
-        send that object model to the client because the serialization library will try to send the entire object graph.
-        This makes it very hard to create object oriented models and serialize pieces of that model to the client without
-        sending everything.  Other JSON libraries require you to create a lot of boiler plate code to translate your
-        object representation into a JSON object.  In this regard I shouldn't have to explain myself, but to keep it
-        short let's me just say I hate boiler plate translation code!  Flexjson tries to solve both of these problems
-        by offering a higher level API or dare I say
+        JavaScript Object Notation (aka JSON) is a very popular alternative to XML for transmitting data to the
+        web browser.  Flexjson is a lightweight library for <a href="#Serialization">serializing</a> and
+        <a href="#Deserialization">deserializing</a> Java objects into and from JSON.  What's different about
+        Flexjson is it's control over what gets serialized allowing both deep and shallow copies of objects.
+        Most JSON serializers mimic object serialization libraries and try to serialize the entire object graph
+        from the object being turned into JSON.  This causes problems when you want a connected object model in
+        your server, but you  can't send that object model to the client because the serialization library will
+        try to send the entire object graph.  This makes it very hard to create object oriented models and serialize
+        pieces of that model to the client without sending everything.  Other JSON libraries require you to create
+        a lot of boiler plate code to translate your object representation into a JSON object.  In this regard I
+        shouldn't have to explain myself, but to keep it short let's me just say I hate boiler plate translation
+        code!  Flexjson tries to solve both of these problems by offering a higher level API or dare I say
         <a href="http://en.wikipedia.org/wiki/Domain-specific_language">DSL</a> for specifying your intent.
     </p>
     <p>
-        In order to explore Flexjson we will be using the following model.  Let's say we're building a PIM or contact
-        management application.  Here are some classes we might see in an application like this along with the
-        relationships between them.
+        In order to explore Flexjson we will be using the following model.  Let's say we're building a PIM or
+        contact management application.  Here are some classes we might see in an application like this along
+        with the relationships between them.
     </p>
 
     <img src="example_object_model.jpg" alt="UML Diagram of Person, Address, Zipcode, and Phone classes."/>
@@ -59,7 +60,8 @@
         In the above diagram you can see Person has many instances of Phone, and has many Addresses.  While this is a
         trival object model it will help us demostrate the ideas behind Flexjson.
     </p>
-    <h2> The Basics </h2>
+    <a name="Serialization"><h2>Serialization</h2></a>
+    <h3> The Basics </h3>
     <p>
         Flexjson takes a different approach allowing you to control the depth to which it will serialize.  It's very
         similiar in concept to lazy loading in Hibernate which allows you to have a connected object model, but control
@@ -90,7 +92,7 @@
 
     </blockquote>
 
-    <h2>Working With Includes</h2>
+    <h3>Working With Includes</h3>
 
     <p>
         Looks pretty much like you'd expect.  However, our Person object contains more fields than name, birthday,
@@ -180,7 +182,7 @@
         have to specify it twice.  You can use the dot notation to trace over your object graph very easily.
     </p>
 
-    <h2>More on Includes</h2>
+    <h3>More on Includes</h3>
 
     <p>
         There is an alternate form of serialize() method that allows you to specify an outer object for collections.
@@ -224,7 +226,7 @@
     }
     </blockquote>
 
-    <h2>Working With Excludes</h2>
+    <h3>Working With Excludes</h3>
 
     <p>
         Not only can you include, but you can specify it in terms of exclude as well.  The exclude() method allows you to
@@ -250,7 +252,7 @@
         it's only <em>the last field</em> that is <em>excluded</em> all other <em>parent fields</em> are <em>included</em>.
     </p>
 
-    <h2>Excluding Using Annotations</h2>
+    <h3>Excluding Using Annotations</h3>
 
     <p>
         Always having to do your excludes in this manner can be cumbersome especially if you always intend something to
@@ -296,7 +298,7 @@
 
     </blockquote>
 
-    <h2>Code Gone Wildcard</h2>
+    <h3>Code Gone Wildcard</h3>
 
     <p>
         In 1.5 you can now specify wildcards in your include() and exclude() method calls.  This makes it easy to
@@ -332,7 +334,7 @@
         using it.
     </p>
 
-    <h2>Order of Evaluation</h2>
+    <h3>Order of Evaluation</h3>
 
     <div class="important">Order of evaluation has changed as of 1.5</div>
 
@@ -370,7 +372,22 @@
         all fields of User object, and it would exclude it thus never reaching the &quot;username&quot; entry.
     </p>
 
-    <h2>Deep Serialization</h2>
+    <h3>Direct Serialization To a Stream</h3>
+
+    <p>
+        For simplicity Flexjson allows you to work with String objects, but but it's more efficient to work directly
+        with the stream we want to send the json data over.  You can supply a java.io.Writer as the destination for
+        the json output.  Now we can go directly to the stream bypassing the conversion to String.  Here is a
+        simple example:
+    </p>
+
+    <blockquote class="java">
+        new JSONSerializer().serialize(myObject, response.getPrintWriter());
+    </blockquote>
+
+    This method returns void so there is no need to handle the return type.
+
+    <h3>Deep Serialization</h3>
 
     <p>
         In 1.2 there was a new feature added to perform a deep serialization of the object using the deepSerialize()
@@ -397,7 +414,7 @@
         use it frivolously.
     </p>
 
-    <h2>Transformers More Than Meets the Eye</h2>
+    <h3>Transformers More Than Meets the Eye</h3>
     <div class="important">Transformers are central to how Flexjson works in 2.0.</div>
     <p>
         Flexjson 2.0 has been completely rewritten to make Transformers central to how processing Java into JSON works.
@@ -768,7 +785,7 @@
         }
     }
     </blockquote>
-    <h2>Thread safety and Reuse</h2>
+    <h3>Thread safety and Reuse</h3>
 
     <p>
         Finally, JSONSerializer instances can be reused to serialize many objects of the same type.  Once you
@@ -800,7 +817,8 @@
 
     </blockquote>
 
-    <h2>Deserialization</h2>
+
+    <a name="Deserialization"><h2>Deserialization</h2></a>
 
     <p>
         Deserialization is the process of taking JSON text binding those values into Objects.  This process can be
@@ -820,12 +838,15 @@
     </p>
 
     <blockquote class="java">
-        Hero harveyBirdman = new Hero("Harvey Birdman", new SecretIdentity("Attorney At Law"), new SecretLair("Sebben & Sebben") );
+        Hero harveyBirdman = new Hero("Harvey Birdman",
+                                       new SecretIdentity("Attorney At Law"),
+                                       new SecretLair("Sebben & Sebben") );
         String jsonHarvey = new JSONSerialize().serialize(hero);
     </blockquote>
     <p>
         Now to reconstitute Harvey to fight for the law we'd use JSONDeserializer like so:
     </p>
+
     <blockquote class="java">
         Hero hero = new JSONDeserializer&lt;Hero&gt;().deserialize( jsonHarvey );
     </blockquote>
@@ -834,7 +855,7 @@
 
     <p>
         Pretty easy when all the type information is included with the JSON data.  Now let's look at the more difficult
-        case of how we might reconstitute something missing type info.
+        case of how we might reconstitute something that is missing type info.
     </p>
     <p>
         Let's exclude the class attribute from our json like so:
@@ -843,50 +864,66 @@
     <blockquote class="java">
         String jsonHarvey = new JSONSerialize().exclude("*.class").serialize(hero);
     </blockquote>
+
     <p>
-        The big trick here is to replace that type information when we instantiate the deserializer.
-        To do that we'll use the flexjson.JSONDeserializer.use(String, Class) method like so:
+        We need to replace the type information we just dropped when we instantiate the deserializer.
+        To do that we'll pass the class we want to use into to
+        flexjson.JSONDeserializer.deserialize(String, Class) method like so:
     </p>
+
+    <blockquote class="java">
+        Hero hero = new JSONDeserializer&lt;Hero&gt;().deserialize( jsonHarvey, Hero.class );
+    </blockquote>
+
+    <p>
+        Prior to 2.0 you have to use the following to specify the root level object by calling use() method
+        passing null for the path.
+    </p>
+
     <blockquote class="java">
         Hero hero = new JSONDeserializer&lt;Hero&gt;().use( null, Hero.class ).deserialize( jsonHarvey );
     </blockquote>
+
     <p>
-        Like riding a horse with no saddle without our type information isn't it?  So what is happening here is we've
-        registered the Hero class onto a path in the json object graph.  We use null here to mean the root of the
-        json object.  If we were naming our root we'd include that name as the path to our root in the JSON.  The
-        flexjson.JSONDeserializer.use(String, Class) method  uses the object graph path to attach certain classes to
-        those locations.  So, when the deserializer is deserializing it knows where it is in the object graph.  It uses
-        that graph path to look up the java class it should use when reconstituting the object.
+        In both cases, what is happening here is we've registered the Hero class onto a path in the json
+        object graph.  We use null here to mean the root of the json object.  If we were naming our root we'd
+        include that name as the path to our root in the JSON.  The flexjson.JSONDeserializer.use(String, Class)
+        method uses the object graph path to attach certain classes to those locations.  So, when the deserializer
+        is deserializing it knows where it is in the object graph, and uses that graph path to look up the
+        java class it should use to gather type information from.
     </p>
+
     <p>
         Notice that all we registered was Hero class how did it know to instantiate SecretLair and SecretIdentity too?
-        That's because flexjson uses the target type (in this case Hero) to figure out the other types by inspecting
+        Flexjson uses the target type (in this case Hero) to figure out the other types by inspecting
         that class.  Meaning that we didn't have to tell it about SecretLair or SecretIdentity because it can figure
-        that out by inspecting the types in the Hero class.  Pretty cool.
+        that out by inspecting the properties in the Hero class.  Pretty cool.
     </p>
 
     <h3>Polymorphism, Subclasses, and Interfaces</h3>
 
     <p>
-        Where this fails is when we starting working with interfaces, abstract classes, and subclasses.
-        Our friend polymorphism has rained on our parade.  Why?  Well if you haven't realized by now
-        inspecting the type from our target class won't help us because either it's not a concrete class or we
-        can't tell the subclass by looking at the super class alone.  Next section we're going to stand up on our
-        bare back horse.  Ready?  Let's do it.
+        Where we run into trouble is when we starting working with interfaces, abstract classes, and subclasses.
+        Our friend polymorphism has rained on our parade.  Why?  Let's say our target type has a member with a type
+        of java.util.List.  Is that an ArrayList, LinkedList, or something else?  By looking at the target
+        type alone we don't know.  The next section we're going to discuss how to handle these tricky problems.
     </p>
+
     <p>
         Before we showed how the flexjson.JSONDeserializer.use(String, Class) method would allow us to
         plug in a single class for a given path.  That might work when you know exactly which class you want to
         instantiate, but when the class type depends on external factors we really need a way to specify several
         possibilities.  That's where the second version of {@link flexjson.JSONDeserializer#use(String, ClassLocator)}
-        comes into play.  A ClassLocator allows you to use a strategy for finding which java Class
-        you want to attach at a particular object path.
+        comes into play.  A ClassLocator allows you to define a strategy for finding which java Class
+        you want to attach at a particular object path dynamically.
     </p>
+
     <p>
-        flexjson.JSONDeserializer.use(String, ClassLocator) have access to the intermediate form of
+        flexjson.JSONDeserializer.use(String, ClassLocator) has access to the intermediate form of
         the object as a Map.  Given the Map at the object path the ClassLocator figures out which Class
         Flexjson will bind the parameters into that object.
     </p>
+
     <p>
         Let's take a look at how this can be done using our Hero class.  All Heros have a list of super powers.
         These super powers are things like X Ray Vision, Heat Vision, Flight, etc.  Each super power is represented
@@ -950,9 +987,10 @@
 
     <p>
         Collections and Maps are somewhat special cases of interfaces because they contain objects within them
-        that aren't accessible through setter and getter methods.  Normally, if you use generics and specify a
-        concrete class as the generic class contained then you won't have anything else to do.  However, mix
-        in an interface or abstract class and you'll have tell the deserializer the types contained within.
+        that aren't accessible through setter and getter methods.  <b>Normally, if you use generics and specify a
+        concrete class as the generic class contained then you won't have anything else to do</b>.  However, mix
+        in an interface, abstract class, or root level object containing Generics and you'll have tell the
+        deserializer the types contained within.
     </p>
 
     <p>
@@ -1026,6 +1064,20 @@
         for the JSONSerializer.
     </p>
 
+    <h3>Direct Deserialization from a Stream</h3>
+
+    <p>
+        For simplicity Flexjson allows you to work with String objects, but it's more efficient to work directly
+        with the stream the json data is coming through.  Starting in 2.1 you can provide a java.io.Reader as a
+        source of the json data.  This cuts down the overhead of converting between String and whatever stream you
+        want to use as the source of the json.  Now it can go directly to the stream bypassing the conversion to
+        String.  Here is a simple example:
+    </p>
+
+    <blockquote class="java">
+        MyObject obj = new JSONDeserializer&gt;MyObject&gt;().deserialize( request.getReader() );
+    </blockquote>
+
     <h3>Deserializing into an Existing Object and Merging</h3>
 
     <div class="important">This is supported out of the box as of 2.1</div>
@@ -1069,7 +1121,7 @@
         deserializing into Java beans not collections.</b>
     </p>
 
-    <h2>Thread safety and Reuse</h2>
+    <h3>Thread safety and Reuse</h3>
 
     <p>
         Finally, JSONSerializer and JSONDeserializer instances can be reused to serialize/deserialize many objects of
