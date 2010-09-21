@@ -16,132 +16,140 @@
     <h3>Sept 20, 2010</h3>
     <ul>
         <li>Enhancements</li>
-        <li>
-            <p>
-                Removed usage java.beans.Introspector and replaced it with a specialized solution so Flexjson
-                could be ported to Android.
-            </p>
-        </li>
-        <li>
-            <p>
-                Added a new ObjectFactory ExistingObjectFactory to support deserializing into an
-                existing object.
-            </p>
-        </li>
-        <li>
-            <p>
-                Added a shorthand method JSONDeserializer.deserializeInto() to deserialize into an existing 
-                object without needing to configure ExistingObjectFactory explicitly.
-            </p>
-        </li>
-        <li>
-            <p>
-                Added methods to parse json input from a java.io.Reader instance for JSONDeserializer.
-                This allows you to skip the overhead of creating a String then transforming that to the
-                stream.
-            </p>
-        </li>
-    </ul>
-    <ul>
+        <ul>
+            <li>
+                <p>
+                    Removed usage java.beans.Introspector and replaced it with a specialized solution so Flexjson
+                    could be ported to Android.
+                </p>
+            </li>
+            <li>
+                <p>
+                    Added a new ObjectFactory ExistingObjectFactory to support deserializing into an
+                    existing object.
+                </p>
+            </li>
+            <li>
+                <p>
+                    Added a shorthand method JSONDeserializer.deserializeInto() to deserialize into an existing
+                    object without needing to configure ExistingObjectFactory explicitly.
+                </p>
+            </li>
+            <li>
+                <p>
+                    Added methods to parse json input from a java.io.Reader instance for JSONDeserializer.
+                    This allows you to skip the overhead of creating a String then transforming that to the
+                    stream.
+                </p>
+            </li>
+        </ul>
         <li>Bug Fixes</li>
-        <li>
-            <p>
-                Fixed a bug related to deserializing into subclasses of Date like Timestamp that don't have
-                a no-arg constructor.  It now uses a constructor that takes a single long value argument.
-            </p>
-        </li>
-        <li>
-            <p>
-                Fixed bug 3062102: 2.0 regressed a problem serializing maps containing nulls for keys and
-                values.  Now Maps containing nulls (either key or value) will serialize correctly.
-            </p>
-        </li>
+        <ul>
+            <li>
+                <p>
+                    Fixed a bug related to deserializing into subclasses of Date like Timestamp that don't have
+                    a no-arg constructor.  It now uses a constructor that takes a single long value argument.
+                </p>
+            </li>
+            <li>
+                <p>
+                    Fixed bug 3062102: 2.0 regressed a problem serializing maps containing nulls for keys and
+                    values.  Now Maps containing nulls (either key or value) will serialize correctly.
+                </p>
+            </li>
+        </ul>
     </ul>
     <h2>Version 2.0</h2>
     <h3>Dec 12, 2009</h3>
     <ul>
         <li>Enhancements</li>
-        <li>
-            <p>
-                Huge refactoring to enable Transformers to be registered anywhere in the object graph when
-                doing serialization.  JSONSerializer uses Transformers as the underpinnings for doing serialization.
-                JSONSerializer is built on top of a collection of Transformers that the user can override with
-                their own implementation.  Transformer's interfaces were changed to they are incompatible with
-                Transformers using the 1.x code base.
-            </p>
-        </li>
-        <li>
-            <p>
-                Huge refactoring to add ObjectBinder to be used anywhere in the object graph when doing
-                deserialization.  It serves as the underpinnings for doing the mapping into Objects so
-                JSONDeserializer is built on top of a collection of ObjectBinders.  The user can override
-                any ObjectBinder with their own implementation.
-            </p>
-        </li>
-        <li>
-            <p>
-                JSONSerializer supports direct serialization to a java.io.Writer instead of using Strings.
-            </p>
-        </li>
-        <li>
-            <p>
-                JSONDeserializer added a method to specify the root class within the deserialize() method call
-                cutting down on the confusion around how to register an object on the root path using null.
-                Also makes code much clearer and cleaner.
-            </p>
-        </li>
+        <ul>
+            <li>
+                <p>
+                    Huge refactoring to enable Transformers to be registered anywhere in the object graph when
+                    doing serialization.  JSONSerializer uses Transformers as the underpinnings for doing serialization.
+                    JSONSerializer is built on top of a collection of Transformers that the user can override with
+                    their own implementation.  Transformer's interfaces were changed to they are incompatible with
+                    Transformers using the 1.x code base.
+                </p>
+            </li>
+            <li>
+                <p>
+                    Huge refactoring to add ObjectBinder to be used anywhere in the object graph when doing
+                    deserialization.  It serves as the underpinnings for doing the mapping into Objects so
+                    JSONDeserializer is built on top of a collection of ObjectBinders.  The user can override
+                    any ObjectBinder with their own implementation.
+                </p>
+            </li>
+            <li>
+                <p>
+                    JSONSerializer supports direct serialization to a java.io.Writer instead of using Strings.
+                </p>
+            </li>
+            <li>
+                <p>
+                    JSONDeserializer added a method to specify the root class within the deserialize() method call
+                    cutting down on the confusion around how to register an object on the root path using null.
+                    Also makes code much clearer and cleaner.
+                </p>
+            </li>
+        </ul>
     </ul>
     <h2>Version 1.9.2</h2>
     <h3>Dec 16, 2009</h3>
     <ul>
         <li>Bug Fixes</li>
-        <li>
-            <p>
-                ClassLocatorObjectFactory assumes value objects are Map objects which isn't true if you register
-                a ClassLocator on a path that has Arrays in it. Since we don't have a Map object corresponding to
-                that path we pass an empty Map into the ClassLocator to indicate the value at this location isn't
-                a Map.
-            </p>
-        </li>
-        <li>
-            <p>
-                Fix for ClassLocators when using mixed maps.  ClassLocatorObjectFactory incorrectly casts targetType
-                to ParameterizedType without a check. Now it tests to see if it's a ParameterizedType before down
-                casting.
-            </p>
-        </li>
+        <ul>
+            <li>
+                <p>
+                    ClassLocatorObjectFactory assumes value objects are Map objects which isn't true if you register
+                    a ClassLocator on a path that has Arrays in it. Since we don't have a Map object corresponding to
+                    that path we pass an empty Map into the ClassLocator to indicate the value at this location isn't
+                    a Map.
+                </p>
+            </li>
+            <li>
+                <p>
+                    Fix for ClassLocators when using mixed maps.  ClassLocatorObjectFactory incorrectly casts targetType
+                    to ParameterizedType without a check. Now it tests to see if it's a ParameterizedType before down
+                    casting.
+                </p>
+            </li>
+        </ul>
     </ul>
     <h2>Version 1.9.1</h2>
     <h3>Dec 7, 2009</h3>
     <ul>
         <li>Bug Fixes</li>
-        <li>
-            <p>
-                Fix for 2910131: Data types Double and double primitive were not recognized
-                by the JSONDeserializer object by default.  ObjectBinder now has a ObjectFactory
-                registered by default for both Double and double classes.
-            </p>
-        </li>
-        <li>
-            <p>
-                Fix for 2905865: Added version number to the manifest file in the jar file.
-            </p>
-        </li>
-        <li>
-            <p>
-                Fix for 2899667: Null properties in the json were not being passed
-                to the binding phase so null properties would be dropped when deserializing.
-                Changed the JSONTokenizer to NOT filter based on the value being null.
-            </p>
-        </li>
-        <li>
-            <p>
-                Fix for 2908854: Deserializing a non-generized Map (i.e. List&lt;Map&gt;) threw
-                a ClassCastException.  This is fixed by changing the ObjectFactory responsible
-                for maps to handle non-generized Maps, and fixes in the path expressions for 1.9
-                enable the user to specify the data types for keys and values.
-            </p>
-        </li>
+        <ul>
+            <li>
+                <p>
+                    Fix for 2910131: Data types Double and double primitive were not recognized
+                    by the JSONDeserializer object by default.  ObjectBinder now has a ObjectFactory
+                    registered by default for both Double and double classes.
+                </p>
+            </li>
+            <li>
+                <p>
+                    Fix for 2905865: Added version number to the manifest file in the jar file.
+                </p>
+            </li>
+            <li>
+                <p>
+                    Fix for 2899667: Null properties in the json were not being passed
+                    to the binding phase so null properties would be dropped when deserializing.
+                    Changed the JSONTokenizer to NOT filter based on the value being null.
+                </p>
+            </li>
+            <li>
+                <p>
+                    Fix for 2908854: Deserializing a non-generized Map (i.e. List&lt;Map&gt;) threw
+                    a ClassCastException.  This is fixed by changing the ObjectFactory responsible
+                    for maps to handle non-generized Maps, and fixes in the path expressions for 1.9
+                    enable the user to specify the data types for keys and values.
+                </p>
+            </li>
+        </ul>
     </ul>
     <h2>Version 1.9</h2>
     <h3>Nov 23, 2009</h3>
