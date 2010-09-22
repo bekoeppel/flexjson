@@ -1,5 +1,7 @@
 package flexjson;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
@@ -7,6 +9,7 @@ public class BeanProperty {
     private String name;
     private BeanAnalyzer bean;
     private Class propertyType;
+    protected Field property;
     protected Method readMethod;
     protected Method writeMethod;
     protected Map<Class<?>, Method> writeMethods = new HashMap<Class<?>,Method>();
@@ -14,10 +17,22 @@ public class BeanProperty {
     public BeanProperty(String name, BeanAnalyzer bean) {
         this.name = name;
         this.bean = bean;
+        this.property = bean.getDeclaredField( name );
+    }
+
+    public BeanProperty(Field property, BeanAnalyzer bean ) {
+        this.name = property.getName();
+        this.bean = bean;
+        this.property = property;
+        this.propertyType = property.getType();
     }
 
     public String getName() {
         return name;
+    }
+
+    public Field getProperty() {
+        return property;
     }
 
     public Class getPropertyType() {
@@ -65,4 +80,28 @@ public class BeanProperty {
             readMethod.setAccessible(true);
         }
     }
+
+    public Boolean isAnnotated() {
+        if( readMethod != null ) {
+            if (readMethod.isAnnotationPresent(JSON.class)) {
+                return readMethod.getAnnotation(JSON.class).include();
+            }
+        } else if( property != null ) {
+            if (property.isAnnotationPresent(JSON.class)) {
+                return property.getAnnotation(JSON.class).include();
+            }
+        }
+        return null;
+    }
+
+    public Object getValue( Object instance ) throws InvocationTargetException, IllegalAccessException {
+        if( readMethod != null ) {
+            return getReadMethod().invoke(instance, (Object[]) null);
+        } else if( property != null ) {
+            return property.get( instance );
+        } else {
+            return null;
+        }
+    }
+
 }

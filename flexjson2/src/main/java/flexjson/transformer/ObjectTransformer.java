@@ -17,9 +17,6 @@ package flexjson.transformer;
 
 import flexjson.*;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-
 public class ObjectTransformer extends AbstractTransformer {
 
     public void transform(Object object) {
@@ -36,9 +33,8 @@ public class ObjectTransformer extends AbstractTransformer {
                 for( BeanProperty prop : analyzer.getProperties() ) {
                     String name = prop.getName();
                     path.enqueue(name);
-                    Method accessor = prop.getReadMethod();
-                    if (accessor != null && context.isIncluded(prop)) {
-                        Object value = accessor.invoke(object, (Object[]) null);
+                    if( context.isIncluded(prop) ) {
+                        Object value = prop.getValue( object );
                         if (!context.getVisits().contains(value)) {
 
                             TransformerWrapper transformer = (TransformerWrapper)context.getTransformer(value);
@@ -49,40 +45,12 @@ public class ObjectTransformer extends AbstractTransformer {
                                 context.writeName(name);
                             }
                             typeContext.setPropertyName(name);
-                            
+
                             transformer.transform(value);
-
                         }
-
                     }
                     path.pop();
                 }
-                for (Class current = object.getClass(); current != null; current = current.getSuperclass()) {
-                    Field[] ff = current.getDeclaredFields();
-                    for (Field field : ff) {
-                        path.enqueue(field.getName());
-                        if (context.isValidField(field) && context.isIncluded( field ) ) {
-                            if (!context.getVisits().contains(field.get(object))) {
-
-                                Object value = field.get(object);
-                                
-                                TransformerWrapper transformer = (TransformerWrapper)context.getTransformer(value);
-
-                                if(!transformer.isInline()) {
-                                    if (!typeContext.isFirst()) context.writeComma();
-                                    typeContext.setFirst(false);
-                                    context.writeName(field.getName());
-                                }
-                                typeContext.setPropertyName(field.getName());
-
-                                transformer.transform(value);
-
-                            }
-                        }
-                        path.pop();
-                    }
-                }
-
                 context.writeCloseObject();
                 context.setVisits((ChainedSet) context.getVisits().getParent());
 

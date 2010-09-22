@@ -57,6 +57,13 @@
                     values.  Now Maps containing nulls (either key or value) will serialize correctly.
                 </p>
             </li>
+            <li>
+                <p>
+                    Public fields weren't being deserialized at all because of Introspector not returning
+                    properties for public fields.  Now with the switch to BeanAnalyzer the code is properly handling
+                    public fields during deserialization.
+                </p>
+            </li>
         </ul>
     </ul>
     <h2>Version 2.0</h2>

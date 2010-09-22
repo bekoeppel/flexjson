@@ -1,5 +1,6 @@
 package flexjson;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
@@ -65,6 +66,12 @@ public class BeanAnalyzer {
                 }
             }
         }
+
+        for( Field publicProperties : clazz.getFields() ) {
+            if( !properties.containsKey( publicProperties.getName() ) ) {
+                properties.put( publicProperties.getName(), new BeanProperty( publicProperties, this ) );
+            }
+        }
     }
 
     public BeanAnalyzer getSuperBean() {
@@ -111,5 +118,14 @@ public class BeanAnalyzer {
 
     public boolean hasProperty(String name) {
         return properties.containsKey(name);
+    }
+
+    protected Field getDeclaredField(String name) {
+        try {
+            return clazz.getDeclaredField( name );
+        } catch (NoSuchFieldException e) {
+            // ignore field does not exist.
+            return null;
+        }
     }
 }

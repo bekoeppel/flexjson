@@ -141,16 +141,10 @@ public class ObjectBinder {
                             throw new JSONException(currentPath + ":  Expected a single parameter for method " + target.getClass().getName() + "." + setMethod.getName() + " but got " + types.length );
                         }
                     } else {
-                        try {
-                            Field field = target.getClass().getDeclaredField( descriptor.getName() );
+                        Field field = descriptor.getProperty();
+                        if( field != null ) {
                             field.setAccessible( true );
-                            if( value instanceof Map ) {
-                                field.set( target, bind(value, field.getGenericType() ) );
-                            } else {
-                                field.set( target, bind( value, field.getGenericType() ) );
-                            }
-                        } catch (NoSuchFieldException e) {
-                            // ignore must not be there.
+                            field.set( target, bind( value, field.getGenericType() ) );
                         }
                     }
                     currentPath.pop();

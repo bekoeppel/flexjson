@@ -17,9 +17,7 @@ package flexjson;
 
 import flexjson.transformer.*;
 
-import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
 
@@ -368,9 +366,9 @@ public class JSONContext {
             return expression.isIncluded();
         }
 
-        Method accessor = prop.getReadMethod();
-        if (accessor.isAnnotationPresent(JSON.class)) {
-            return accessor.getAnnotation(JSON.class).include();
+        Boolean annotation = prop.isAnnotated();
+        if( annotation != null ) {
+            return annotation;
         }
 
         if (serializationType == SerializationType.SHALLOW) {

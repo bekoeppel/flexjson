@@ -2,6 +2,7 @@ package flexjson;
 
 import flexjson.mock.Book;
 import flexjson.mock.Employee;
+import flexjson.mock.Spiderman;
 import flexjson.model.Candidate;
 import junit.framework.TestCase;
 import junit.framework.Test;
@@ -27,6 +28,14 @@ public class BeanAnalyzerTest extends TestCase {
         compare(Introspector.getBeanInfo( Candidate.class ), BeanAnalyzer.analyze( Candidate.class ) );
         compare(Introspector.getBeanInfo(Employee.class), BeanAnalyzer.analyze(Employee.class) );
         compare(Introspector.getBeanInfo( Book.class ), BeanAnalyzer.analyze( Book.class ) );
+    }
+
+    public void testPublicProperties() throws IntrospectionException {
+        BeanAnalyzer spiderman = BeanAnalyzer.analyze(Spiderman.class);
+
+        assertTrue( spiderman.hasProperty("spideySense") );
+        assertTrue( spiderman.hasProperty("superpower") );
+        assertEquals( 3, spiderman.getProperties().size() );
     }
 
     public void testPerformance() throws IntrospectionException {

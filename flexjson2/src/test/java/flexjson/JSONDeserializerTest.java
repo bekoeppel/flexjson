@@ -409,6 +409,18 @@ public class JSONDeserializerTest extends TestCase {
         assertSame( fakePhone, p.getPhones().get(0) );
     }
 
+    public void testDeserializationIntoPublicFields() {
+        Spiderman spiderman = new Spiderman();
+        spiderman.spideySense = false;
+        spiderman.superpower = "Creates Many Webs and Super Tough";
+
+        String json = new JSONSerializer().serialize( spiderman );
+        Spiderman jsonSpiderman = new JSONDeserializer<Spiderman>().deserialize( json );
+
+        assertEquals( spiderman.spideySense, jsonSpiderman.spideySense );
+        assertEquals( spiderman.superpower, jsonSpiderman.superpower );
+    }
+
     public void setUp() {
     }
 
