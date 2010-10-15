@@ -20,10 +20,12 @@ import flexjson.transformer.FlatDateTransformer;
 import flexjson.transformer.StateTransformer;
 import flexjson.transformer.StringArrayTransformer;
 import junit.framework.TestCase;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.StringWriter;
+import java.io.Writer;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -388,4 +390,12 @@ public class SimpleSerializeTest extends TestCase {
         return person;
     }
 
+    public void testSerializeWithWriter() {
+        JSONSerializer serializer = new JSONSerializer();
+        Writer w = new StringWriter();
+        serializer.serialize("String with \n some \n newlines", w);
+        String string = w.toString();
+        logger.info(string);
+        assertEquals("\"String with \\n some \\n newlines\"", string);
+    }
 }

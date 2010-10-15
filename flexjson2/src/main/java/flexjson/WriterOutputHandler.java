@@ -37,7 +37,7 @@ public class WriterOutputHandler implements OutputHandler {
 
     public int write(String value, int start, int end, String append) {
         try {
-            out.write( value, start, end );
+            out.write( value, start, end-start );
             out.write( append );
             return end + 1;
         } catch (IOException e) {
@@ -47,7 +47,7 @@ public class WriterOutputHandler implements OutputHandler {
 
     public int write(String value, int start, int end) {
         try {
-            out.write( value, start, end );
+            out.write( value, start, end-start );
             return end;
         } catch (IOException e) {
             throw new JSONException("There was a problem writing output to the Writer.", e);
