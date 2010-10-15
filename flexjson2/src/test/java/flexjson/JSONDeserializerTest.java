@@ -1,5 +1,6 @@
 package flexjson;
 
+import flexjson.model.Account;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.framework.Test;
@@ -419,6 +420,14 @@ public class JSONDeserializerTest extends TestCase {
 
         assertEquals( spiderman.spideySense, jsonSpiderman.spideySense );
         assertEquals( spiderman.superpower, jsonSpiderman.superpower );
+    }
+
+    public void testAutoTypeConvertToNumerical() {
+        Account account = new JSONDeserializer<Account>().deserialize("{'id': '5', 'accountNumber': '1234567-123'}", Account.class);
+        assertEquals( new Integer(5), account.getId() );
+
+        XRayVision xray = new JSONDeserializer<XRayVision>().deserialize("{ 'power': '2.3' }", XRayVision.class);
+        assertEquals( 2.3f, xray.getPower() );
     }
 
     public void setUp() {

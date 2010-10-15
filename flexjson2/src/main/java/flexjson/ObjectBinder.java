@@ -159,7 +159,7 @@ public class ObjectBinder {
     }
 
     public JSONException cannotConvertValueToTargetType(Object value, Class targetType) {
-        return new JSONException( String.format("%s:  Can not convert %s into %s", currentPath, value.getClass().getName(), targetType.getClass().getName() ) );
+        return new JSONException( String.format("%s:  Can not convert %s into %s", currentPath, value.getClass().getName(), targetType.getName() ) );
     }
 
     private Class getTargetClass(Type targetType) {
