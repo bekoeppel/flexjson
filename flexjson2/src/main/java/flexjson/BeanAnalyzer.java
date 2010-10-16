@@ -68,6 +68,8 @@ public class BeanAnalyzer {
         }
 
         for( Field publicProperties : clazz.getFields() ) {
+            int modifiers = publicProperties.getModifiers();
+            if( Modifier.isStatic( modifiers ) || Modifier.isTransient(modifiers) ) continue;
             if( !properties.containsKey( publicProperties.getName() ) ) {
                 properties.put( publicProperties.getName(), new BeanProperty( publicProperties, this ) );
             }

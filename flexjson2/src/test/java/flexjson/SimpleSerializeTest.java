@@ -390,6 +390,9 @@ public class SimpleSerializeTest extends TestCase {
         return person;
     }
 
+    /**
+     * http://sourceforge.net/tracker/?func=detail&atid=947842&aid=3088061&group_id=194042
+     */
     public void testSerializeWithWriter() {
         JSONSerializer serializer = new JSONSerializer();
         Writer w = new StringWriter();

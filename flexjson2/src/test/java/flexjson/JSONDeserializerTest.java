@@ -11,6 +11,7 @@ import flexjson.mock.Person;
 import flexjson.mock.*;
 import flexjson.mock.superhero.*;
 
+import java.awt.geom.Point2D;
 import java.util.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -265,6 +266,15 @@ public class JSONDeserializerTest extends TestCase {
         assertEquals( "Ben", bro.getPeople()[1].getFirstname() );
     }
 
+    /**
+     * https://sourceforge.net/tracker/?func=detail&aid=3004001&group_id=194042&atid=947842
+     */
+    public void testEmptyArray() {
+        Group group = new JSONDeserializer<Group>().deserialize("{'people': [], 'groupName': 'Nobody' }", Group.class );
+        assertEquals( "Nobody", group.getGroupName() );
+        assertEquals( 0, group.getPeople().length );
+    }
+
     public void testDeserialization() {
       JSONDeserializer<Map<String, Object>> deserializer = new JSONDeserializer<Map<String, Object>>();
       String input = "{property: true, property2:5, property3:'abc'}";
@@ -274,7 +284,6 @@ public class JSONDeserializerTest extends TestCase {
     }
 
 
-    // this test should be successful
     public void testNullDeserialization() {
         String input = "{property: null, property2:5, property3:'abc'}";
 
@@ -422,12 +431,50 @@ public class JSONDeserializerTest extends TestCase {
         assertEquals( spiderman.superpower, jsonSpiderman.superpower );
     }
 
+    /**
+     *  https://sourceforge.net/tracker/?func=detail&atid=947844&aid=3004785&group_id=194042
+     */
     public void testAutoTypeConvertToNumerical() {
         Account account = new JSONDeserializer<Account>().deserialize("{'id': '5', 'accountNumber': '1234567-123'}", Account.class);
         assertEquals( new Integer(5), account.getId() );
 
         XRayVision xray = new JSONDeserializer<XRayVision>().deserialize("{ 'power': '2.3' }", XRayVision.class);
         assertEquals( 2.3f, xray.getPower() );
+    }
+
+    /**
+     * https://sourceforge.net/tracker/?func=detail&aid=2973789&group_id=194042&atid=947842
+     */
+    public void testDeserializeURL() {
+        String json = "{\n" +
+                "  \"oslc_cm:next\": \"http:\\/\\/localhost:9080\\/results\\/3\",\n" +
+                "  \"oslc_cm:previous\": \"http:\\/\\/localhost:9080\\/results\\/1\", \n" +
+                "  \"oslc_cm:totalCount\" : 27,\n" +
+                "  \"oslc_cm:results\": [\n" +
+                "    {\n" +
+                "      \"rdf:resource\": \"http:\\/\\/localhost:9080\\/records\\/1234\"\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"rdf:resource\": \"http:\\/\\/localhost:9080\\/records\\/1235\"\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"rdf:resource\": \"http:\\/\\/localhost:9080\\/records\\/1236\"\n" +
+                "    }   \n" +
+                "  ]\n" +
+                "}";
+        Map<String,Object> page2 = new JSONDeserializer<Map<String,Object>>().deserialize( json );
+        assertEquals( "http://localhost:9080/results/3", page2.get("oslc_cm:next") );
+        assertEquals( 3, ((List)page2.get("oslc_cm:results")).size() );
+    }
+
+    /**
+     * https://sourceforge.net/tracker/?func=detail&aid=2968434&group_id=194042&atid=947842
+     */
+    public void testPoint() {
+        String json = new JSONSerializer().serialize( new Point2D.Float(1.0f, 2.0f) );
+        Point2D.Float point = new JSONDeserializer<Point2D.Float>().deserialize( json );
+        assertEquals( 1.0f, point.x );
+        assertEquals( 2.0f, point.y );
     }
 
     public void setUp() {

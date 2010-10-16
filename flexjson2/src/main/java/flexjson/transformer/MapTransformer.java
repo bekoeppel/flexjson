@@ -31,9 +31,9 @@ public class MapTransformer extends AbstractTransformer {
         TypeContext typeContext = getContext().writeOpenObject();
         for (Object key : value.keySet()) {
 
-            path.enqueue((String) key);
+            path.enqueue(key != null ? key.toString() : null);
 
-            if (context.isIncluded((String) key, value.get(key))) {
+            if (context.isIncluded(key != null ? key.toString() : null, value.get(key))) {
 
                 TransformerWrapper transformer = (TransformerWrapper)context.getTransformer(value.get(key));
 

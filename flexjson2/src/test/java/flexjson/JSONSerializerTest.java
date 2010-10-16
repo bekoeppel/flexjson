@@ -386,6 +386,18 @@ public class JSONSerializerTest extends TestCase {
         assertStringValue("Creates web", json);
     }
 
+    /**
+     * https://sourceforge.net/tracker/index.php?func=detail&aid=2927626&group_id=194042&atid=947842#
+     */
+    public void testExcludingPublicFields() {
+        Spiderman spiderman = new Spiderman();
+
+        String json = new JSONSerializer().exclude("superpower").serialize( spiderman );
+
+        assertAttributeMissing("superpower", json);
+        assertAttribute("spideySense", json);
+    }
+
     public void testPrettyPrint() {
         JSONSerializer serializer = new JSONSerializer();
 
