@@ -1166,6 +1166,72 @@
         be used in Android see this <a href="http://wrongnotes.blogspot.com/flexjson-meet-android">post</a>. 
     </p>
 
+    <h2>Maven 2</h2>
+
+    <h3>Release</h3>
+    <p>
+        FlexJson is avaialable on the central maven repository. In order to use flexjson in your maven enabled project
+        simply add the following to your dependencies.
+    </p>
+
+    <div class="important">
+        You can find the current release version here:<br/>
+        <a href="http://repo2.maven.org/maven2/net/sf/flexjson/flexjson/" target="_blank">http://repo2.maven.org/maven2/net/sf/flexjson/flexjson/</a>
+    </div>
+
+    <blockquote class="java">
+    &lt;dependencies&gt;
+        ...
+        &lt;dependency&gt;
+            &lt;groupId&gt;net.sf.flexjson&lt;/groupId&gt;
+            &lt;artifactId&gt;flexjson&lt;/artifactId&gt;
+            &lt;version&gt;2.1&lt;/version&gt;&nbsp;&lt;!-- This may not be the current version. Check the above link --&gt;
+        &lt;/dependency&gt;
+        ...
+    &lt;/dependencies&gt;
+    </blockquote>
+
+    <h3>Snapshot</h3>
+    <p>
+        If you wish to access a pre-release SNAPSHOT of flexjson you can add the following in the repositories section of your pom.
+        Be sure to specify the SNAPSHOT version you wish to use in the version tag of the dependency.
+    </p>
+
+    <div class="important">
+        You can find the current SNAPSHOT version here:<br/>
+        <a href="https://oss.sonatype.org/content/repositories/snapshots/net/sf/flexjson/flexjson/" target="_blank">https://oss.sonatype.org/content/repositories/snapshots/net/sf/flexjson/flexjson/</a>
+    </div>
+
+    <blockquote class="java">
+    &lt;repositories&gt;
+        ...
+        &lt;repository&gt;
+            &lt;id&gt;sonatype.oss.snapshots&lt;/id&gt;
+            &lt;name&gt;Sonatype OSS Snapshot Repository&lt;/name&gt;
+            &lt;url&gt;http://oss.sonatype.org/content/repositories/snapshots&lt;/url&gt;
+            &lt;releases&gt;
+                &lt;enabled&gt;false&lt;/enabled&gt;
+            &lt;/releases&gt;
+            &lt;snapshots&gt;
+                &lt;enabled&gt;true&lt;/enabled&gt;
+            &lt;/snapshots&gt;
+        &lt;/repository&gt;
+        ...
+    &lt;/repositories&gt;
+    </blockquote>
+
+    <blockquote class="java">
+    &lt;dependencies&gt;
+        ...
+        &lt;dependency&gt;
+            &lt;groupId&gt;net.sf.flexjson&lt;/groupId&gt;
+            &lt;artifactId&gt;flexjson&lt;/artifactId&gt;
+            &lt;version&gt;2.1-SNAPSHOT&lt;/version&gt;&nbsp;&lt;!-- This may not be the most current SNAPSHOT version. Check the above link --&gt;
+        &lt;/dependency&gt;
+        ...
+    &lt;/dependencies&gt;
+    </blockquote>
+
     <h2>The End</h2>
 
     <p>

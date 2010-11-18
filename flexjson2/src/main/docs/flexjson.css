@@ -118,6 +118,5 @@ b.rtop b.r1, b.rtop b.r2, b.rtop b.r3, b.rtop b.r4 {
     background: #eeeeee url('exclaimation.png') no-repeat scroll 5px 5px;
     padding: 5px 35px 2px 35px;
     margin: 2px 35px;
-    height: 30px;
     border: 1px solid #666666;
 }
