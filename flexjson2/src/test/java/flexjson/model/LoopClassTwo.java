@@ -12,9 +12,6 @@ public class LoopClassTwo {
     private LoopClassOne loopClassOne;
 
     public LoopClassOne getLoopClassOne() {
-        if(loopClassOne == null) {
-            this.loopClassOne = new LoopClassOne();
-        }
         return loopClassOne;
     }
 

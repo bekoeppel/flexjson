@@ -372,7 +372,7 @@ public class SimpleSerializeTest extends TestCase {
 
         Account account2 = new Account();
         account2.setId(2);
-        account2.setName("Joe Savings");
+        account2.setName("Joe \"Savings\"");
         account2.setAccountType(AccountType.Savings);
         account2.setAccountNumber("00007654321");
         account2.setBalance(new BigDecimal("800.20"));
@@ -396,9 +396,8 @@ public class SimpleSerializeTest extends TestCase {
     public void testSerializeWithWriter() {
         JSONSerializer serializer = new JSONSerializer();
         Writer w = new StringWriter();
-        serializer.serialize("String with \n some \n newlines", w);
-        String string = w.toString();
-        logger.info(string);
-        assertEquals("\"String with \\n some \\n newlines\"", string);
+        Person person = buildPerson1();
+        person.setFirstName("x=\"0123456789\" x=\"0123456789\" x=\"0123456789\" x=\"0123456789\" x=\"0123456789\" x=\"0123456789\" x=\"0123456789\" x=\"0123456789\" x=\"0123456789\" x=\"0123456789\"x=\"0123456789\" x=\"0123456789\" x=\"0123456789\" x=\"0123456789\" x=\"0123456789\"x=\"0123456789\" x=\"0123456789\" x=\"0123456789\" x=\"0123456789\" x=\"0123456789\"x=\"0123456789\" x=\"0123456789\" x=\"0123456789\" x=\"0123456789\" x=\"0123456789\"");
+        serializer.deepSerialize(person, w);
     }
 }
