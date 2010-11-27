@@ -27,6 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class JSONSerializerTest extends TestCase {
 
@@ -489,6 +490,17 @@ public class JSONSerializerTest extends TestCase {
 
         assertAttribute("birthdate", json);
         assertStringValue("1988-11-23", json);
+    }
+
+    public void testCopyOnWriteList() {
+        CopyOnWriteArrayList<Person> people = new CopyOnWriteArrayList<Person>();
+        people.add( charlie );
+        people.add( ben );
+
+        String json = new JSONSerializer().serialize( people );
+        assertAttribute("firstname", json );
+        assertStringValue("Charlie", json );
+        assertStringValue("Ben", json );
     }
 
     private int occurs(String str, String json) {

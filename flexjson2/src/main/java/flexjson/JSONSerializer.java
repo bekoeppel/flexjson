@@ -176,8 +176,8 @@ import java.util.Map;
  * </p>
  * <p>
  * JSONSerializer is safe to use the serialize() methods from two seperate
- * threads.  It is NOT safe to use combination of {@link JSONSerializer#include(String[])}
- * {@link JSONSerializer#transform(Transformer, String[])}, or {@link JSONSerializer#exclude(String[])}
+ * threads.  It is NOT safe to use combination of {@link JSONSerializer#include(String...)}
+ * {@link JSONSerializer#transform(flexjson.transformer.Transformer, String...)}, or {@link JSONSerializer#exclude(String...)}
  * from multiple threads at the same time.  It is also NOT safe to use
  * {@link JSONSerializer#serialize(Object)} and include/exclude/transform from
  * multiple threads.  The reason for not making them more thread safe is to boost performance.
@@ -371,7 +371,6 @@ public class JSONSerializer {
         context.setPathExpressions(pathExpressions);
 
         try {
-
             //initiate serialization of target tree
             String rootName = context.getRootName();
             if (rootName == null || rootName.trim().equals("")) {
@@ -383,7 +382,7 @@ public class JSONSerializer {
                 context.writeCloseObject();
             }
 
-        output = context.getOut().toString();
+            output = context.getOut().toString();
         } finally {
             // cleanup context
             JSONContext.cleanup();

@@ -72,13 +72,9 @@ public class TypeTransformerMap extends HashMap<Class, Transformer> {
             if (containsKey(interfaze)) {
                 return updateTransformers(originalKey, get(interfaze));
             } else {
-                for (Class superInterface : interfaze.getInterfaces()) {
-                    if (containsKey(superInterface)) {
-                        return updateTransformers(originalKey, get(superInterface));
-                    }
-                }
+                Transformer t = findTransformer( interfaze, originalKey );
+                if( t != null ) return t;
             }
-
         }
 
         // if no interface transformers then check superclass
