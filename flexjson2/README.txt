@@ -67,6 +67,30 @@ will be prompted for it.
  # Perform
    mvn release:perform -Dgpg.passphrase=thephrase[or enter it interactively]
 
+== OSS Sonatype Staging ==
+
+ # Close staging
+
+ Once the project has been built and uploaded with maven you'll need to login to https://oss.sonatype.org.
+
+ Click "Staging Repositories" on the left.
+
+ You will see flexjson in the the Repository list. Highlight it and visually verify that everything looks
+ correct by expanding the treeview that pops up at the bottom of the screen.
+
+ Once you are confident click the checkbox next to the flexjson repository and click the "Close" button
+ located above the repository list.
+
+ Fill in a comment like "closing staging" and click okay. This will close the staging phase and you will
+ then move on to the release phase.
+
+ # Release
+
+ In order to finally release flexjson you simply need to click the checkbox next to flexjson and then clck
+ the "Release" button located above the repository list.
+
+ Voila! FlexJSON will be released to the central maven repository after a short while.
+
 == Build Downloadable Distributions ==
 
 After completing the release to the maven repository it is time to build the downloadable
