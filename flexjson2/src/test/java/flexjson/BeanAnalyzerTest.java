@@ -4,10 +4,10 @@ import flexjson.mock.Book;
 import flexjson.mock.Employee;
 import flexjson.mock.Spiderman;
 import flexjson.model.Candidate;
-import junit.framework.TestCase;
-import junit.framework.Test;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
+import org.junit.Ignore;
+import org.junit.Test;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
@@ -16,7 +16,11 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 import java.util.Collection;
 
-public class BeanAnalyzerTest extends TestCase {
+import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+public class BeanAnalyzerTest {
 
     public void setUp() {
     }
@@ -24,12 +28,14 @@ public class BeanAnalyzerTest extends TestCase {
     public void tearDown() {
     }
 
+    @Test
     public void testAnalyzer() throws IntrospectionException {
         compare(Introspector.getBeanInfo( Candidate.class ), BeanAnalyzer.analyze( Candidate.class ) );
         compare(Introspector.getBeanInfo(Employee.class), BeanAnalyzer.analyze(Employee.class) );
         compare(Introspector.getBeanInfo( Book.class ), BeanAnalyzer.analyze( Book.class ) );
     }
 
+    @Test
     public void testPublicProperties() throws IntrospectionException {
         BeanAnalyzer spiderman = BeanAnalyzer.analyze(Spiderman.class);
 
@@ -38,6 +44,8 @@ public class BeanAnalyzerTest extends TestCase {
         assertEquals( 3, spiderman.getProperties().size() );
     }
 
+    @Ignore("This test can fail because it tries to measure performance.")
+    @Test
     public void testPerformance() throws IntrospectionException {
         long averageInspector = 0L;
         long averageAnalyzer = 0L;
@@ -103,13 +111,5 @@ public class BeanAnalyzerTest extends TestCase {
             if( descriptor.getReadMethod() != null ) System.out.print(descriptor.getReadMethod().getName() + "()");
             if( descriptor.getWriteMethod() != null ) System.out.println(descriptor.getWriteMethod().getName() + "( " + descriptor.getWriteMethod().getParameterTypes()[0].getName() + ")");
         }
-    }
-
-    public static Test suite() {
-        return new TestSuite(BeanAnalyzerTest.class);
-    }
-
-    public static void main(String[] args) {
-        TestRunner.run(suite());
     }
 }
