@@ -9,15 +9,18 @@ import flexjson.JSON;
 import org.junit.Ignore;
 
 @Ignore
-public class TestClass2{
+public class TestClass2 {
+
+    @JSON( include = false )
 	private String name="testName2";
-	private Map<String, TestClass3> mapOfJustice = new HashMap<String, TestClass3>();;
+    private transient String description = "This is some description that shouldn't be there.";
+    
+	private Map<String, TestClass3> mapOfJustice = new HashMap<String, TestClass3>();
 
 	public String getName() {
 		return name;
 	}
 
-	@JSON
 	public Map<String, TestClass3> getMapOfJustice() {
 		return mapOfJustice;
 	}
@@ -30,7 +33,15 @@ public class TestClass2{
 		this.mapOfJustice = mapOfJustice;
 	}
 
-	@Override
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    @Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;

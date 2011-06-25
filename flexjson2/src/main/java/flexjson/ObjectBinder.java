@@ -199,7 +199,7 @@ public class ObjectBinder {
 
     private Class findClassName( Object map, Class targetType ) throws JSONException {
         if( !pathFactories.containsKey( currentPath ) ) {
-            Class mostSpecificType = useMostSpecific( targetType, map instanceof Map ? findClassInMap( (Map)map, null ) : null );
+            Class mostSpecificType = useMostSpecific( map instanceof Map ? findClassInMap( (Map)map, null ) : null, targetType );
             if( mostSpecificType == null ) {
                 return map.getClass();
             } else {
@@ -227,10 +227,14 @@ public class ObjectBinder {
             String classname = (String)map.remove("class");
             try {
                 if( classname != null ) {
-                    return Class.forName( classname );
-                } else {
-                    return null;
+                    ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+                    if( classLoader != null ) {
+                        return classLoader.loadClass(classname);
+                    } else {
+                        return Class.forName( classname );
+                    }
                 }
+                return null;
             } catch( ClassNotFoundException e ) {
                 throw new JSONException( String.format( "%s:  Could not load %s", currentPath, classname ), e );
             }

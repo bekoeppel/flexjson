@@ -88,12 +88,14 @@ public class BeanProperty {
             if (rm.isAnnotationPresent(JSON.class)) {
                 return rm.getAnnotation(JSON.class).include();
             }
-        } else if (property != null) {
+        }
+
+        if (property != null) {
             if (property.isAnnotationPresent(JSON.class)) {
                 return property.getAnnotation(JSON.class).include();
             }
         }
-        return null;
+        return null; // this is important to indicate nothing was found (found and it was true, found and it was false, not found)
     }
 
     public Object getValue(Object instance) throws InvocationTargetException, IllegalAccessException {
@@ -107,7 +109,7 @@ public class BeanProperty {
         }
     }
 
-    public Boolean isReadable() {
+    public Boolean isReadable() { 
         Method rm = getReadMethod();
         return rm != null && !Modifier.isStatic(rm.getModifiers()) || property != null && !Modifier.isStatic(property.getModifiers()) && !Modifier.isTransient(property.getModifiers());
     }
@@ -115,5 +117,18 @@ public class BeanProperty {
     public Boolean isWritable() {
         Method wm = getWriteMethod();
         return wm != null && Modifier.isPublic(wm.getModifiers()) || property != null && Modifier.isPublic(property.getModifiers()) && !Modifier.isTransient(property.getModifiers());
+    }
+
+    public Boolean isTransient() {
+        return property != null && Modifier.isTransient( property.getModifiers() );
+    }
+
+    /**
+     * This method exists to help remove any properties that are only private members.
+     * 
+     * @return returns true if this property doesn't have a read method, write method, or is a non-public field.
+     */
+    protected boolean isNonProperty() {
+        return getReadMethod() == null && getWriteMethod() == null && !Modifier.isPublic( property.getModifiers() );
     }
 }

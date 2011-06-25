@@ -29,7 +29,7 @@ import java.lang.annotation.Target;
  * example the password of a User.
  */
 @Retention(value = RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE, ElementType.METHOD})
+@Target({ElementType.FIELD, ElementType.TYPE, ElementType.METHOD})
 public @interface JSON {
     boolean include() default true;
 }

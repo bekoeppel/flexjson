@@ -2,14 +2,39 @@ package flexjson.mock;
 
 import org.junit.Ignore;
 
-//import org.apache.commons.lang.builder.ToStringBuilder;
-
 @Ignore
 public class TestClass3 {
 
+    private String name;
+    private String category;
 	private boolean found = false;
 
-	public void setFound(boolean found) {
+    public TestClass3() {
+    }
+
+    public TestClass3(String name, String category, boolean found) {
+        this.name = name;
+        this.category = category;
+        this.found = found;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public void setFound(boolean found) {
 		this.found = found;
 	}
 
@@ -38,11 +63,5 @@ public class TestClass3 {
 			return false;
 		return true;
 	}
-
-//	@Override
-//	public String toString() {
-//		return ToStringBuilder.reflectionToString(this);
-//	}
-
 
 }

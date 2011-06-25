@@ -34,6 +34,15 @@ public class BeanAnalyzer {
 
     private void populateProperties() {
         properties = new TreeMap<String,BeanProperty>();
+
+        for( Field publicProperties : clazz.getDeclaredFields() ) {
+            int modifiers = publicProperties.getModifiers();
+            if( Modifier.isStatic( modifiers ) ) continue;
+            if( !properties.containsKey( publicProperties.getName() ) ) {
+                properties.put( publicProperties.getName(), new BeanProperty( publicProperties, this ) );
+            }
+        }
+        
         for( Method method : clazz.getDeclaredMethods() ) {
             int modifiers = method.getModifiers();
             if( Modifier.isStatic(modifiers) ) continue;
@@ -67,11 +76,10 @@ public class BeanAnalyzer {
             }
         }
 
-        for( Field publicProperties : clazz.getFields() ) {
-            int modifiers = publicProperties.getModifiers();
-            if( Modifier.isStatic( modifiers ) || Modifier.isTransient(modifiers) ) continue;
-            if( !properties.containsKey( publicProperties.getName() ) ) {
-                properties.put( publicProperties.getName(), new BeanProperty( publicProperties, this ) );
+        for( Iterator<BeanProperty> i = properties.values().iterator(); i.hasNext(); ) {
+            BeanProperty property = i.next();
+            if( property.isNonProperty() ) {
+                i.remove();
             }
         }
     }
@@ -119,7 +127,7 @@ public class BeanAnalyzer {
     }
 
     public boolean hasProperty(String name) {
-        return properties.containsKey(name);
+        return properties.containsKey(name) || (superBean != null && superBean.hasProperty(name));
     }
 
     protected Field getDeclaredField(String name) {

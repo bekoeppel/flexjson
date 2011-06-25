@@ -371,9 +371,11 @@ public class JSONContext {
             return annotation;
         }
 
+        if( prop.isTransient() ) return false;
+
         if (serializationType == SerializationType.SHALLOW) {
             Class propType = prop.getPropertyType();
-            return !(propType.isArray() || Iterable.class.isAssignableFrom(propType));
+            return !(propType.isArray() || Iterable.class.isAssignableFrom(propType) || Map.class.isAssignableFrom(propType));
         } else {
             return true;
         }
@@ -406,28 +408,6 @@ public class JSONContext {
         } else {
             return true;
         }
-    }
-
-    public boolean isIncluded( Field field ) {
-        PathExpression expression = matches( pathExpressions );
-        if( expression != null ) {
-            return expression.isIncluded();
-        }
-
-        if( field.isAnnotationPresent( JSON.class ) ) {
-            return field.getAnnotation( JSON.class ).include();
-        }
-
-        if( serializationType == SerializationType.SHALLOW ) {
-            Class type = field.getType();
-            return !( type.isArray() || Iterable.class.isAssignableFrom(type));
-        } else {
-            return true;
-        }
-    }
-
-    public boolean isValidField(Field field) {
-        return !Modifier.isStatic(field.getModifiers()) && Modifier.isPublic(field.getModifiers()) && !Modifier.isTransient(field.getModifiers());
     }
 
     protected PathExpression matches(List<PathExpression> expressions) {

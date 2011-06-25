@@ -425,6 +425,43 @@ public class JSONSerializerTest extends TestCase {
         assertAttributeMissing("hobbies", json);
     }
 
+    public void testExclude() {
+        String json = new JSONSerializer().serialize(charlie);
+
+        assertAttribute("firstname", json);
+        assertAttributeMissing("number", json);
+        assertAttributeMissing("exchange", json);
+        assertAttributeMissing("areaCode", json);
+
+        json = new JSONSerializer().include("phones").serialize(charlie);
+
+        assertAttribute("firstname", json);
+        assertAttribute("number", json);
+        assertAttribute("exchange", json);
+        assertAttribute("areaCode", json);
+
+        json = new JSONSerializer().exclude("phones.areaCode").serialize(charlie);
+
+        assertAttribute("firstname", json);
+        assertAttribute("number", json);
+        assertAttribute("exchange", json);
+        assertAttributeMissing("areaCode", json);
+    }
+
+    public void testExcludeWithMap() {
+        TestClass2 test = new TestClass2();
+        test.getMapOfJustice().put("something", new TestClass3("Germany", "Europe", true) );
+        test.getMapOfJustice().put("something2", new TestClass3("China", "Asia", false) );
+        test.getMapOfJustice().put("something3", new TestClass3("Australia", "Australia", true) );
+
+        String json = new JSONSerializer().exclude("mapOfJustice.*.category").prettyPrint(true).serialize(test);
+
+        assertAttribute("mapOfJustice", json);
+        assertAttribute("name", json);
+        assertAttribute("found", json);
+        assertAttributeMissing("category", json);
+    }
+
     public void testExcludeAll() {
         JSONSerializer serializer = new JSONSerializer();
         String json = serializer.exclude("*").serialize(charlie);
@@ -501,6 +538,35 @@ public class JSONSerializerTest extends TestCase {
         assertAttribute("firstname", json );
         assertStringValue("Charlie", json );
         assertStringValue("Ben", json );
+    }
+
+    public void testAnnotations() {
+        HashMap<String, TestClass3> map = new HashMap<String, TestClass3>();
+        map.put("String1", new TestClass3());
+
+        TestClass2 testElement = new TestClass2();
+        testElement.setMapOfJustice(map);
+
+        String json = new JSONSerializer().serialize( testElement );
+        assertAttributeMissing("mapOfJustice", json);
+        assertAttributeMissing("name", json);
+        assertEquals(-1, json.indexOf("testName2"));
+
+        json = new JSONSerializer().include("mapOfJustice").serialize( testElement );
+        assertAttribute("mapOfJustice", json);
+        // make sure the name property value is missing!  assertAttributeMissing( "name", json )
+        // conflicts since mapOfJustice contains an object with name in it
+        assertEquals(-1, json.indexOf("testName2") );
+    }
+
+    public void testTransient() {
+        TestClass2 testElement = new TestClass2();
+
+        String json = new JSONSerializer().serialize( testElement );
+        assertAttributeMissing("description", json);
+
+        json = new JSONSerializer().include("description").serialize( testElement );
+        assertAttribute("description", json);
     }
 
     private int occurs(String str, String json) {

@@ -185,7 +185,7 @@ public class JSONDeserializer<T> {
     }
 
     /**
-     * Same as {@link #deserialize(java.io.Reader, Class)}, but uses an instance of
+     * Same as {@link #deserialize(String, Class)}, but uses an instance of
      * java.io.Reader as json input.
      *
      * @param input the stream where the json input is coming from.
@@ -195,6 +195,36 @@ public class JSONDeserializer<T> {
     public T deserialize( Reader input, Class root ) {
         ObjectBinder binder = createObjectBinder();
         return (T)binder.bind( new JSONTokener( input ).nextValue(), root );
+    }
+
+    /**
+     * Same as {@link #deserialize(String, Class)} but it starts binding into
+     * the instance of the given Class at the given path.
+     *
+     * @param input a json format string.
+     * @param path a path to an instance of the given class.
+     * @param root the Class used to create the initial object.  Must have a no-arg constructor.
+     * @return the object created from the given json input.
+     */
+    public T deserialize(String input, String path, Class root ) {
+        ObjectBinder binder = createObjectBinder();
+        Map value = (Map)new JSONTokener( input ).nextValue();
+        return (T)binder.bind( value.get(path), root );
+    }
+
+    /**
+     * Same as {@link #deserialize(java.io.Reader, Class)} but it starts binding into
+     * the instance of the given Class at the given path.
+     *
+     * @param input the stream where the json input is coming from.
+     * @param path a path to an instance of the given class.
+     * @param root the Class used to create the initial object.  Must have a no-arg constructor.
+     * @return an Java instance deserialized from the java.io.Reader's input.
+     */
+    public T deserialize(Reader input, String path, Class root ) {
+        ObjectBinder binder = createObjectBinder();
+        Map value = (Map)new JSONTokener( input ).nextValue();
+        return (T)binder.bind( value.get(path), root );
     }
 
     /**
@@ -226,6 +256,38 @@ public class JSONDeserializer<T> {
     }
 
     /**
+     * Same as {@link #deserialize(String, ObjectFactory)}, it starts binding into
+     * the instance of the given Class at the given path.
+     *
+     * @param input a json formatted string.
+     * @param path the path two which you start binding.
+     * @param factory an ObjectFactory used to create the initial object.
+     * @return an Java instance deserialized from the given json input.
+     */
+    public T deserialize( String input, String path, ObjectFactory factory ) {
+        use((String)null, factory);
+        ObjectBinder binder = createObjectBinder();
+        Map value = (Map)new JSONTokener(input).nextValue();
+        return (T)binder.bind( value.get(path) );
+    }
+
+    /**
+     * Same as {@link #deserialize(String, ObjectFactory)}, it starts binding into
+     * the instance of the given Class at the given path.
+     *
+     * @param input the stream where the json input is coming from.
+     * @param path the path two which you start binding.
+     * @param factory an ObjectFactory used to create the initial object.
+     * @return an Java instance deserialized from the java.io.Reader's input.
+     */
+    public T deserialize(Reader input, String path, ObjectFactory factory ) {
+        use( (String)null, factory );
+        ObjectBinder binder = createObjectBinder();
+        Object value = new JSONTokener(input).nextValue();
+        return (T)binder.bind( ((Map)value).get(path) );
+    }
+
+    /**
      * Deserialize the given input into the existing object target.
      * Values in the json input will overwrite values in the
      * target object.  This means if a value is included in json
@@ -249,6 +311,34 @@ public class JSONDeserializer<T> {
      */
     public T deserializeInto( Reader input, T target ) {
         return deserialize( input, new ExistingObjectFactory(target) );
+    }
+
+    /**
+     * Deserialize the given input into the existing object target.
+     * Values in the json input will overwrite values in the
+     * target object.  This means if a value is included in json
+     * a new object will be created and set into the existing object.
+     *
+     * @param input a json formatted string.
+     * @param path the path two which you start binding.
+     * @param target an instance to set values into from the json string.
+     * @return will return a reference to target.
+     */
+    public T deserializeInto( String input, String path, T target ) {
+        return deserialize( input, path, new ExistingObjectFactory(target) );
+    }
+
+    /**
+     * Same as {@link #deserializeInto(String, String, Object)}, but uses an instance of
+     * java.io.Reader as json input.
+     *
+     * @param input the stream where the json input is coming from.
+     * @param path the path two which you start binding.
+     * @param target an instance to set values into from the json string.
+     * @return will return a reference to target.
+     */
+    public T deserializeInto( Reader input, String path, T target ) {
+        return deserialize( input, path, new ExistingObjectFactory(target) );
     }
 
     public JSONDeserializer<T> use( String path, ClassLocator locator ) {

@@ -35,6 +35,22 @@ public class JSONDeserializerTest extends TestCase {
         assertEquals(jsonCharlie, jsonCharlie.getWork().getPerson());
     }
 
+    public void testDeserializeWithPath() {
+        Person charlie = new FixtureCreator().createCharlie();
+        String json = new JSONSerializer().rootName("person").serialize(charlie);
+        Person jsonCharlie = new JSONDeserializer<Person>().deserialize(json, "person", Person.class );
+        assertNotNull("Make sure we deserialized something non-null", jsonCharlie);
+
+        assertEquals(charlie.getLastname(), jsonCharlie.getLastname());
+        assertEquals(charlie.getFirstname(), jsonCharlie.getFirstname());
+        assertEquals(charlie.getBirthdate(), jsonCharlie.getBirthdate());
+        assertEquals(charlie.getHome().getState(), jsonCharlie.getHome().getState());
+        assertEquals(charlie.getHome().getStreet(), jsonCharlie.getHome().getStreet());
+        assertEquals(charlie.getHome().getCity(), jsonCharlie.getHome().getCity());
+        assertEquals(charlie.getWork().getCity(), jsonCharlie.getWork().getCity());
+        assertEquals(jsonCharlie, jsonCharlie.getWork().getPerson());
+    }
+
     public void testDeserializeWithIncludes() {
         Person charlie = new FixtureCreator().createCharlie();
         String json = new JSONSerializer().include("phones", "hobbies").serialize(charlie);
@@ -398,9 +414,12 @@ public class JSONDeserializerTest extends TestCase {
     public void testDeserializeIntoExistingObject() {
         FixtureCreator creator = new FixtureCreator();
         Person charlie = creator.createCharlie();
-        Person charlieClone = new Person( "Chauncy", "Beauregard", null, null, null );
         Phone fakePhone = new Phone( PhoneNumberType.MOBILE, "303 555 1234");
+
+        Person charlieClone = new Person( "Chauncy", "Beauregard", null, null, null );
         charlieClone.getPhones().add( fakePhone );
+        charlieClone.getHobbies().add("Being Fake");
+        charlieClone.getHobbies().add("Assuming Other Identities");
 
         String json = new JSONSerializer().include("hobbies").exclude("firstname", "lastname").serialize( charlie );
         Person p = new JSONDeserializer<Person>().deserializeInto(json, charlieClone);

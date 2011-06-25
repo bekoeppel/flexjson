@@ -3,6 +3,7 @@ package flexjson;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import flexjson.mock.TestClass;
 import flexjson.mock.TestClass2;
@@ -11,11 +12,11 @@ import junit.framework.TestCase;
 
 public class JsonSerializationAndDeserializationTest extends TestCase {
 
-	String expectedSerializedObjectString = "{\"name\":\"testName\",\"testList\":[{\"mapOfJustice\":{\"String1\":{\"found\":false}},\"name\":\"testName2\"}]}";
+	String expectedSerializedObjectString = "{\"name\":\"testName\",\"testList\":[{\"mapOfJustice\":{\"String1\":{\"category\":null,\"found\":false,\"name\":null}}}]}";
 	
 	public void testCanSerializeAnObjectIntoSomethingSensible() throws Exception {
 		TestClass testObject = createTestObject();
-		String serializedString = new JSONSerializer().exclude("*.class").serialize(testObject);
+		String serializedString = new JSONSerializer().include("testList.mapOfJustice").exclude("*.class").serialize(testObject);
 		assertEquals(expectedSerializedObjectString, serializedString);
 	}
 	
@@ -23,12 +24,20 @@ public class JsonSerializationAndDeserializationTest extends TestCase {
 		TestClass expectedTestClass = createTestObject();
 		
 		expectedTestClass.getTestList().get(0).getMapOfJustice().values().iterator().next().setFound(true);
-		String nobber = new JSONSerializer().exclude("*.class").serialize(expectedTestClass);
+		String nobber = new JSONSerializer().include("testList.mapOfJustice").exclude("*.class").serialize(expectedTestClass);
         JSONDeserializer<TestClass> deserializer = new JSONDeserializer<TestClass>().use(null, TestClass.class);
         TestClass deserializedTestClass = deserializer.deserialize(nobber);
 
 		assertEquals(expectedTestClass, deserializedTestClass);
 	}
+
+    public void testUseandRootDeserialization() {
+        String json = "{\"foo\":\"bar\", \"class\":\"java.lang.Integer\"}";
+        Map<String,String> useMap = new JSONDeserializer<Map<String,String>>().use(null, HashMap.class).deserialize( json );
+        Map<String,String> rootMap = new JSONDeserializer<Map<String,String>>().deserialize( json, HashMap.class );
+
+        assertEquals( rootMap.size(), useMap.size() );
+    }
 
 	private TestClass createTestObject() {
 		TestClass testObject = new TestClass();
@@ -45,5 +54,4 @@ public class JsonSerializationAndDeserializationTest extends TestCase {
 		list.add(listElement);
 		return list;
 	}
-
 }
