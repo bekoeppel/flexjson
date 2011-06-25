@@ -185,18 +185,24 @@
     <h3>More on Includes</h3>
 
     <p>
-        There is an alternate form of serialize() method that allows you to specify an outer object for collections.
-        There are some javascript libraries like <a href="http://www.extjs.com">EXTJS</a> (previously known as YUI-EXT)
-        that require this for their JSON data models.  However, I haven't found any JSON libraries that offer this type
-        of serialization.  Here is an example:
+        There is an option that allows you to specify an outer object for collections.  Using the rootName() method you
+        can specify the property of that outer object.  There are some javascript libraries like
+        <a href="http://www.extjs.com">EXTJS</a> (previously known as YUI-EXT) that require this for their JSON data
+        models.  However, I haven't found any JSON libraries that offer this type of serialization.  Here is an example:
     </p>
+
+    <div class="important">
+        The rootName() method is new as of Flexjson 2.0.  Prior versions used an alternate version of
+        serialize().  The reason for this new method allowed for more versions of serialize without requiring
+        too many overload method combinations.
+    </div>
 
     <blockquote class="java">
     public String getPeople( Object arg1, ... ) {
 
         List people = ...load a person...;
 
-        return new JSONSerializer().include("phoneNumbers").serialize("people", people);
+        return new JSONSerializer().include("phoneNumbers").rootName("people").serialize(people);
     }
 
     </blockquote>
