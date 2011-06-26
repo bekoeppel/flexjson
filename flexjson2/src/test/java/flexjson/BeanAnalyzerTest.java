@@ -4,8 +4,6 @@ import flexjson.mock.Book;
 import flexjson.mock.Employee;
 import flexjson.mock.Spiderman;
 import flexjson.model.Candidate;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -21,12 +19,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 public class BeanAnalyzerTest {
-
-    public void setUp() {
-    }
-
-    public void tearDown() {
-    }
 
     @Test
     public void testAnalyzer() throws IntrospectionException {

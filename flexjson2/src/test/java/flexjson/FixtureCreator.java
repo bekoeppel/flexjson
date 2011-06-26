@@ -56,8 +56,8 @@ public class FixtureCreator {
 
     public Person createPedro() {
         Zipcode pedroZip = new Zipcode("49404");
-        Address pedroHome = new Address(" 12 Acrelândia Way", "Rio de Janeiro", "Brazil", pedroZip);
-        Address pedroWork = new Address(" 12 Acrelândia Way", "Rio de Janeiro", "Brazil", pedroZip );
+        Address pedroHome = new Address(" 12 Acrel\u00E8ndia Way", "Rio de Janeiro", "Brazil", pedroZip);
+        Address pedroWork = new Address(" 12 Acrel\u00E8ndia Way", "Rio de Janeiro", "Brazil", pedroZip );
 
         Phone pedroPhone = new Phone( PhoneNumberType.MOBILE, "123 555 2323");
 
