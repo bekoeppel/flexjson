@@ -224,7 +224,7 @@ public class ObjectBinder {
 
     protected Class findClassInMap( Map map, Class override ) {
         if( override == null ) {
-            String classname = (String)map.remove("class");
+            String classname = (String)map.get("class");
             try {
                 if( classname != null ) {
                     ClassLoader classLoader = Thread.currentThread().getContextClassLoader();

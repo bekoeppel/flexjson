@@ -37,6 +37,10 @@ public class JsonSerializationAndDeserializationTest extends TestCase {
         Map<String,String> rootMap = new JSONDeserializer<Map<String,String>>().deserialize( json, HashMap.class );
 
         assertEquals( rootMap.size(), useMap.size() );
+        assertEquals( "bar", useMap.get("foo") );
+        assertEquals( "bar", rootMap.get("foo") );
+        assertEquals( "java.lang.Integer", useMap.get("class") );
+        assertEquals( "java.lang.Integer", rootMap.get("class") );
     }
 
 	private TestClass createTestObject() {
