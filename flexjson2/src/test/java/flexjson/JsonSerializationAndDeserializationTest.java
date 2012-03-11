@@ -12,9 +12,9 @@ import junit.framework.TestCase;
 
 public class JsonSerializationAndDeserializationTest extends TestCase {
 
-	String expectedSerializedObjectString = "{\"name\":\"testName\",\"testList\":[{\"mapOfJustice\":{\"String1\":{\"category\":null,\"found\":false,\"name\":null}}}]}";
+	String expectedSerializedObjectString = "{\"name\":\"testName\",\"test_list\":[{\"mapOfJustice\":{\"String1\":{\"category\":null,\"found\":false,\"name\":null}}}]}";
 	
-	public void testCanSerializeAnObjectIntoSomethingSensible() throws Exception {
+	public void testJsonNameAndIncludes() throws Exception {
 		TestClass testObject = createTestObject();
 		String serializedString = new JSONSerializer().include("testList.mapOfJustice").exclude("*.class").serialize(testObject);
 		assertEquals(expectedSerializedObjectString, serializedString);

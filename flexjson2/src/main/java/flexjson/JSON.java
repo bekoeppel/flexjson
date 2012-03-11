@@ -15,6 +15,8 @@
  */
 package flexjson;
 
+import flexjson.transformer.Transformer;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -31,5 +33,9 @@ import java.lang.annotation.Target;
 @Retention(value = RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.TYPE, ElementType.METHOD})
 public @interface JSON {
+    String name() default "";
     boolean include() default true;
+    Class<? extends Transformer> transformer() default Transformer.class;
+    Class<? extends ObjectFactory> objectFactory() default ObjectFactory.class;
+
 }

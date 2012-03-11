@@ -31,7 +31,7 @@ public class TestClass{
 //		this.service = service;
 //	}
 
-	@JSON
+	@JSON(name = "test_list")
 	public List<TestClass2> getTestList() {
 		return testList;
 	}

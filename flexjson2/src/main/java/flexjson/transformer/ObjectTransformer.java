@@ -42,9 +42,9 @@ public class ObjectTransformer extends AbstractTransformer {
                             if(!transformer.isInline()) {
                                 if (!typeContext.isFirst()) context.writeComma();
                                 typeContext.setFirst(false);
-                                context.writeName(name);
+                                context.writeName(prop.getJsonName());
                             }
-                            typeContext.setPropertyName(name);
+                            typeContext.setPropertyName(prop.getJsonName());
 
                             transformer.transform(value);
                         }

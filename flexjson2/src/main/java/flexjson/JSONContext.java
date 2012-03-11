@@ -17,8 +17,6 @@ package flexjson;
 
 import flexjson.transformer.*;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.*;
 
 public class JSONContext {
@@ -366,9 +364,9 @@ public class JSONContext {
             return expression.isIncluded();
         }
 
-        Boolean annotation = prop.isAnnotated();
-        if( annotation != null ) {
-            return annotation;
+        Boolean included = prop.isIncluded();
+        if( included != null ) {
+            return included;
         }
 
         if( prop.isTransient() ) return false;

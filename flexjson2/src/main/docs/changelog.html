@@ -12,6 +12,74 @@
 </head>
 <body>
     <h1>Flexjson Change Log</h1>
+    <h2>Version 2.2</h2>
+    <h3>March 15, 2012</h3>
+    <ul>
+        <li>Enhancements</li>
+        <ul>
+            <li>
+                <p>
+                    Allow @JSON annotation on fields .
+                </p>
+            </li>
+            <li>
+                <p>
+                    Added alternate field name in JSON stream from property name using @JSON.
+                </p>
+            </li>
+            <li>
+                <p>
+                    Added support for defining Transfomers and ObjectFactories using @JSON.
+                </p>
+            </li>
+            <li>
+                <p>
+                    Add methods to DateObjectFactory to make it easier to add new patterns per instance,
+                    as well as class level default formats.
+                </p>
+            </li>
+        </ul>
+    </ul>
+    <ul>
+        <li>Bug Fixes</li>
+        <ul>
+            <li>
+                <p>
+                    32113835 - @JSON could not be used on field definitions.
+                </p>
+            </li>
+            <li>
+                <p>
+                    3167237 - Transient fields were being included when they should not be.
+                </p>
+            </li>
+            <li>
+                <p>
+                    3130753 - Deserialization was using Class.forName instead of ContextClassLoader.
+                </p>
+            </li>
+            <li>
+                <p>
+                    Map fields were being included on Shallow serialization when they shouldn't be.
+                </p>
+            </li>
+            <li>
+                <p>
+                    Documentation had not been updated ...
+                </p>
+            </li>
+            <li>
+                <p>
+                    3441147 - Fixed threading issues with DateFormat when used in DateTransformer and DateObjectFactory.
+                </p>
+            </li>
+            <li>
+                <p>
+                    3110872 - TypeTransformerMap wasn't going up the chain for super interfaces properly.
+                </p>
+            </li>
+        </ul>
+    </ul>
     <h2>Version 2.1</h2>
     <h3>Sept 20, 2010</h3>
     <ul>

@@ -1,5 +1,7 @@
 package flexjson;
 
+import flexjson.transformer.Transformer;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -7,29 +9,52 @@ import java.lang.reflect.Modifier;
 import java.util.*;
 
 public class BeanProperty {
-    private String name;
+    private final String name;
+    private String jsonName;
     private BeanAnalyzer bean;
     private Class propertyType;
-    protected Field property;
+    protected final Field property;
     protected Method readMethod;
     protected Method writeMethod;
     protected Map<Class<?>, Method> writeMethods = new HashMap<Class<?>, Method>();
+    protected DeferredInstantiation<?  extends Transformer> transformer = null;
+    protected DeferredInstantiation<? extends ObjectFactory> objectFactory = null;
+    protected Boolean included = null;
 
     public BeanProperty(String name, BeanAnalyzer bean) {
-        this.name = name;
+        this.name = jsonName = name;
         this.bean = bean;
         this.property = bean.getDeclaredField(name);
+
+        if (property != null && property.isAnnotationPresent(JSON.class)) {
+            processAnnotation(property.getAnnotation(JSON.class));
+        }
     }
 
     public BeanProperty(Field property, BeanAnalyzer bean) {
-        this.name = property.getName();
+        this.name = jsonName = property.getName();
         this.bean = bean;
         this.property = property;
         this.propertyType = property.getType();
+
+        if (property.isAnnotationPresent(JSON.class)) {
+            processAnnotation(property.getAnnotation(JSON.class));
+        }
+    }
+
+    private void processAnnotation(JSON annotation) {
+        jsonName = annotation.name().length() > 0 ? annotation.name() : name;
+        transformer = annotation.transformer() == Transformer.class ? null : new DeferredInstantiation<Transformer>( annotation.transformer() );
+        objectFactory = annotation.objectFactory() == ObjectFactory.class ? null : new DeferredInstantiation<ObjectFactory>( annotation.objectFactory() );
+        included = annotation.include();
     }
 
     public String getName() {
         return name;
+    }
+
+    public String getJsonName() {
+        return jsonName;
     }
 
     public Field getProperty() {
@@ -80,22 +105,14 @@ public class BeanProperty {
             readMethod = method;
             readMethod.setAccessible(true);
         }
+
+        if (readMethod != null && readMethod.isAnnotationPresent(JSON.class)) {
+            processAnnotation(readMethod.getAnnotation(JSON.class));
+        }
     }
 
-    public Boolean isAnnotated() {
-        Method rm = getReadMethod();
-        if (rm != null) {
-            if (rm.isAnnotationPresent(JSON.class)) {
-                return rm.getAnnotation(JSON.class).include();
-            }
-        }
-
-        if (property != null) {
-            if (property.isAnnotationPresent(JSON.class)) {
-                return property.getAnnotation(JSON.class).include();
-            }
-        }
-        return null; // this is important to indicate nothing was found (found and it was true, found and it was false, not found)
+    public Boolean isIncluded() {
+        return included;
     }
 
     public Object getValue(Object instance) throws InvocationTargetException, IllegalAccessException {
@@ -130,5 +147,13 @@ public class BeanProperty {
      */
     protected boolean isNonProperty() {
         return getReadMethod() == null && getWriteMethod() == null && !Modifier.isPublic( property.getModifiers() );
+    }
+
+    public Transformer getTransformer() throws InstantiationException, IllegalAccessException {
+        return transformer != null ? transformer.get() : null;
+    }
+
+    public ObjectFactory getObjectFactory() throws InstantiationException, IllegalAccessException {
+        return objectFactory != null ? objectFactory.get() : null;
     }
 }

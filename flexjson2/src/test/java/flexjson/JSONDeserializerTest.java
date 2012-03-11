@@ -1,5 +1,6 @@
 package flexjson;
 
+import flexjson.factories.DateObjectFactory;
 import flexjson.model.Account;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -220,8 +221,24 @@ public class JSONDeserializerTest extends TestCase {
 
         String json = new JSONSerializer().transform(transformer, "birthdate").serialize(charlie);
         Person newUser = new JSONDeserializer<Person>().deserialize(json);
+
         assertEquals( charlie.getBirthdate(), newUser.getBirthdate() );
         assertEquals( "03/21/76", df.format(newUser.getBirthdate()) );
+
+        String pattern = "yyyy-MM-dd hh:mm:ss";
+
+        json = new JSONSerializer().transform( new DateTransformer( pattern ), Date.class ).serialize(charlie);
+        Person user = new JSONDeserializer<Person>().use("birthdate", new DateObjectFactory().add(pattern) ).deserialize(json);
+
+        assertEquals( charlie.getBirthdate(), user.getBirthdate() );
+        assertEquals( "03/21/76", df.format( user.getBirthdate() ) );
+
+        DateObjectFactory.addDefaultFormat( pattern );
+        json = new JSONSerializer().transform( new DateTransformer( pattern ), Date.class ).serialize(charlie);
+        user = new JSONDeserializer<Person>().deserialize(json);
+
+        assertEquals( charlie.getBirthdate(), user.getBirthdate() );
+        assertEquals( "03/21/76", df.format( user.getBirthdate() ) );
     }
 
     public void testDateTransforming() throws ParseException {

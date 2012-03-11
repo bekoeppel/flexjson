@@ -283,9 +283,9 @@ public class ObjectBinder {
     }
 
     private Object findFieldInJson( Map map, BeanProperty property ) {
-        Object value = map.get( property.getName() );
+        Object value = map.get( property.getJsonName() );
         if( value == null ) {
-            String field = property.getName();
+            String field = property.getJsonName();
             value = map.get( upperCase(field) );
         }
 
