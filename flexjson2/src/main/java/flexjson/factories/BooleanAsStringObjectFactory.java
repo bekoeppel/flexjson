@@ -20,6 +20,6 @@ public class BooleanAsStringObjectFactory implements ObjectFactory {
     }
 
     public Object instantiate(ObjectBinder context, Object value, Type targetType, Class targetClass) {
-        return truthValue.equalsIgnoreCase(truthValue) ? Boolean.TRUE : Boolean.FALSE;
+        return truthValue.equalsIgnoreCase(value.toString()) ? Boolean.TRUE : Boolean.FALSE;
     }
 }

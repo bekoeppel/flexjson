@@ -352,6 +352,14 @@ public class JSONDeserializer<T> {
 
     public JSONDeserializer<T> use( Class clazz, ObjectFactory factory ) {
         typeFactories.put( clazz, factory );
+        if( clazz == Boolean.class ) typeFactories.put(Boolean.TYPE, factory );
+        else if( clazz == Integer.class ) typeFactories.put(Integer.TYPE, factory );
+        else if( clazz == Short.class ) typeFactories.put(Short.TYPE, factory );
+        else if( clazz == Long.class ) typeFactories.put(Long.TYPE, factory );
+        else if( clazz == Byte.class ) typeFactories.put(Byte.TYPE, factory );
+        else if( clazz == Float.class ) typeFactories.put(Float.TYPE, factory );
+        else if( clazz == Double.class ) typeFactories.put(Double.TYPE, factory );
+        else if( clazz == Character.class ) typeFactories.put(Character.TYPE, factory );
         return this;
     }
 

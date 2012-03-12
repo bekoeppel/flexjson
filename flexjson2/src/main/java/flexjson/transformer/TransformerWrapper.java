@@ -21,7 +21,7 @@ public class TransformerWrapper extends AbstractTransformer {
 
         this.transformer.transform(object);
 
-        // Call FlexJSON interceptors afterTranform last
+        // Call FlexJSON interceptors afterTransform last
         getContext().getObjectStack().removeFirst();
 
     }

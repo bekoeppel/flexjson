@@ -6,15 +6,12 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import flexjson.factories.BooleanAsStringObjectFactory;
+import flexjson.mock.*;
+import flexjson.transformer.BooleanAsStringTransformer;
 import junit.framework.TestCase;
 
 import org.junit.Test;
-
-import flexjson.mock.SubTask;
-import flexjson.mock.Task;
-import flexjson.mock.TestClass;
-import flexjson.mock.TestClass2;
-import flexjson.mock.TestClass3;
 
 public class JsonSerializationAndDeserializationTest extends TestCase {
 
@@ -96,6 +93,25 @@ public class JsonSerializationAndDeserializationTest extends TestCase {
         assertEquals(expectedSerializedObjectFirstVisitedInCollectionString, json);
     	
 	}
+
+    @Test
+    public void testAlternateBooleanTransformer() {
+        String expectedYes = "{\"class\":\"flexjson.mock.Spiderman\",\"spideySense\":\"yes\",\"superpower\":\"Creates web\"}";
+        String expectedNo = "{\"class\":\"flexjson.mock.Spiderman\",\"spideySense\":\"no\",\"superpower\":\"Creates web\"}";
+
+        Spiderman spiderman = new Spiderman();
+        spiderman.spideySense = true;
+        String json = new JSONSerializer().transform( new BooleanAsStringTransformer("yes", "no"), Boolean.class ).serialize(spiderman);
+        assertEquals( expectedYes, json );
+        spiderman.spideySense = false;
+        json = new JSONSerializer().transform( new BooleanAsStringTransformer("yes", "no"), Boolean.class ).serialize(spiderman);
+        assertEquals( expectedNo, json );
+
+        spiderman = new JSONDeserializer<Spiderman>().use(Boolean.class, new BooleanAsStringObjectFactory("yes", "no")).deserialize(expectedYes, Spiderman.class);
+        assertTrue( "Assert it deserialized yes into true", spiderman.spideySense );
+        spiderman = new JSONDeserializer<Spiderman>().use(Boolean.class, new BooleanAsStringObjectFactory("yes", "no")).deserialize( expectedNo, Spiderman.class );
+        assertFalse("Assert it deserialized no into false", spiderman.spideySense);
+    }
 
 	private TestClass createTestObject() {
 		TestClass testObject = new TestClass();
