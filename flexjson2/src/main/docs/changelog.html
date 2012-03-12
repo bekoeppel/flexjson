@@ -38,6 +38,9 @@
                     as well as class level default formats.
                 </p>
             </li>
+            <li>
+                <p>3419090 - Added BooleanAsStringTransformer and BooleanAsObjectBinder to handle writing out a Boolean as Strings.</p>
+            </li>
         </ul>
     </ul>
     <ul>
@@ -77,6 +80,15 @@
                 <p>
                     3110872 - TypeTransformerMap wasn't going up the chain for super interfaces properly.
                 </p>
+            </li>
+            <li>
+                <p>3449532 - Extra comma could be written out if there were circular references in collections.</p>
+            </li>
+            <li>
+                <p>3122442 - Properties without getters were being written out as null when they shouldn't.</p>
+            </li>
+            <li>
+                <p>3485430 - Registering an ObjectFactory on a super class type wasn't being used for subclasses.</p>
             </li>
         </ul>
     </ul>

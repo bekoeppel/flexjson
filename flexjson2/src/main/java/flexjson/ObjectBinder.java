@@ -254,13 +254,16 @@ public class ObjectBinder {
 
     private ObjectFactory findFactoryByTargetClass(Class targetType) {
         ObjectFactory factory;
-        factory = factories.get( targetType );
-        if( factory == null && targetType != null && targetType.getSuperclass() != null ) {
-            for( Class intf : targetType.getInterfaces() ) {
-                factory = findFactoryByTargetClass( intf );
-                if( factory != null ) return factory;
+        factory = factories.get(targetType);
+        if (factory == null && targetType != null) {
+            for (Class intf : targetType.getInterfaces()) {
+                factory = findFactoryByTargetClass(intf);
+                if (factory != null) return factory;
             }
-            return findFactoryByTargetClass( targetType.getSuperclass() );
+            if (targetType.getSuperclass() != null) {
+                return findFactoryByTargetClass(targetType.getSuperclass());
+            }
+            return null;
         } else {
             return factory;
         }
