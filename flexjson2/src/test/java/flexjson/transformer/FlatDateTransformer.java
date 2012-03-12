@@ -36,7 +36,7 @@ public class FlatDateTransformer extends AbstractTransformer {
         c.setTime(date);
 
         if (!typeContext.isFirst()) getContext().writeComma();
-        typeContext.setFirst(false);
+        typeContext.increment();
         getContext().writeName(fieldName("Month"));
         getContext().transform(c.get(Calendar.MONTH));
 

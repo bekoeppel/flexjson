@@ -18,12 +18,12 @@ package flexjson;
 public class TypeContext {
 
     private BasicType basicType;
-    private boolean isFirst;
+    private int count;
     private String propertyName;
 
     public TypeContext(BasicType basicType) {
         this.basicType = basicType;
-        isFirst = true;
+        count = 0;
     }
 
     public BasicType getBasicType() {
@@ -35,11 +35,15 @@ public class TypeContext {
     }
 
     public boolean isFirst() {
-        return isFirst;
+        return count == 0;
     }
 
-    public void setFirst(boolean first) {
-        isFirst = first;
+    public void decrement() {
+        count = Math.max(count-1, 0);
+    }
+    
+    public void increment() {
+        count++;
     }
 
     public String getPropertyName() {

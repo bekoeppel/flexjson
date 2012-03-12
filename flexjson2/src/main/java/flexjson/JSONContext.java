@@ -44,6 +44,7 @@ public class JSONContext {
 
     private Path path = new Path();
 
+    private boolean commaWritePending;
 
     public JSONContext() {}
 
@@ -169,6 +170,9 @@ public class JSONContext {
      * @param value
      */
     public void write(String value) {
+    	
+    	commitComma();
+    	
         TypeContext currentTypeContext = peekTypeContext();
         if (currentTypeContext != null &&
                 currentTypeContext.getBasicType() == BasicType.ARRAY) {
@@ -178,6 +182,9 @@ public class JSONContext {
     }
 
     public TypeContext writeOpenObject() {
+    	
+    	commitComma();
+    	
         if (prettyPrint) {
             TypeContext currentTypeContext = peekTypeContext();
             if (currentTypeContext != null &&
@@ -196,6 +203,9 @@ public class JSONContext {
     }
 
     public void writeCloseObject() {
+    	
+    	discardComma();
+    	
         if (prettyPrint) {
             out.write("\n");
             indent -= 4;
@@ -206,6 +216,9 @@ public class JSONContext {
     }
 
     public void writeName(String name) {
+    	
+    	commitComma();
+    	
         if (prettyPrint) writeIndent();
         if( name != null )
             writeQuoted(name);
@@ -216,13 +229,27 @@ public class JSONContext {
     }
 
     public void writeComma() {
-        out.write(",");
-        if (prettyPrint) {
-            out.write("\n");
-        }
+    	commaWritePending = true;
+    }
+    
+    private void discardComma() {
+    	commaWritePending = false;
+    }
+    
+    private void commitComma() {
+    	if(commaWritePending) {
+	        out.write(",");
+	        if (prettyPrint) {
+	            out.write("\n");
+	        }
+	        commaWritePending = false;
+    	}
     }
 
     public TypeContext writeOpenArray() {
+    	
+    	commitComma();
+    	
         if (prettyPrint) {
             TypeContext currentTypeContext = peekTypeContext();
             if (currentTypeContext != null &&
@@ -241,6 +268,9 @@ public class JSONContext {
     }
 
     public void writeCloseArray() {
+    	
+    	discardComma();
+    	
         if (prettyPrint) {
             out.write("\n");
             indent -= 4;
@@ -262,6 +292,9 @@ public class JSONContext {
      * @param value
      */
     public void writeQuoted(String value) {
+    	
+    	commitComma();
+    	
         if (prettyPrint) {
             TypeContext currentTypeContext = peekTypeContext();
             if (currentTypeContext != null &&

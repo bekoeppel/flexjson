@@ -40,7 +40,7 @@ public class MapTransformer extends AbstractTransformer {
 
                 if(!transformer.isInline()) {
                     if (!typeContext.isFirst()) getContext().writeComma();
-                    typeContext.setFirst(false);
+                    typeContext.increment();
                     if( key != null ) {
                         getContext().writeName(key.toString());
                     } else {

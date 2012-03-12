@@ -25,7 +25,7 @@ public class StringArrayTransformer extends AbstractTransformer {
         TypeContext typeContext = getContext().writeOpenArray();
         for (String item : stringArr) {
             if (!typeContext.isFirst()) getContext().writeComma();
-            typeContext.setFirst(false);
+            typeContext.increment();
             getContext().transform(item.toUpperCase());
         }
         getContext().writeCloseArray();

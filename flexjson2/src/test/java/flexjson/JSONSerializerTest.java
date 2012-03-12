@@ -607,6 +607,14 @@ public class JSONSerializerTest {
         assertAttribute("description", json);
     }
 
+    @Test
+    public void testSettersWithoutGettersAreMissing() {
+        Friend friend = new Friend("Nugget", "Donkey Rider", "Slim");
+        String json = new JSONSerializer().include("*").prettyPrint(true).serialize( friend );
+        assertAttribute("nicknames", json);
+        assertAttributeMissing("nicknamesAsArray", json);
+    }
+
     private int occurs(String str, String json) {
         int current = 0;
         int count = 0;

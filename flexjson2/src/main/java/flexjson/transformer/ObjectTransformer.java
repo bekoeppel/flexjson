@@ -33,7 +33,7 @@ public class ObjectTransformer extends AbstractTransformer {
                 for( BeanProperty prop : analyzer.getProperties() ) {
                     String name = prop.getName();
                     path.enqueue(name);
-                    if( context.isIncluded(prop) ) {
+                    if( context.isIncluded(prop) && prop.isReadable() ) {
                         Object value = prop.getValue( object );
                         if (!context.getVisits().contains(value)) {
 
@@ -41,7 +41,7 @@ public class ObjectTransformer extends AbstractTransformer {
 
                             if(!transformer.isInline()) {
                                 if (!typeContext.isFirst()) context.writeComma();
-                                typeContext.setFirst(false);
+                                typeContext.increment();
                                 context.writeName(prop.getJsonName());
                             }
                             typeContext.setPropertyName(prop.getJsonName());
@@ -54,6 +54,11 @@ public class ObjectTransformer extends AbstractTransformer {
                 context.writeCloseObject();
                 context.setVisits((ChainedSet) context.getVisits().getParent());
 
+            } else {
+            	TypeContext parentTypeContext = getContext().peekTypeContext();
+            	if(parentTypeContext != null) {
+            		parentTypeContext.decrement();
+            	}
             }
         } catch (JSONException e) {
             throw e;
