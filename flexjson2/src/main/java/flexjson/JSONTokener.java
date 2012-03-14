@@ -559,47 +559,20 @@ public class JSONTokener {
             return null;
         }
 
-        /*
-         * If it might be a number, try converting it. We support the 0- and 0x-
-         * conventions. If a number cannot be produced, then the value will just
-         * be a string. Note that the 0-, 0x-, plus, and implied string
-         * conventions are non-standard. A JSON parser is free to accept
-         * non-JSON forms as long as it accepts all correct JSON forms.
-         */
+        if( isNumber(s) ) {
+            return new JsonNumber( s );
+        } else {
+            return s;
+        }
+    }
 
-        char b = s.charAt(0);
-        if ((b >= '0' && b <= '9') || b == '.' || b == '-' || b == '+') {
-            if (b == '0') {
-                if (s.length() > 2 &&
-                        (s.charAt(1) == 'x' || s.charAt(1) == 'X')) {
-                    try {
-                        return Integer.parseInt(s.substring(2),
-                                16);
-                    } catch (Exception e) {
-                        /* Ignore the error */
-                    }
-                } else {
-                    try {
-                        return Integer.parseInt(s, 8);
-                    } catch (Exception e) {
-                        /* Ignore the error */
-                    }
-                }
-            }
-            try {
-                return new Integer(s);
-            } catch (Exception e) {
-                try {
-                    return new Long(s);
-                } catch (Exception f) {
-                    try {
-                        return new Double(s);
-                    }  catch (Exception g) {
-                    	/* Ignore the error */
-                    }
-                }
+    private boolean isNumber(String s) {
+        for( int i = 0; i < s.length(); i++ ) {
+            char c = s.charAt(i);
+            if( !Character.isDigit(c) && c != '-' && c != '.' && c != '+' && c != 'e' && c != 'E' ) {
+                return false;
             }
         }
-        return s;
+        return true;
     }
 }

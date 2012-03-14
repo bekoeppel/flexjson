@@ -41,6 +41,14 @@
             <li>
                 <p>3419090 - Added BooleanAsStringTransformer and BooleanAsObjectBinder to handle writing out a Boolean as Strings.</p>
             </li>
+            <li>
+                <p>
+                    Better handling of BigInteger and BigDecimal so you don't have to handle them separately.  Introduced
+                    JsonNumber instead of converting numbers to fixed quantities like Double, Long, Integer, etc.  This
+                    can have an impact on custom ObjectFactories so be aware if you have written custom ObjectFactories.
+                    Treat all expect numeric values as java.lang.Number and you shouldn't have any problems.
+                </p>
+            </li>
         </ul>
     </ul>
     <ul>

@@ -531,9 +531,9 @@ public class JSONDeserializerTest extends TestCase {
         public void transform(Object value) {
             int classname = value.toString().lastIndexOf('.');
             if (classname > 0) {
-                JSONContext.get().write( value.toString().substring(classname + 1) );
+                JSONContext.get().writeQuoted( value.toString().substring(classname + 1) );
             } else {
-                JSONContext.get().write( value.toString() );
+                JSONContext.get().writeQuoted( value.toString() );
             }
         }
     }

@@ -105,10 +105,8 @@ public class DateObjectFactory implements ObjectFactory {
      */
     public Object instantiate(ObjectBinder context, Object value, Type targetType, Class targetClass) {
         try {
-            if( value instanceof Double ) {
-                return instantiateDate( (Class)targetType, ((Double)value).longValue(), context );
-            } else if( value instanceof Long ) {
-                return instantiateDate( (Class)targetType, (Long)value, context );
+            if( value instanceof Number ) {
+                return instantiateDate( (Class)targetType, ((Number)value).longValue(), context );
             } else {
                 for( DateFormat format : getDateFormats() ) {
                     try {

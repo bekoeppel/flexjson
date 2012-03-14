@@ -45,6 +45,15 @@ public class ObjectBinder {
         factories.put( Array.class, new ArrayObjectFactory() );
         factories.put( BigDecimal.class, new BigDecimalFactory() );
         factories.put( BigInteger.class, new BigIntegerFactory() );
+        /* this is added because it possible that typing information
+         * is lost when using un-typed collections.  This means a
+         * JsonNumber could be the only hint we have for what type
+         * this object should be.  In this case we need a catch-all
+         * factory here to convert JsonNumbers into some Java native
+         * type.  Therefore, this is here to trap those cases and
+         * convert it to a number.
+         */
+        factories.put( JsonNumber.class, new JsonNumberObjectFactory() );
     }
 
     public ObjectBinder use(Path path, ObjectFactory factory) {
@@ -324,8 +333,8 @@ public class ObjectBinder {
             return ((Number)value).floatValue();
         } else if( value instanceof Boolean && clazz.equals(Boolean.class) ) {
             return value;
-        } else if( value instanceof Long && clazz == Date.class ) {
-            return new Date( (Long)value );
+        } else if( value instanceof Number && clazz == Date.class ) {
+            return new Date( ((Number) value).longValue() );
         } else {
             throw new JSONException(String.format("%s: Don't know how to bind %s into class %s.  You might need to use an ObjectFactory instead of a plain class.", getCurrentPath().toString(), value, clazz.getName()) );
         }
