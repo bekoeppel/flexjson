@@ -32,6 +32,22 @@ public class Hero {
         return name;
     }
 
+    private void setLair(SecretLair lair) {
+        this.lair = lair;
+    }
+
+    private void setIdentity(SecretIdentity identity) {
+        this.identity = identity;
+    }
+
+    private void setName(String name) {
+        this.name = name;
+    }
+
+    private void setPowers(List<SuperPower> powers) {
+        this.powers = powers;
+    }
+
     public List<SuperPower> getPowers() {
         return powers;
     }

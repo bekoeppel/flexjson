@@ -133,7 +133,7 @@ public class BeanProperty {
 
     public Boolean isWritable() {
         Method wm = getWriteMethod();
-        return wm != null && Modifier.isPublic(wm.getModifiers()) || property != null && Modifier.isPublic(property.getModifiers()) && !Modifier.isTransient(property.getModifiers());
+        return wm != null || property != null && Modifier.isPublic(property.getModifiers()) && !Modifier.isTransient(property.getModifiers());
     }
 
     public Boolean isTransient() {

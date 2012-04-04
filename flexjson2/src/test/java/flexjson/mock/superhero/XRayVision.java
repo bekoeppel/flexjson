@@ -14,4 +14,8 @@ public class XRayVision implements SuperPower {
     public float getPower() {
         return power;
     }
+
+    protected void setPower(float power) {
+        this.power = power;
+    }
 }

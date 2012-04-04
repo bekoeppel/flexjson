@@ -4,10 +4,7 @@ import flexjson.transformer.*;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Map;
+import java.util.*;
 
 public class TransformerUtil {
 
@@ -55,6 +52,9 @@ public class TransformerUtil {
 
         transformer = new BasicDateTransformer();
         defaultTransformers.put(Date.class, new TransformerWrapper(transformer));
+
+        transformer = new DefaultCalendarTransformer();
+        defaultTransformers.put(Calendar.class, new TransformerWrapper(transformer));
 
         transformer = new EnumTransformer();
         defaultTransformers.put(Enum.class, new TransformerWrapper(transformer));

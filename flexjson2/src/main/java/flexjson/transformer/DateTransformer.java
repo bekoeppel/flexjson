@@ -31,7 +31,7 @@ public class DateTransformer extends AbstractTransformer implements ObjectFactor
         try {
             return getFormatter().parse(value.toString());
         } catch (ParseException e) {
-            throw new JSONException(String.format( "Failed to parse %s with %s pattern.", value, dateFormat ), e );
+            throw new JSONException(String.format( "%s: Failed to parse %s with %s pattern.", context.getCurrentPath(), value, dateFormat ), e );
         }
     }
 

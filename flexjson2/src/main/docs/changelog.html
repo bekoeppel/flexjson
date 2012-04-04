@@ -13,7 +13,7 @@
 <body>
     <h1>Flexjson Change Log</h1>
     <h2>Version 2.2</h2>
-    <h3>March 15, 2012</h3>
+    <h3>April 7, 2012</h3>
     <ul>
         <li>Enhancements</li>
         <ul>
@@ -29,7 +29,7 @@
             </li>
             <li>
                 <p>
-                    Added support for defining Transfomers and ObjectFactories using @JSON.
+                    Added support for defining Transformers and ObjectFactories using @JSON.
                 </p>
             </li>
             <li>
@@ -97,6 +97,12 @@
             </li>
             <li>
                 <p>3485430 - Registering an ObjectFactory on a super class type wasn't being used for subclasses.</p>
+            </li>
+            <li>
+                <p>Added default Transformer for handling java.util.Calendar instances.</p>
+            </li>
+            <li>
+                <p>Fixed underflow issues where a Date that could fit inside an Integer was being returned as an Int instead of Long.</p>
             </li>
         </ul>
     </ul>

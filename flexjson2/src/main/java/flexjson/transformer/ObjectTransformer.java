@@ -63,7 +63,7 @@ public class ObjectTransformer extends AbstractTransformer {
         } catch (JSONException e) {
             throw e;
         } catch (Exception e) {
-            throw new JSONException("Error trying to deepSerialize", e);
+            throw new JSONException(String.format("%s: Error while trying to deepSerialize.", path), e);
         }
     }
 

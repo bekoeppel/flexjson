@@ -91,10 +91,10 @@ public class JSONDeserializerTest extends TestCase {
 
         assertNotNull("Make sure we got back a superman", jsonSuperMan);
         assertEquals("Assert our name is super man", "Super Man", jsonSuperMan.getName());
-        assertNotNull("Assert our secret identiy was restored", jsonSuperMan.getIdentity());
+        assertNotNull("Assert our secret identity was restored", jsonSuperMan.getIdentity());
         assertEquals("Assert our secret identity is Clark Kent", "Clark Kent", jsonSuperMan.getIdentity().getName());
         assertNotNull("Assert our secret lair was restored", jsonSuperMan.getLair());
-        assertEquals("Assert our lair is the fortrees of solitude", "Fortress of Solitude", jsonSuperMan.getLair().getName());
+        assertEquals("Assert our lair is the fortress of solitude", "Fortress of Solitude", jsonSuperMan.getLair().getName());
     }
 
     public void testNoHintsButClassesForCollection() {
@@ -511,6 +511,29 @@ public class JSONDeserializerTest extends TestCase {
         Point2D.Float point = new JSONDeserializer<Point2D.Float>().deserialize( json );
         assertEquals( 1.0f, point.x );
         assertEquals( 2.0f, point.y );
+    }
+
+    public void testUnixEpoch() {
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+        cal.set(Calendar.YEAR, 1970);
+        cal.set(Calendar.MONTH, 0);
+        cal.set(Calendar.DAY_OF_MONTH, 1);
+        cal.set(Calendar.AM_PM, Calendar.AM);
+        cal.set(Calendar.HOUR, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+
+        Person hank = new Person("Hank", "Paulsen", cal.getTime(), null, null);
+
+        String json = new JSONSerializer().serialize(hank);
+        Person deHank = new JSONDeserializer<Person>().deserialize(json, Person.class);
+
+        assertEquals( hank.getFirstname(), deHank.getFirstname() );
+        assertEquals( hank.getLastname(), deHank.getLastname() );
+        assertEquals( hank.getBirthdate(), deHank.getBirthdate() );
     }
 
     public void setUp() {

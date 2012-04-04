@@ -137,26 +137,28 @@ public class ObjectBinder {
             objectStack.add( target );
             BeanAnalyzer analyzer = BeanAnalyzer.analyze( target.getClass() );
             for( BeanProperty descriptor : analyzer.getProperties() ) {
-                Object value = findFieldInJson( jsonOwner, descriptor );
-                if( value != null ) {
-                    currentPath.enqueue( descriptor.getName() );
-                    Method setMethod = descriptor.getWriteMethod();
-                    if( setMethod != null ) {
-                        Type[] types = setMethod.getGenericParameterTypes();
-                        if( types.length == 1 ) {
-                            Type paramType = types[0];
-                            setMethod.invoke( objectStack.getLast(), bind( value, resolveParameterizedTypes( paramType, targetType ) ) );
+                if( containsFieldInJson(jsonOwner, descriptor) ) {
+                    Object value = findFieldInJson( jsonOwner, descriptor );
+                    if( descriptor.isWritable() ) {
+                        currentPath.enqueue( descriptor.getName() );
+                        Method setMethod = descriptor.getWriteMethod();
+                        if( setMethod != null ) {
+                            Type[] types = setMethod.getGenericParameterTypes();
+                            if( types.length == 1 ) {
+                                Type paramType = types[0];
+                                setMethod.invoke( objectStack.getLast(), bind( value, resolveParameterizedTypes( paramType, targetType ) ) );
+                            } else {
+                                throw new JSONException(currentPath + ":  Expected a single parameter for method " + target.getClass().getName() + "." + setMethod.getName() + " but got " + types.length );
+                            }
                         } else {
-                            throw new JSONException(currentPath + ":  Expected a single parameter for method " + target.getClass().getName() + "." + setMethod.getName() + " but got " + types.length );
+                            Field field = descriptor.getProperty();
+                            if( field != null ) {
+                                field.setAccessible( true );
+                                field.set( target, bind( value, field.getGenericType() ) );
+                            }
                         }
-                    } else {
-                        Field field = descriptor.getProperty();
-                        if( field != null ) {
-                            field.setAccessible( true );
-                            field.set( target, bind( value, field.getGenericType() ) );
-                        }
+                        currentPath.pop();
                     }
-                    currentPath.pop();
                 }
             }
             return objectStack.removeLast();
@@ -294,6 +296,10 @@ public class ObjectBinder {
         }
     }
 
+    private boolean containsFieldInJson( Map map, BeanProperty property ) {
+        return map.containsKey( property.getJsonName() ) || map.containsKey( upperCase(property.getJsonName()) );
+    }
+
     private Object findFieldInJson( Map map, BeanProperty property ) {
         Object value = map.get( property.getJsonName() );
         if( value == null ) {
@@ -319,25 +325,26 @@ public class ObjectBinder {
     public Object bindPrimitive(Object value, Class clazz) {
         if( value.getClass() == clazz ) {
             return value;
-        } else if( value instanceof Number && clazz.equals(Double.class) ) {
-            return ((Number)value).doubleValue();
-        } else if( value instanceof Number && clazz.equals(Integer.class) ) {
-            return ((Number)value).intValue();
-        } else if( value instanceof Number && clazz.equals(Long.class) ) {
-            return ((Number)value).longValue();
-        } else if( value instanceof Number && clazz.equals(Short.class) ) {
-            return ((Number)value).shortValue();
-        } else if( value instanceof Number && clazz.equals(Byte.class) ) {
-            return ((Number)value).byteValue();
-        } else if( value instanceof Number && clazz.equals(Float.class) ) {
-            return ((Number)value).floatValue();
+        } else if( value instanceof Number ) {
+            if( clazz.equals(Double.class) ) {
+                return ((Number)value).doubleValue();
+            } else if( clazz.equals(Integer.class) ) {
+                return ((Number)value).intValue();
+            } else if( clazz.equals(Long.class) ) {
+                return ((Number)value).longValue();
+            } else if( clazz.equals(Short.class) ) {
+                return ((Number)value).shortValue();
+            } else if( clazz.equals(Byte.class) ) {
+                return ((Number)value).byteValue();
+            } else if( clazz.equals(Float.class) ) {
+                return ((Number)value).floatValue();
+            } else if( clazz == Date.class ) {
+                return new Date( ((Number) value).longValue() );
+            }
         } else if( value instanceof Boolean && clazz.equals(Boolean.class) ) {
             return value;
-        } else if( value instanceof Number && clazz == Date.class ) {
-            return new Date( ((Number) value).longValue() );
-        } else {
-            throw new JSONException(String.format("%s: Don't know how to bind %s into class %s.  You might need to use an ObjectFactory instead of a plain class.", getCurrentPath().toString(), value, clazz.getName()) );
         }
+        throw new JSONException(String.format("%s: Don't know how to bind %s into class %s.  You might need to use an ObjectFactory instead of a plain class.", getCurrentPath().toString(), value, clazz.getName()) );
     }
 
     public Class findClassAtPath(Path currentPath) throws ClassNotFoundException {

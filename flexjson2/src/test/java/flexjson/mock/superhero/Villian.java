@@ -24,15 +24,31 @@ public class Villian {
         return name;
     }
 
+    private void setName(String name) {
+        this.name = name;
+    }
+
     public Hero getNemesis() {
         return nemesis;
+    }
+
+    protected void setNemesis(Hero nemesis) {
+        this.nemesis = nemesis;
     }
 
     public SecretLair getLair() {
         return lair;
     }
 
+    protected void setLair(SecretLair lair) {
+        this.lair = lair;
+    }
+
     public List<SuperPower> getPowers() {
         return powers;
+    }
+
+    protected void setPowers(List<SuperPower> powers) {
+        this.powers = powers;
     }
 }

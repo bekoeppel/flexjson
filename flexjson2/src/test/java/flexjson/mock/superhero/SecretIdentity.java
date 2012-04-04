@@ -15,6 +15,10 @@ public class SecretIdentity {
         return name;
     }
 
+    private void setName(String name) {
+        this.name = name;
+    }
+
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
