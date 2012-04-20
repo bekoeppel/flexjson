@@ -219,14 +219,14 @@
                 "name": "Warren Buffet",
                 "birthday": -1241467200000,
                 "nickname": "Oracle of Omaha",
-                "phonNumbers" : [ ... ],
+                "phoneNumbers" : [ ... ],
             },
             {
                 "class": "Person",
                 "name": "Steven Jobs",
                 "birthday": -468702000000,
                 "nickname": "Steve",
-                "phonNumbers" : [ ... ],
+                "phoneNumbers" : [ ... ],
             }
         ]
     }
@@ -1225,7 +1225,7 @@
     </p>
 
     <blockquote class="java">
-        MyObject obj = new JSONDeserializer&gt;MyObject&gt;().deserialize( request.getReader() );
+        MyObject obj = new JSONDeserializer&lt;MyObject&gt;().deserialize( request.getReader() );
     </blockquote>
 
     <h3>Deserializing into an Existing Object and Merging</h3>

@@ -12,14 +12,14 @@
 </head>
 <body>
     <h1>Flexjson Change Log</h1>
-    <h2>Version 2.2</h2>
+    <h2>Version 3.0</h2>
     <h3>April 7, 2012</h3>
     <ul>
         <li>Enhancements</li>
         <ul>
             <li>
                 <p>
-                    Allow @JSON annotation on fields .
+                    Allow @JSON annotation on fields.
                 </p>
             </li>
             <li>
@@ -48,6 +48,9 @@
                     can have an impact on custom ObjectFactories so be aware if you have written custom ObjectFactories.
                     Treat all expect numeric values as java.lang.Number and you shouldn't have any problems.
                 </p>
+            </li>
+            <li>
+                <p>java.util.Calendar was not recognized as a default serialized type, and would throw exceptions.</p>
             </li>
         </ul>
     </ul>
