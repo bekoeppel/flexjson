@@ -189,13 +189,21 @@ public class JSONSerializer {
 
     public final static char[] HEX = "0123456789ABCDEF".toCharArray();
 
-    private TypeTransformerMap typeTransformerMap = new TypeTransformerMap(TransformerUtil.getDefaultTypeTransformers());
+    private TypeTransformerMap typeTransformerMap;
     private Map<Path, Transformer> pathTransformerMap = new HashMap<Path, Transformer>();
 
     private List<PathExpression> pathExpressions = new ArrayList<PathExpression>();
 
     private boolean prettyPrint;
     private String rootName;
+
+    public JSONSerializer() {
+        this.typeTransformerMap = new TypeTransformerMap(TransformerUtil.getDefaultTypeTransformers());
+    }
+
+    public JSONSerializer(TypeTransformerMap parentTypeTransformerMap) {
+        this.typeTransformerMap = new TypeTransformerMap(parentTypeTransformerMap);
+    }
 
     // OutputHander Configuration
 
@@ -429,7 +437,7 @@ public class JSONSerializer {
         transformer = new TransformerWrapper(transformer);
         
         for (Class type : types) {
-            typeTransformerMap.put(type, transformer);
+            typeTransformerMap.putTransformer(type, transformer);
         }
 
         return this;
