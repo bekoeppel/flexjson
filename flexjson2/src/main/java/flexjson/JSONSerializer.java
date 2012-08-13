@@ -201,8 +201,8 @@ public class JSONSerializer {
         this.typeTransformerMap = new TypeTransformerMap(TransformerUtil.getDefaultTypeTransformers());
     }
 
-    public JSONSerializer(TypeTransformerMap parentTypeTransformerMap) {
-        this.typeTransformerMap = new TypeTransformerMap(parentTypeTransformerMap);
+    public JSONSerializer(TypeTransformerMap defaultTypeTransformers) {
+        this.typeTransformerMap = new TypeTransformerMap(defaultTypeTransformers);
     }
 
     // OutputHander Configuration
