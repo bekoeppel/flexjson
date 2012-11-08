@@ -113,6 +113,28 @@ public class JsonSerializationAndDeserializationTest extends TestCase {
         assertFalse("Assert it deserialized no into false", spiderman.spideySense);
     }
 
+    @Test
+    public void testSimpleMapDeserialization() {
+        MapNoTyping demo = new MapNoTyping();
+        demo.getData().put("key1", "value1");
+        demo.getData().put("key2", "value2");
+        demo.getData().put("key3", new TestClass3("charlie", "tatters", false) );
+
+        JSONSerializer jsonSerializer = new JSONSerializer();
+
+        String json = jsonSerializer.deepSerialize( demo );
+        JSONDeserializer<MapNoTyping> jsonDeserializer = new JSONDeserializer<MapNoTyping>();
+        MapNoTyping result = jsonDeserializer.deserialize( json );
+
+        assertTrue( result.getData().containsKey("key1") );
+        assertTrue(result.getData().containsKey("key2"));
+        assertTrue(result.getData().containsKey("key3"));
+
+        assertEquals( "value1", result.getData().get("key1") );
+        assertEquals("value2", result.getData().get("key2"));
+        assertEquals( demo.getData().get("key3"), result.getData().get("key3") );
+    }
+
 	private TestClass createTestObject() {
 		TestClass testObject = new TestClass();
 		testObject.setTestList(createSingleTestClass2List());

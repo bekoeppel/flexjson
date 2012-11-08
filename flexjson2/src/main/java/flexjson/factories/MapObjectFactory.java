@@ -13,7 +13,11 @@ public class MapObjectFactory implements ObjectFactory {
         if( targetType != null ) {
             if( targetType instanceof ParameterizedType ) {
                 ParameterizedType ptype = (ParameterizedType) targetType;
-                return context.bindIntoMap( (Map)value, new HashMap<Object,Object>(), ptype.getActualTypeArguments()[0], ptype.getActualTypeArguments()[1] );
+                Type keyType = ptype.getActualTypeArguments()[0];
+                Type valueType = ptype.getActualTypeArguments()[1];
+                return context.bindIntoMap( (Map)value, new HashMap<Object,Object>(),
+                        keyType == Object.class ? null : keyType,
+                        valueType == Object.class ? null : valueType );
             }
         }
         return context.bindIntoMap( (Map)value, new HashMap<Object,Object>(), null, null );
