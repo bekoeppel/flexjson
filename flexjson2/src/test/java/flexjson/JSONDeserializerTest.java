@@ -2,15 +2,12 @@ package flexjson;
 
 import flexjson.factories.DateObjectFactory;
 import flexjson.model.Account;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.framework.Test;
-import junit.textui.TestRunner;
 import flexjson.transformer.DateTransformer;
 import flexjson.transformer.Transformer;
 import flexjson.mock.Person;
 import flexjson.mock.*;
 import flexjson.mock.superhero.*;
+import org.junit.Test;
 
 import java.awt.geom.Point2D;
 import java.util.*;
@@ -18,8 +15,13 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.lang.reflect.Array;
 
-public class JSONDeserializerTest extends TestCase {
+import static org.junit.Assert.*;
 
+public class JSONDeserializerTest {
+
+    private static final double DELTA = 0.000000001;
+
+    @Test
     public void testDeserializeNoIncludes() {
         Person charlie = new FixtureCreator().createCharlie();
         String json = new JSONSerializer().serialize(charlie);
@@ -36,6 +38,7 @@ public class JSONDeserializerTest extends TestCase {
         assertEquals(jsonCharlie, jsonCharlie.getWork().getPerson());
     }
 
+    @Test
     public void testDeserializeWithPath() {
         Person charlie = new FixtureCreator().createCharlie();
         String json = new JSONSerializer().rootName("person").serialize(charlie);
@@ -52,6 +55,7 @@ public class JSONDeserializerTest extends TestCase {
         assertEquals(jsonCharlie, jsonCharlie.getWork().getPerson());
     }
 
+    @Test
     public void testDeserializeWithIncludes() {
         Person charlie = new FixtureCreator().createCharlie();
         String json = new JSONSerializer().include("phones", "hobbies").serialize(charlie);
@@ -65,6 +69,7 @@ public class JSONDeserializerTest extends TestCase {
         assertEquals("Fixing Horse Races", jsonCharlie.getHobbies().get(1));
     }
 
+    @Test
     public void testSubClassDeserialize() {
         Employee dilbert = new FixtureCreator().createDilbert();
         String json = new JSONSerializer().include("phones", "hobbies").serialize(dilbert);
@@ -74,6 +79,7 @@ public class JSONDeserializerTest extends TestCase {
         assertEquals("Make sure dilbert has a company.", dilbert.getCompany(), ((Employee) jsonDilbert).getCompany());
     }
 
+    @Test
     public void testDeserializeInterfaces() {
         Hero superman = new FixtureCreator().createSuperman();
         String json = new JSONSerializer().include("powers").serialize(superman);
@@ -84,6 +90,7 @@ public class JSONDeserializerTest extends TestCase {
         assertHeroHasPowers(jsonSuperMan);
     }
 
+    @Test
     public void testNoClassHints() {
         Hero superman = new FixtureCreator().createSuperman();
         String json = new JSONSerializer().exclude("*.class").serialize(superman);
@@ -97,6 +104,7 @@ public class JSONDeserializerTest extends TestCase {
         assertEquals("Assert our lair is the fortress of solitude", "Fortress of Solitude", jsonSuperMan.getLair().getName());
     }
 
+    @Test
     public void testNoHintsButClassesForCollection() {
         Hero superman = new FixtureCreator().createSuperman();
         String json = new JSONSerializer().include("powers.class").exclude("*.class").serialize(superman);
@@ -111,6 +119,7 @@ public class JSONDeserializerTest extends TestCase {
         }
     }
 
+    @Test
     public void testNoClassHintsForCollections() {
         Hero superman = new FixtureCreator().createSuperman();
         String json = new JSONSerializer()
@@ -126,6 +135,7 @@ public class JSONDeserializerTest extends TestCase {
         assertHeroHasPowers(jsonSuperMan);
     }
 
+    @Test
     public void testListSerialization() {
         FixtureCreator fixtures = new FixtureCreator();
         Person ben = fixtures.createBen();
@@ -154,6 +164,7 @@ public class JSONDeserializerTest extends TestCase {
         assertEquals(HashMap.class, peopleMap.get(0).getClass());
     }
 
+    @Test
     public void testGenericTypeDeserialization() {
         FixtureCreator fixtures = new FixtureCreator();
         Pair<Hero, Villian> archenemies = new Pair<Hero, Villian>(fixtures.createSuperman(), fixtures.createLexLuthor());
@@ -175,6 +186,7 @@ public class JSONDeserializerTest extends TestCase {
 
     }
 
+    @Test
     public void testGeneralMapDeserialization() {
         FixtureCreator fixtures = new FixtureCreator();
         String json = new JSONSerializer().exclude("*.class").serialize(fixtures.createCharlie());
@@ -186,6 +198,7 @@ public class JSONDeserializerTest extends TestCase {
         assertTrue(Map.class.isAssignableFrom(deserialized.get("home").getClass()));
     }
 
+    @Test
     public void testListDeserializationNoClass() {
         FixtureCreator fixtures = new FixtureCreator();
         Person ben = fixtures.createBen();
@@ -205,6 +218,7 @@ public class JSONDeserializerTest extends TestCase {
         assertEquals(pedro.getFirstname(), list.get(2).getFirstname());
     }
 
+    @Test
     public void testMixedCase() {
         String json = "{\"Birthdate\":196261875187,\"Firstname\":\"Charlie\",\"Home\":{\"City\":\"Atlanta\",\"State\":\"Ga\",\"Street\":\"4132 Pluto Drive\",\"Zipcode\":{\"zipcode\":\"33913\"}},\"lastname\":\"Hubbard\",\"Work\":{\"City\":\"Neptune\",\"State\":\"Milkiway\",\"Street\":\"44 Planetary St.\",\"Zipcode\":{\"Zipcode\":\"30328-0764\"}}}";
         Person charlie = new JSONDeserializer<Person>().use(null, Person.class).deserialize(json);
@@ -213,6 +227,7 @@ public class JSONDeserializerTest extends TestCase {
         assertEquals("Atlanta", charlie.getHome().getCity());
     }
 
+    @Test
     public void testDefaultDateFormats() throws ParseException {
         SimpleDateFormat df = new SimpleDateFormat("MM/dd/yy");
         Person charlie = new Person("Charlie", "Hubbard", new Date(), null, null);
@@ -241,6 +256,7 @@ public class JSONDeserializerTest extends TestCase {
         assertEquals( "03/21/76", df.format( user.getBirthdate() ) );
     }
 
+    @Test
     public void testDateTransforming() throws ParseException {
         SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd");
         Person charlie = new Person("Charlie", "Hubbard", new Date(), null, null);
@@ -258,6 +274,7 @@ public class JSONDeserializerTest extends TestCase {
         assertEquals( "2009/01/02", df.format(newUser.getBirthdate()) );
     }
 
+    @Test
     public void testMapWithEmbeddedObject() {
         Map<String,Network> networks = new JSONDeserializer<Map<String,Network>>().deserialize( "{\"1\": {\"class\":\"flexjson.mock.Network\", \"name\": \"Charlie\"} }" );
 
@@ -284,6 +301,7 @@ public class JSONDeserializerTest extends TestCase {
         assertEquals( "Charlie", complex.get( "1" ).getSecond().getName() );
     }
 
+    @Test
     public void testArrayType() {
         Person charlie = new FixtureCreator().createCharlie();
         Person ben = new FixtureCreator().createBen();
@@ -302,12 +320,14 @@ public class JSONDeserializerTest extends TestCase {
     /**
      * https://sourceforge.net/tracker/?func=detail&aid=3004001&group_id=194042&atid=947842
      */
+    @Test
     public void testEmptyArray() {
         Group group = new JSONDeserializer<Group>().deserialize("{'people': [], 'groupName': 'Nobody' }", Group.class );
         assertEquals( "Nobody", group.getGroupName() );
         assertEquals( 0, group.getPeople().length );
     }
 
+    @Test
     public void testDeserialization() {
       JSONDeserializer<Map<String, Object>> deserializer = new JSONDeserializer<Map<String, Object>>();
       String input = "{property: true, property2:5, property3:'abc'}";
@@ -317,6 +337,7 @@ public class JSONDeserializerTest extends TestCase {
     }
 
 
+    @Test
     public void testNullDeserialization() {
         String input = "{property: null, property2:5, property3:'abc'}";
 
@@ -331,6 +352,7 @@ public class JSONDeserializerTest extends TestCase {
         assertNull("the value should be null", result.get("property"));
     }
 
+    @Test
     public void testArrayAndClassLocatorsInsideMaps() {
         ClassLocator locator = new ClassLocator() {
             public Class locate(ObjectBinder context, Path currentPath) throws ClassNotFoundException {
@@ -356,6 +378,7 @@ public class JSONDeserializerTest extends TestCase {
         assertTrue( bound.get("foo4") instanceof LinkedList );
     }
 
+    @Test
     public void testArraysAndClassLocators() {
         ClassLocator locator = new ClassLocator() {
             public Class locate(ObjectBinder context, Path currentPath) throws ClassNotFoundException {
@@ -372,12 +395,13 @@ public class JSONDeserializerTest extends TestCase {
                 }
             }
         };
-        List<Map<String,Object>> list = new JSONDeserializer<List<Map<String,Object>>>().use("values", locator).deserialize( "[{'foo1': 'bar1', 'foo2': {'actLevStart': 1, 'actLevEnd': 2 }, 'foo3': {'someMapKey': 'someMapValue'}}]");
+        List<Map<String,Object>> list = new JSONDeserializer<List<Map<String,Object>>>().use("values", locator).deserialize("[{'foo1': 'bar1', 'foo2': {'actLevStart': 1, 'actLevEnd': 2 }, 'foo3': {'someMapKey': 'someMapValue'}}]");
 
         assertEquals( 1, list.size() );
         assertEquals( 3, list.get(0).size() );
     }
 
+    @Test
     public void testPrimitives() {
         List<Date> dates = new ArrayList<Date>();
         dates.add( new Date() );
@@ -396,7 +420,7 @@ public class JSONDeserializerTest extends TestCase {
 
         assertEquals( numbers.size(), jsonNumbers.size() );
         for( int i = 0; i < numbers.size(); i++ ) {
-            assertEquals( numbers.get(i).floatValue(), jsonNumbers.get(i).floatValue() );
+            assertEquals( numbers.get(i).floatValue(), jsonNumbers.get(i).floatValue(), DELTA );
         }
 
         List<Boolean> bools = Arrays.asList( true, false, true, false, false );
@@ -411,6 +435,7 @@ public class JSONDeserializerTest extends TestCase {
         assertEquals( numbers.size(), jsonNumbers.size() );
     }
 
+    @Test
     public void testArray() {
        Person[] p = new Person[3];
         FixtureCreator fixture = new FixtureCreator();
@@ -428,6 +453,7 @@ public class JSONDeserializerTest extends TestCase {
         assertEquals( "Ben", jsonP[2].getFirstname() );
     }
 
+    @Test
     public void testDeserializeIntoExistingObject() {
         FixtureCreator creator = new FixtureCreator();
         Person charlie = creator.createCharlie();
@@ -455,6 +481,7 @@ public class JSONDeserializerTest extends TestCase {
         assertSame( fakePhone, p.getPhones().get(0) );
     }
 
+    @Test
     public void testDeserializationIntoPublicFields() {
         Spiderman spiderman = new Spiderman();
         spiderman.spideySense = false;
@@ -470,17 +497,19 @@ public class JSONDeserializerTest extends TestCase {
     /**
      *  https://sourceforge.net/tracker/?func=detail&atid=947844&aid=3004785&group_id=194042
      */
+    @Test
     public void testAutoTypeConvertToNumerical() {
         Account account = new JSONDeserializer<Account>().deserialize("{'id': '5', 'accountNumber': '1234567-123'}", Account.class);
         assertEquals( new Integer(5), account.getId() );
 
         XRayVision xray = new JSONDeserializer<XRayVision>().deserialize("{ 'power': '2.3' }", XRayVision.class);
-        assertEquals( 2.3f, xray.getPower() );
+        assertEquals( 2.3f, xray.getPower(), DELTA);
     }
 
     /**
      * https://sourceforge.net/tracker/?func=detail&aid=2973789&group_id=194042&atid=947842
      */
+    @Test
     public void testDeserializeURL() {
         String json = "{\n" +
                 "  \"oslc_cm:next\": \"http:\\/\\/localhost:9080\\/results\\/3\",\n" +
@@ -506,13 +535,15 @@ public class JSONDeserializerTest extends TestCase {
     /**
      * https://sourceforge.net/tracker/?func=detail&aid=2968434&group_id=194042&atid=947842
      */
+    @Test
     public void testPoint() {
         String json = new JSONSerializer().serialize( new Point2D.Float(1.0f, 2.0f) );
         Point2D.Float point = new JSONDeserializer<Point2D.Float>().deserialize( json );
-        assertEquals( 1.0f, point.x );
-        assertEquals( 2.0f, point.y );
+        assertEquals( 1.0f, point.x, DELTA );
+        assertEquals( 2.0f, point.y, DELTA );
     }
 
+    @Test
     public void testUnixEpoch() {
         Calendar cal = Calendar.getInstance();
         cal.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -534,20 +565,6 @@ public class JSONDeserializerTest extends TestCase {
         assertEquals( hank.getFirstname(), deHank.getFirstname() );
         assertEquals( hank.getLastname(), deHank.getLastname() );
         assertEquals( hank.getBirthdate(), deHank.getBirthdate() );
-    }
-
-    public void setUp() {
-    }
-
-    public void tearDown() {
-    }
-
-    public static Test suite() {
-        return new TestSuite(JSONDeserializerTest.class);
-    }
-
-    public static void main(String[] args) {
-        TestRunner.run(suite());
     }
 
     public static class SimpleClassnameTransformer implements Transformer {

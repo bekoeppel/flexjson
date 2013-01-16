@@ -19,8 +19,8 @@ import flexjson.model.*;
 import flexjson.transformer.FlatDateTransformer;
 import flexjson.transformer.StateTransformer;
 import flexjson.transformer.StringArrayTransformer;
-import junit.framework.TestCase;
 
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,10 +29,13 @@ import java.io.Writer;
 import java.math.BigDecimal;
 import java.util.*;
 
-public class SimpleSerializeTest extends TestCase {
+import static org.junit.Assert.*;
+
+public class SimpleSerializeTest {
 
     final Logger logger = LoggerFactory.getLogger(SimpleSerializeTest.class);
 
+    @Test
     public void testDeepSerializePerson() {
         Person person = buildPerson1();
 
@@ -45,6 +48,7 @@ public class SimpleSerializeTest extends TestCase {
 
     }
 
+    @Test
     public void testSerializePerson() {
         Person person = buildPerson1();
 
@@ -57,6 +61,7 @@ public class SimpleSerializeTest extends TestCase {
 
     }
 
+    @Test
     public void testDeepSerializePersonWithRootName() {
         Person person = buildPerson1();
 
@@ -73,6 +78,7 @@ public class SimpleSerializeTest extends TestCase {
 
     }
 
+    @Test
     public void testDeepSerializePersonWithWriter() {
         Person person = buildPerson1();
 
@@ -94,6 +100,7 @@ public class SimpleSerializeTest extends TestCase {
 
     }
 
+    @Test
     public void testDeepSerializePersonWithWriterPretty() {
         Person person = buildPerson1();
 
@@ -114,6 +121,7 @@ public class SimpleSerializeTest extends TestCase {
 
     }
 
+    @Test
     public void testSerializeAddressList() {
         Person person = buildPerson1();
 
@@ -124,6 +132,7 @@ public class SimpleSerializeTest extends TestCase {
 
     }
 
+    @Test
     public void testSerializeAccountsMap() {
         Person person = buildPerson1();
 
@@ -134,6 +143,7 @@ public class SimpleSerializeTest extends TestCase {
         logger.info(string);
     }
 
+    @Test
     public void testInlineOnDate() {
         Date birthDate = buildPerson1().getBirthDate();
         JSONSerializer serializer = new JSONSerializer();
@@ -143,6 +153,7 @@ public class SimpleSerializeTest extends TestCase {
         assertEquals(json, "{\"month\":11,\"day\":13,\"year\":2007}");
     }
 
+    @Test
     public void testInlineOnPersonWithFlatDate() {
         Person person = buildPerson1();
         JSONSerializer serializer = new JSONSerializer();
@@ -154,6 +165,7 @@ public class SimpleSerializeTest extends TestCase {
         assertTrue(json.contains("\"birthDateMonth\":11,\"birthDateDay\":13,\"birthDateYear\":2007"));
     }
 
+    @Test
     public void testInlineOnCandidate() {
 
         Candidate candidate = buildCandidate1();
@@ -166,6 +178,7 @@ public class SimpleSerializeTest extends TestCase {
         
     }
 
+    @Test
     public void testInlineOnCandidateWithoutPrefix() {
 
         Candidate candidate = buildCandidate1();
@@ -178,6 +191,7 @@ public class SimpleSerializeTest extends TestCase {
 
     }
 
+    @Test
     public void testDeferOnExperience() {
 
         List<Experience> experienceList = new ArrayList<Experience>();
@@ -191,6 +205,7 @@ public class SimpleSerializeTest extends TestCase {
         logger.info(json);
     }
 
+    @Test
     public void testIgnoreOfListChildInMap() {
 
         Map someObject = new HashMap();
@@ -393,11 +408,13 @@ public class SimpleSerializeTest extends TestCase {
     /**
      * http://sourceforge.net/tracker/?func=detail&atid=947842&aid=3088061&group_id=194042
      */
+    @Test
     public void testSerializeWithWriter() {
         JSONSerializer serializer = new JSONSerializer();
         Writer w = new StringWriter();
         Person person = buildPerson1();
         person.setFirstName("x=\"0123456789\" x=\"0123456789\" x=\"0123456789\" x=\"0123456789\" x=\"0123456789\" x=\"0123456789\" x=\"0123456789\" x=\"0123456789\" x=\"0123456789\" x=\"0123456789\"x=\"0123456789\" x=\"0123456789\" x=\"0123456789\" x=\"0123456789\" x=\"0123456789\"x=\"0123456789\" x=\"0123456789\" x=\"0123456789\" x=\"0123456789\" x=\"0123456789\"x=\"0123456789\" x=\"0123456789\" x=\"0123456789\" x=\"0123456789\" x=\"0123456789\"");
         serializer.deepSerialize(person, w);
+        assertTrue(true);
     }
 }

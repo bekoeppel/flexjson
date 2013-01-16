@@ -9,11 +9,12 @@ import java.util.Map;
 import flexjson.factories.BooleanAsStringObjectFactory;
 import flexjson.mock.*;
 import flexjson.transformer.BooleanAsStringTransformer;
-import junit.framework.TestCase;
 
 import org.junit.Test;
 
-public class JsonSerializationAndDeserializationTest extends TestCase {
+import static org.junit.Assert.*;
+
+public class JsonSerializationAndDeserializationTest {
 
 	String expectedSerializedObjectString = "{\"name\":\"testName\",\"test_list\":[{\"mapOfJustice\":{\"String1\":{\"category\":null,\"found\":false,\"name\":null}}}]}";
 	
@@ -21,12 +22,14 @@ public class JsonSerializationAndDeserializationTest extends TestCase {
 	
     String expectedSerializedObjectFirstVisitedInCollectionString = "{\"name\":\"SubTask 1\",\"task\":{\"name\":\"Sample task with subTasks\",\"subTasks\":[{\"name\":\"SubTask 2\"}]}}";
 
+    @Test
 	public void testJsonNameAndIncludes() throws Exception {
 		TestClass testObject = createTestObject();
 		String serializedString = new JSONSerializer().include("testList.mapOfJustice").exclude("*.class").serialize(testObject);
 		assertEquals(expectedSerializedObjectString, serializedString);
 	}
-	
+
+    @Test
 	public void testCanDeserializeAnObjectIntoSomethingSensible() throws Exception {
 		TestClass expectedTestClass = createTestObject();
 		
@@ -38,6 +41,7 @@ public class JsonSerializationAndDeserializationTest extends TestCase {
 		assertEquals(expectedTestClass, deserializedTestClass);
 	}
 
+    @Test
     public void testUseandRootDeserialization() {
         String json = "{\"foo\":\"bar\", \"class\":\"java.lang.Integer\"}";
         Map<String,String> useMap = new JSONDeserializer<Map<String,String>>().use(null, HashMap.class).deserialize( json );
