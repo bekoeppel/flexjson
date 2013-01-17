@@ -8,7 +8,7 @@
   <groupId>net.sf.flexjson</groupId>
   <artifactId>flexjson</artifactId>
   <packaging>jar</packaging>
-  <version>3.0</version>
+  <version>3.1-SNAPSHOT</version>
   <name>flexjson</name>
   <url>http://flexjson.sourceforge.net/</url>
   <licenses>
@@ -32,9 +32,9 @@
     </developer>
   </developers>
   <scm>
-    <url>http://flexjson.svn.sourceforge.net/viewvc/flexjson/tags/flexjson-3.0</url>
-    <connection>scm:svn:https://flexjson.svn.sourceforge.net/svnroot/flexjson/tags/flexjson-3.0</connection>
-    <developerConnection>scm:svn:https://flexjson.svn.sourceforge.net/svnroot/flexjson/tags/flexjson-3.0</developerConnection>
+    <url>http://flexjson.svn.sourceforge.net/viewvc/flexjson/trunk/flexjson2/</url>
+    <connection>scm:svn:https://flexjson.svn.sourceforge.net/svnroot/flexjson/trunk/flexjson2</connection>
+    <developerConnection>scm:svn:https://flexjson.svn.sourceforge.net/svnroot/flexjson/trunk/flexjson2</developerConnection>
   </scm>
   <reporting>
     <plugins>
