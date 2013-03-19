@@ -101,7 +101,7 @@ public class BeanProperty {
             propertyType = method.getReturnType();
             readMethod = method;
             readMethod.setAccessible(true);
-        } else if (propertyType == method.getReturnType()) {
+        } else if (method.getReturnType().isAssignableFrom( propertyType )) {
             readMethod = method;
             readMethod.setAccessible(true);
         }
