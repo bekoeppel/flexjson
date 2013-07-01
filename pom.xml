@@ -39,8 +39,8 @@
 
     <scm>
         <url>https://svn.code.sf.net/p/flexjson/code/trunk</url>
-        <connection>scm:svn:svn://svn.code.sf.net/p/flexjson/code/trunk/</connection>
-        <developerConnection>scm:svn:svn+ssh://svn.code.sf.net/p/flexjson/code/trunk/</developerConnection>
+        <connection>scm:svn:https://svn.code.sf.net/p/flexjson/code/trunk</connection>
+        <developerConnection>scm:svn:https://svn.code.sf.net/p/flexjson/code/trunk</developerConnection>
     </scm>
     <reporting>
         <plugins>
