@@ -40,8 +40,7 @@
     <scm>
         <url>svn+ssh://svn.code.sf.net/p/flexjson/code/</url>
         <connection>scm:svn:ssh://svn.code.sf.net/p/flexjson/code/trunk/</connection>
-        <developerConnection>scm:svn:ssh://svn.code.sf.net/p/flexjson/code/trunk/
-        </developerConnection>
+        <developerConnection>scm:svn:ssh://svn.code.sf.net/p/flexjson/code/trunk/</developerConnection>
     </scm>
     <reporting>
         <plugins>
