@@ -63,7 +63,7 @@ public class JSONContext {
      */
     public void transform(Object object) {
 
-        Transformer transformer = getPathTransformer(object);
+        Transformer transformer = getPathTransformer();
 
         if (transformer == null) {
             transformer = getTypeTransformer(object);
@@ -81,7 +81,7 @@ public class JSONContext {
      */
     public Transformer getTransformer(Object object) {
 
-        Transformer transformer = getPathTransformer(object);
+        Transformer transformer = getPathTransformer();
 
         if (transformer == null) {
             transformer = getTypeTransformer(object);
@@ -91,8 +91,7 @@ public class JSONContext {
 
     }
 
-    private Transformer getPathTransformer(Object object) {
-        if (null == object) return getTypeTransformer(object);
+    private Transformer getPathTransformer() {
         return pathTransformerMap.get(path);
     }
 

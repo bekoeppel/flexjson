@@ -16,6 +16,7 @@
 package flexjson;
 
 import flexjson.mock.*;
+import flexjson.transformer.AbstractTransformer;
 import flexjson.transformer.DateTransformer;
 import flexjson.transformer.HtmlEncoderTransformer;
 import flexjson.model.ListContainer;
@@ -170,6 +171,59 @@ public class JSONSerializerTest {
         assertTrue( "Assert null is present as a value", json.contains( ":null" ) );
     }
 
+	@Test
+	public void should_give_different_null_value_for_specific_propery() {
+		JSONSerializer serializer = new JSONSerializer().exclude("*.class").exclude("toString").exclude("hashCode");
+		serializer.transform(new AbstractTransformer() {
+			public void transform(Object data) {
+				boolean setContext = false;
+				TypeContext typeContext = getContext().peekTypeContext();
+				String propertyName = typeContext != null ? typeContext.getPropertyName() : "";
+
+				if (typeContext == null || typeContext.getBasicType() != BasicType.OBJECT) {
+					typeContext = getContext().writeOpenObject();
+					setContext = true;
+				}
+
+				try {
+					if (!typeContext.isFirst()) {
+						getContext().writeComma();
+					}
+					getContext().writeName(propertyName);
+
+					getContext().writeOpenObject();
+
+					getContext().writeName("value");
+					getContext().write((data == null) ? null : data.toString());
+
+					getContext().writeComma();
+					getContext().writeName("displayStr");
+					getContext().writeQuoted(data == null ? "No Data" : data +  "&deg;F");
+
+					getContext().writeCloseObject();
+
+				} catch (Throwable e) {
+					System.out.println("Failed to transform parameter: " + propertyName + ", value --> " + data + " --> " + e);
+				} finally {
+					if (setContext) {
+						getContext().writeCloseObject();
+					}
+				}
+			}
+
+			@Override
+			public Boolean isInline() {
+				return Boolean.TRUE;
+			}
+		}, "lastname");
+
+		FixtureCreator fixtureCreator = new FixtureCreator();
+		Person lCharlie = fixtureCreator.createCharlie();
+		lCharlie.setLastname(null);
+		String json = serializer.deepSerialize(lCharlie);
+		System.out.println(json);
+	}
+
     @Test
     public void testArray() {
         int[] array = new int[30];
@@ -209,19 +263,19 @@ public class JSONSerializerTest {
         assertSerializedTo("Hello 'Charlie'", "\"Hello 'Charlie'\"");
         assertSerializedTo("Hello \"Charlie\"", "\"Hello \\\"Charlie\\\"\"");
         assertSerializedTo(
-                "¥ Shadowing the senior pastor as he performed weekly duties including sermon\n" +
+                "ï¿½ Shadowing the senior pastor as he performed weekly duties including sermon\n" +
                 "preparation, wedding, funerals, and other activities.\n" +
-                "¥ Teaching Junior High School Sunday School.\n" +
-                "¥ Participating in session meetings, worship planning meetings, and staff meetings.\n" +
-                "¥ Assisting in research for sermon preparation.\n" +
-                "¥ Speaking occasionally in church including scripture reading and giving the\n" +
+                "ï¿½ Teaching Junior High School Sunday School.\n" +
+                "ï¿½ Participating in session meetings, worship planning meetings, and staff meetings.\n" +
+                "ï¿½ Assisting in research for sermon preparation.\n" +
+                "ï¿½ Speaking occasionally in church including scripture reading and giving the\n" +
                 "announcements.",
-                "\"¥ Shadowing the senior pastor as he performed weekly duties including sermon\\n" +
+                "\"ï¿½ Shadowing the senior pastor as he performed weekly duties including sermon\\n" +
                 "preparation, wedding, funerals, and other activities.\\n" +
-                "¥ Teaching Junior High School Sunday School.\\n" +
-                "¥ Participating in session meetings, worship planning meetings, and staff meetings.\\n" +
-                "¥ Assisting in research for sermon preparation.\\n" +
-                "¥ Speaking occasionally in church including scripture reading and giving the\\n" +
+                "ï¿½ Teaching Junior High School Sunday School.\\n" +
+                "ï¿½ Participating in session meetings, worship planning meetings, and staff meetings.\\n" +
+                "ï¿½ Assisting in research for sermon preparation.\\n" +
+                "ï¿½ Speaking occasionally in church including scripture reading and giving the\\n" +
                 "announcements.\"");
     }
 
