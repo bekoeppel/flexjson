@@ -641,7 +641,6 @@
             TypeContext typeContext = getContext().writeOpenArray();
             for (Object item : iterable) {
                 if (!typeContext.isFirst()) getContext().writeComma();
-                typeContext.setFirst(false);
                 getContext().transform(item);
             }
             getContext().writeCloseArray();
@@ -804,7 +803,6 @@
     c.setTime(date);
 
     if (!typeContext.isFirst()) getContext().writeComma();
-    typeContext.setFirst(false);
     getContext().writeName(fieldName("Month"));
     getContext().transform(c.get(Calendar.MONTH));
 
@@ -818,9 +816,8 @@
     </blockquote>
     <p>
     	 All of this is fairly self explanatory. But, I'll draw special attention to the use of typeContext.isFirst(). This is used to check if the currently
-        generating property is the first one to be created for this JSON object. If it is then we avoid writing the comma and then immediately set the
-        typeContext.setFirst(false) so that all subsequent property creation for this JSON object prefixes a comma. If we did not perform the isFirst check we
-        could easily wind up with JSON that looks like this:
+        generating property is the first one to be created for this JSON object. If it is then we avoid writing the comma. If we did not perform the isFirst
+        check we would wind up with JSON that looks like this:
     </p>
     <blockquote class="java">
     {,"month":11,"day":13,"year":2007}
@@ -864,7 +861,6 @@
             c.setTime(date);
 
             if (!typeContext.isFirst()) getContext().writeComma();
-            typeContext.setFirst(false);
             getContext().writeName(fieldName("Month"));
             getContext().transform(c.get(Calendar.MONTH));
 
