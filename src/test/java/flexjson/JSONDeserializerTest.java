@@ -1,12 +1,14 @@
 package flexjson;
 
 import flexjson.factories.DateObjectFactory;
+import flexjson.factories.ExistingObjectFactory;
 import flexjson.model.Account;
 import flexjson.transformer.DateTransformer;
 import flexjson.transformer.Transformer;
 import flexjson.mock.Person;
 import flexjson.mock.*;
 import flexjson.mock.superhero.*;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.awt.geom.Point2D;
@@ -21,9 +23,16 @@ public class JSONDeserializerTest {
 
     private static final double DELTA = 0.000000001;
 
+    private FixtureCreator creator;
+
+    @Before
+    public void setUp() {
+        creator = new FixtureCreator();
+    }
+
     @Test
     public void testDeserializeNoIncludes() {
-        Person charlie = new FixtureCreator().createCharlie();
+        Person charlie = creator.createCharlie();
         String json = new JSONSerializer().serialize(charlie);
         Person jsonCharlie = new JSONDeserializer<Person>().deserialize(json);
         assertNotNull("Make sure we deserialized something non-null", jsonCharlie);
@@ -40,7 +49,7 @@ public class JSONDeserializerTest {
 
     @Test
     public void testDeserializeWithPath() {
-        Person charlie = new FixtureCreator().createCharlie();
+        Person charlie = creator.createCharlie();
         String json = new JSONSerializer().rootName("person").serialize(charlie);
         Person jsonCharlie = new JSONDeserializer<Person>().deserialize(json, "person", Person.class );
         assertNotNull("Make sure we deserialized something non-null", jsonCharlie);
@@ -57,7 +66,7 @@ public class JSONDeserializerTest {
 
     @Test
     public void testDeserializeWithIncludes() {
-        Person charlie = new FixtureCreator().createCharlie();
+        Person charlie = creator.createCharlie();
         String json = new JSONSerializer().include("phones", "hobbies").serialize(charlie);
         Person jsonCharlie = new JSONDeserializer<Person>().deserialize(json);
         assertNotNull("Make sure we deserialized something non-null", jsonCharlie);
@@ -71,7 +80,7 @@ public class JSONDeserializerTest {
 
     @Test
     public void testSubClassDeserialize() {
-        Employee dilbert = new FixtureCreator().createDilbert();
+        Employee dilbert = creator.createDilbert();
         String json = new JSONSerializer().include("phones", "hobbies").serialize(dilbert);
         Person jsonDilbert = new JSONDeserializer<Person>().deserialize(json);
         assertNotNull("Make sure we got back dilbert.", jsonDilbert);
@@ -81,7 +90,7 @@ public class JSONDeserializerTest {
 
     @Test
     public void testDeserializeInterfaces() {
-        Hero superman = new FixtureCreator().createSuperman();
+        Hero superman = creator.createSuperman();
         String json = new JSONSerializer().include("powers").serialize(superman);
         Hero jsonSuperMan = new JSONDeserializer<Hero>().deserialize(json);
         assertNotNull("Make sure we got back a superman", jsonSuperMan);
@@ -92,7 +101,7 @@ public class JSONDeserializerTest {
 
     @Test
     public void testNoClassHints() {
-        Hero superman = new FixtureCreator().createSuperman();
+        Hero superman = creator.createSuperman();
         String json = new JSONSerializer().exclude("*.class").serialize(superman);
         Hero jsonSuperMan = new JSONDeserializer<Hero>().use(null, Hero.class).use("lair", SecretLair.class).use("secretIdentity", SecretIdentity.class).deserialize(json);
 
@@ -106,7 +115,7 @@ public class JSONDeserializerTest {
 
     @Test
     public void testNoHintsButClassesForCollection() {
-        Hero superman = new FixtureCreator().createSuperman();
+        Hero superman = creator.createSuperman();
         String json = new JSONSerializer().include("powers.class").exclude("*.class").serialize(superman);
         Hero jsonSuperMan = new JSONDeserializer<Hero>()
                 .deserialize(json, Hero.class);
@@ -121,7 +130,7 @@ public class JSONDeserializerTest {
 
     @Test
     public void testNoClassHintsForCollections() {
-        Hero superman = new FixtureCreator().createSuperman();
+        Hero superman = creator.createSuperman();
         String json = new JSONSerializer()
                 .include("powers")
                 .include("powers.class")
@@ -137,10 +146,9 @@ public class JSONDeserializerTest {
 
     @Test
     public void testListSerialization() {
-        FixtureCreator fixtures = new FixtureCreator();
-        Person ben = fixtures.createBen();
-        Person charlie = fixtures.createCharlie();
-        Person pedro = fixtures.createPedro();
+        Person ben = creator.createBen();
+        Person charlie = creator.createCharlie();
+        Person pedro = creator.createPedro();
         List<Person> list = new ArrayList<Person>(3);
         list.add(ben);
         list.add(charlie);
@@ -166,8 +174,7 @@ public class JSONDeserializerTest {
 
     @Test
     public void testGenericTypeDeserialization() {
-        FixtureCreator fixtures = new FixtureCreator();
-        Pair<Hero, Villian> archenemies = new Pair<Hero, Villian>(fixtures.createSuperman(), fixtures.createLexLuthor());
+        Pair<Hero, Villian> archenemies = new Pair<Hero, Villian>(creator.createSuperman(), creator.createLexLuthor());
         String json = new JSONSerializer().exclude("*.class").serialize(archenemies);
         Pair<Hero, Villian> deserialArchEnemies = new JSONDeserializer<Pair<Hero, Villian>>()
                 .use("first", Hero.class)
@@ -188,8 +195,7 @@ public class JSONDeserializerTest {
 
     @Test
     public void testGeneralMapDeserialization() {
-        FixtureCreator fixtures = new FixtureCreator();
-        String json = new JSONSerializer().exclude("*.class").serialize(fixtures.createCharlie());
+        String json = new JSONSerializer().exclude("*.class").serialize(creator.createCharlie());
         Map<String, Object> deserialized = new JSONDeserializer<Map<String, Object>>().deserialize(json);
 
         assertEquals("Charlie", deserialized.get("firstname"));
@@ -200,10 +206,9 @@ public class JSONDeserializerTest {
 
     @Test
     public void testListDeserializationNoClass() {
-        FixtureCreator fixtures = new FixtureCreator();
-        Person ben = fixtures.createBen();
-        Person charlie = fixtures.createCharlie();
-        Person pedro = fixtures.createPedro();
+        Person ben = creator.createBen();
+        Person charlie = creator.createCharlie();
+        Person pedro = creator.createPedro();
         List<Person> list = new ArrayList<Person>(3);
         list.add(ben);
         list.add(charlie);
@@ -303,8 +308,8 @@ public class JSONDeserializerTest {
 
     @Test
     public void testArrayType() {
-        Person charlie = new FixtureCreator().createCharlie();
-        Person ben = new FixtureCreator().createBen();
+        Person charlie = creator.createCharlie();
+        Person ben = creator.createBen();
 
         Group group = new Group( "brothers", charlie, ben );
         String json = new JSONSerializer().include("people").exclude("*.class").serialize( group );
@@ -438,10 +443,9 @@ public class JSONDeserializerTest {
     @Test
     public void testArray() {
        Person[] p = new Person[3];
-        FixtureCreator fixture = new FixtureCreator();
-        p[0] = fixture.createCharlie();
-        p[1] = fixture.createDilbert();
-        p[2] = fixture.createBen();
+        p[0] = creator.createCharlie();
+        p[1] = creator.createDilbert();
+        p[2] = creator.createBen();
 
         String json = new JSONSerializer().serialize( p );
 
@@ -455,7 +459,6 @@ public class JSONDeserializerTest {
 
     @Test
     public void testDeserializeIntoExistingObject() {
-        FixtureCreator creator = new FixtureCreator();
         Person charlie = creator.createCharlie();
         Phone fakePhone = new Phone( PhoneNumberType.MOBILE, "303 555 1234");
 
@@ -479,6 +482,34 @@ public class JSONDeserializerTest {
         assertEquals( 1, p.getPhones().size() );
         assertEquals( 2, charlie.getPhones().size() );
         assertSame( fakePhone, p.getPhones().get(0) );
+    }
+
+    @Test
+    public void deserializeIntoExistingCollection() {
+        List<Person> people = new ArrayList<Person>();
+        people.add( creator.createCharlie() );
+        people.add( creator.createBen() );
+
+        String json = new JSONSerializer().include("hobbies").serialize(people);
+        List<Person> people2 = new JSONDeserializer<List<Person>>().deserializeInto(json, new LinkedList<Person>());
+
+        assertEquals( people2.getClass(), LinkedList.class );
+        assertEquals( people2.size(), people.size() );
+    }
+
+    @Test
+    public void deserializeIntoExistingMap() {
+        Map<String,Person> people = new HashMap<String, Person>();
+        people.put("Florida", creator.createCharlie());
+        people.put("Alabama", creator.createBen());
+
+        String json = new JSONSerializer().include("*.hobbies").serialize( people );
+        Map<String,Person> people2 = new JSONDeserializer<Map<String,Person>>().deserializeInto( json, new TreeMap<String,Person>() );
+
+        assertEquals( TreeMap.class, people2.getClass() );
+        assertEquals( people.size(), people2.size() );
+        assertEquals( 3, people2.get("Florida").getHobbies().size() );
+        assertEquals( 3, people2.get("Alabama").getHobbies().size() );
     }
 
     @Test

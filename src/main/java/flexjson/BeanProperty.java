@@ -115,14 +115,20 @@ public class BeanProperty {
         return included;
     }
 
-    public Object getValue(Object instance) throws InvocationTargetException, IllegalAccessException {
-        Method rm = getReadMethod();
-        if (rm != null ) {
-            return rm.invoke(instance, (Object[]) null);
-        } else if (property != null) {
-            return property.get(instance);
-        } else {
-            return null;
+    public Object getValue(Object instance) {
+        try {
+            Method rm = getReadMethod();
+            if (rm != null ) {
+                return rm.invoke(instance, (Object[]) null);
+            } else if (property != null) {
+                return property.get(instance);
+            } else {
+                return null;
+            }
+        } catch (InvocationTargetException e) {
+            throw new JSONException("Error while reading property " + propertyType.getName() + "." + name, e);
+        } catch (IllegalAccessException e) {
+            throw new JSONException("Error while reading property " + propertyType.getName() + "." + name, e);
         }
     }
 
