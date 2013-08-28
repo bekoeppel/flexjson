@@ -308,7 +308,15 @@ public class JSONContext {
         for( int i = 0; i < len; i++ ) {
             char c = value.charAt(i);
             if (c == '"') {
-                last = out.write(value, last, i, "\\\"");
+                last = out.write(value, last, i, "\\u0022");
+            } else if (c == '&') {
+                last = out.write(value, last, i, "\\u0026");
+            } else if (c == '\'') {
+                last = out.write(value, last, i, "\\u0027");
+            } else if (c == '<') {
+                last = out.write(value, last, i, "\\u003c");
+            } else if (c == '>') {
+                last = out.write(value, last, i, "\\u003e");
             } else if (c == '\\') {
                 last = out.write(value, last, i, "\\\\");
             } else if (c == '\b') {

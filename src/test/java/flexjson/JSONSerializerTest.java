@@ -260,8 +260,9 @@ public class JSONSerializerTest {
         assertSerializedTo("Hello", "\"Hello\"");
         assertSerializedTo("Hello World", "\"Hello World\"");
         assertSerializedTo("Hello\nWorld", "\"Hello\\nWorld\"");
-        assertSerializedTo("Hello 'Charlie'", "\"Hello 'Charlie'\"");
-        assertSerializedTo("Hello \"Charlie\"", "\"Hello \\\"Charlie\\\"\"");
+        assertSerializedTo("Hello 'Charlie'", "\"Hello \\u0027Charlie\\u0027\"");
+        assertSerializedTo("Hello \"Charlie\"", "\"Hello \\u0022Charlie\\u0022\"");
+        assertSerializedTo("</script>", "\"\\u003c/script\\u003e\"");
         assertSerializedTo(
                 "� Shadowing the senior pastor as he performed weekly duties including sermon\n" +
                 "preparation, wedding, funerals, and other activities.\n" +
@@ -277,6 +278,9 @@ public class JSONSerializerTest {
                 "� Assisting in research for sermon preparation.\\n" +
                 "� Speaking occasionally in church including scripture reading and giving the\\n" +
                 "announcements.\"");
+        Map test = new HashMap();
+        test.put("</script>", "</script>");
+        assertEquals("{\"\\u003c/script\\u003e\":\"\\u003c/script\\u003e\"}", new JSONSerializer().serialize(test));
     }
 
     @Test
@@ -602,7 +606,7 @@ public class JSONSerializerTest {
 
         assertStringValue("&gt;&lt;eno", json);
         assertStringValue("h&amp;d", json);
-        assertStringValue("333 \\\"Diddle & Town\\\"", json);
+        assertStringValue("333 \\u0022Diddle \\u0026 Town\\u0022", json);
         assertStringValueMissing("333 &quot;Diddle &amp; Town&quot;", json);
         assertAttributeMissing("class", json);
     }
