@@ -37,9 +37,9 @@ public class ObjectTransformer extends AbstractTransformer {
                         Object value = prop.getValue( object );
                         if (!context.getVisits().contains(value)) {
 
-                            TransformerWrapper transformer = (TransformerWrapper)context.getTransformer(value);
+                            Transformer transformer = context.getTransformer(prop, value);
 
-                            if(!transformer.isInline()) {
+                            if(!(transformer instanceof Inline) || !((Inline)transformer).isInline()) {
                                 if (!typeContext.isFirst()) context.writeComma();
                                 typeContext.increment();
                                 context.writeName(prop.getJsonName());
@@ -63,7 +63,7 @@ public class ObjectTransformer extends AbstractTransformer {
         } catch (JSONException e) {
             throw e;
         } catch (Exception e) {
-            throw new JSONException(String.format("%s: Error while trying to deepSerialize.", path), e);
+            throw new JSONException(String.format("%s: Error while trying to serialize.", path), e);
         }
     }
 

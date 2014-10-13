@@ -16,6 +16,7 @@
 package flexjson.transformer;
 
 import flexjson.JSONContext;
+import flexjson.JSONException;
 import flexjson.Path;
 import flexjson.TypeContext;
 
@@ -28,40 +29,44 @@ public class MapTransformer extends AbstractTransformer {
         Path path = context.getPath();
         Map value = (Map) object;
 
-        TypeContext typeContext = getContext().writeOpenObject();
-        for (Object key : value.keySet()) {
+        try {
+            TypeContext typeContext = getContext().writeOpenObject();
+            for (Object key : value.keySet()) {
 
-            path.enqueue(key != null ? key.toString() : null);
+                path.enqueue(key != null ? key.toString() : null);
 
-            if (context.isIncluded(key != null ? key.toString() : null, value.get(key))) {
+                if (context.isIncluded(key != null ? key.toString() : null, value.get(key))) {
 
-                TransformerWrapper transformer = (TransformerWrapper)context.getTransformer(value.get(key));
+                    Transformer transformer = context.getTransformer(null, value.get(key));
 
 
-                if(!transformer.isInline()) {
-                    if (!typeContext.isFirst()) getContext().writeComma();
-                    typeContext.increment();
-                    if( key != null ) {
-                        getContext().writeName(key.toString());
-                    } else {
-                        getContext().writeName(null);
+                    if(!(transformer instanceof Inline) || !((Inline)transformer).isInline()) {
+                        if (!typeContext.isFirst()) getContext().writeComma();
+                        typeContext.increment();
+                        if( key != null ) {
+                            getContext().writeName(key.toString());
+                        } else {
+                            getContext().writeName(null);
+                        }
                     }
+
+                    if( key != null ) {
+                        typeContext.setPropertyName(key.toString());
+                    } else {
+                        typeContext.setPropertyName(null);
+                    }
+
+                    transformer.transform(value.get(key));
+
                 }
 
-                if( key != null ) {
-                    typeContext.setPropertyName(key.toString());
-                } else {
-                    typeContext.setPropertyName(null);
-                }
-
-                transformer.transform(value.get(key));
+                path.pop();
 
             }
-
-            path.pop();
-
+            getContext().writeCloseObject();
+        } catch( Exception ex ) {
+            throw new JSONException(String.format("%s: Error while trying to serialize.", path), ex);
         }
-        getContext().writeCloseObject();
     }
 
 }

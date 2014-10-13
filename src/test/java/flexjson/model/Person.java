@@ -15,7 +15,8 @@
  */
 package flexjson.model;
 
-import flexjson.model.LoopClassOne;
+import flexjson.JSON;
+import flexjson.transformer.StringArrayTransformer;
 
 import java.util.Date;
 import java.util.List;
@@ -85,6 +86,7 @@ public class Person {
         this.accounts = accounts;
     }
 
+    @JSON(transformer = StringArrayTransformer.class)
     public String[] getFavoriteFoods() {
         return favoriteFoods;
     }

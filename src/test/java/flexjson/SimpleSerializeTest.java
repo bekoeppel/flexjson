@@ -67,7 +67,6 @@ public class SimpleSerializeTest {
 
         JSONSerializer serializer = new JSONSerializer()
                 .transform(new StateTransformer(), State.class)
-                .transform(new StringArrayTransformer(), String[].class)
                 .exclude("loopClassOnes.loopClassTwo.loopClassOne")
                 .rootName("myRootName");
 
@@ -75,7 +74,8 @@ public class SimpleSerializeTest {
         logger.info(string);
         assertTrue(string.contains("{\"myRootName\":"));
         assertTrue(string.contains("\"state\":\"Nevada\","));
-
+        assertTrue(string.contains("ICE CREAM"));
+        assertTrue(string.contains("BURRITOS"));
     }
 
     @Test
@@ -88,7 +88,6 @@ public class SimpleSerializeTest {
         JSONSerializer serializer =
                 new JSONSerializer()
                         .transform(new StateTransformer(), State.class)
-                        .transform(new StringArrayTransformer(), String[].class)
                         .exclude("loopClassOnes.loopClassTwo.loopClassOne")
                         .rootName("myRootName");
 
@@ -97,7 +96,8 @@ public class SimpleSerializeTest {
         logger.info(string);
         assertTrue(string.contains("{\"myRootName\":"));
         assertTrue(string.contains("\"state\":\"Nevada\","));
-
+        assertTrue(string.contains("ICE CREAM"));
+        assertTrue(string.contains("BURRITOS"));
     }
 
     @Test
@@ -240,11 +240,11 @@ public class SimpleSerializeTest {
         experience.setBeginDate(beginCal.getTime());
         experience.setEndDate(null);
         experience.setCurrent(true);
-        experience.setJobDescription("¥ Item 1\n" +
-                "¥ Item 2\n" +
-                "¥ Item 3.\n" +
-                "¥ Item 4.\n" +
-                "¥ Item 5\n");
+        experience.setJobDescription("ï¿½ Item 1\n" +
+                "ï¿½ Item 2\n" +
+                "ï¿½ Item 3.\n" +
+                "ï¿½ Item 4.\n" +
+                "ï¿½ Item 5\n");
 
         return experience;
         

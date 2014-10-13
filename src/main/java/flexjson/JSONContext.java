@@ -76,15 +76,23 @@ public class JSONContext {
     /**
      * Retrieves a transformer for the provided object
      *
+     *
+     * @param prop
      * @param object
      * @return
      */
-    public Transformer getTransformer(Object object) {
+    public Transformer getTransformer(BeanProperty prop, Object object) throws IllegalAccessException, InstantiationException {
 
         Transformer transformer = getPathTransformer();
 
         if (transformer == null) {
-            transformer = getTypeTransformer(object);
+            if( prop != null ) {
+                transformer = prop.getTransformer();
+            }
+
+            if( transformer == null ) {
+                transformer = getTypeTransformer(object);
+            }
         }
 
         return transformer;
