@@ -16,10 +16,10 @@ import java.lang.reflect.Type;
 public class JsonNumberObjectFactory implements ObjectFactory {
     public Object instantiate(ObjectBinder context, Object value, Type targetType, Class targetClass) {
         JsonNumber number = (JsonNumber) value;
-        if( number.isDecimal() ) {
-            return number.doubleValue();
-        } else {
+        if( number.isLong() ) {
             return number.longValue();
+        } else {
+            return number.doubleValue();
         }
     }
 }

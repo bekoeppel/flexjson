@@ -598,6 +598,18 @@ public class JSONDeserializerTest {
         assertEquals( hank.getBirthdate(), deHank.getBirthdate() );
     }
 
+    @Test
+    public void testDecimalVsLong() {
+        String json = "{ 'long': 3, 'exponent': 3e+2, 'decimal': 4.5, 'negativeLong': -45, 'positiveLong': 34 }";
+        Map obj = new JSONDeserializer<Map>().deserialize(json, Map.class);
+
+        assertEquals(3l, obj.get("long") );
+        assertEquals(300d, obj.get("exponent") );
+        assertEquals(4.5d, obj.get("decimal") );
+        assertEquals(-45l, obj.get("negativeLong") );
+        assertEquals(34l, obj.get("positiveLong") );
+    }
+
     public static class SimpleClassnameTransformer implements Transformer {
         public void transform(Object value) {
             int classname = value.toString().lastIndexOf('.');
