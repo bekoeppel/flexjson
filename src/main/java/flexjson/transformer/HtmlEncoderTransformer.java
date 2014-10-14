@@ -106,6 +106,10 @@ public class HtmlEncoderTransformer extends AbstractTransformer {
     }
 
     public void transform(Object value) {
+        if( value == null ) {
+            getContext().write("null");
+            return;
+        }
 
         String val = value.toString();
         getContext().write("\"");
@@ -122,6 +126,5 @@ public class HtmlEncoderTransformer extends AbstractTransformer {
             }
         }
         getContext().write("\"");
-
     }
 }

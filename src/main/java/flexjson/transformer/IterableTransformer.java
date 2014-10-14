@@ -15,7 +15,6 @@
  */
 package flexjson.transformer;
 
-import flexjson.BasicType;
 import flexjson.TypeContext;
 
 public class IterableTransformer extends AbstractTransformer {

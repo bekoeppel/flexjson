@@ -17,6 +17,10 @@ public class BooleanAsStringTransformer extends AbstractTransformer {
     }
 
     public void transform(Object object) {
+        if( object == null ) {
+            getContext().write("null");
+            return;
+        }
         getContext().writeQuoted(((Boolean) object) ? truthValue : falseValue);
     }
 }

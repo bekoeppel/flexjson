@@ -20,7 +20,11 @@ import java.util.Date;
 public class BasicDateTransformer extends AbstractTransformer {
 
     public void transform(Object object) {
-        getContext().write(String.valueOf(((Date) object).getTime()));
+        if( object != null ) {
+            getContext().write(String.valueOf(((Date) object).getTime()));
+        } else {
+            getContext().write("null");
+        }
     }
 
 }

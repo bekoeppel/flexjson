@@ -24,6 +24,10 @@ public class DateTransformer extends AbstractTransformer implements ObjectFactor
 
 
     public void transform(Object value) {
+        if( value == null ) {
+            getContext().write("null");
+            return;
+        }
         getContext().writeQuoted(getFormatter().format(value));
     }
 

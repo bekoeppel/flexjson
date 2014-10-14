@@ -21,6 +21,10 @@ import flexjson.BasicType;
 public class StringArrayTransformer extends AbstractTransformer {
 
     public void transform(Object object) {
+        if( object == null ) {
+            getContext().write("null");
+            return;
+        }
         String[] stringArr = (String[]) object;
         TypeContext typeContext = getContext().writeOpenArray();
         for (String item : stringArr) {

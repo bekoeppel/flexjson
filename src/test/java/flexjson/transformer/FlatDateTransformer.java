@@ -19,6 +19,10 @@ public class FlatDateTransformer extends AbstractTransformer {
     }
 
     public void transform(Object o) {
+        if( o == null ) {
+            getContext().write("null");
+            return;
+        }
 
         boolean setContext = false;
 

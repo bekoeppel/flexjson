@@ -20,6 +20,10 @@ import flexjson.model.State;
 public class StateTransformer extends AbstractTransformer {
 
     public void transform(Object object) {
+        if( object == null ) {
+            getContext().write("null");
+            return;
+        }
 
         State state = (State) object;
         getContext().transform(state.getName());

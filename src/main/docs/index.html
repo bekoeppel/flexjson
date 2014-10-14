@@ -613,6 +613,10 @@
     public class StringTransformer extends AbstractTransformer {
 
         public void transform(Object object) {
+            if( object == null ) {
+               getContext().write("null");
+               return;
+            }
             getContext().writeQuoted((String) object);
         }
 
@@ -625,6 +629,12 @@
     <p>
         As a side note you may notice that the Transformer extends AbstractTransformer. It is recommended that custom transformers extend the
         AbstractTransformer although it is not required. Feel free to take a look in the AbstractTransformer to see what it does. There isn't much to it.
+    </p>
+    <p>
+        All Transfomers must handle being passed a null value so you see the first few lines at the first handles a null value.  Prior
+        Transformers did not have to handle null values since the framework would handle it.  However, due to a bug fix requesting the
+        ability to handle nulls in Transformers now all Transformers must handle them.  So if you write a custom Transformer it could
+        result in a NullPointerException if you aren't explicitly handling it.
     </p>
 
     <h3>Transforming a Collection</h3>
