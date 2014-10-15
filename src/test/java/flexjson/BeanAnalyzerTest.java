@@ -12,7 +12,9 @@ import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -34,6 +36,15 @@ public class BeanAnalyzerTest {
         assertTrue( spiderman.hasProperty("spideySense") );
         assertTrue( spiderman.hasProperty("superpower") );
         assertEquals( 3, spiderman.getProperties().size() );
+    }
+
+    @Test
+    public void testSuperInterfacePropertyMethodBean() {
+        BeanAnalyzer analyzer = BeanAnalyzer.analyze(SuperInterfacePropertyMethodBean.class);
+
+        assertTrue(analyzer.hasProperty("property"));
+        assertNotNull(analyzer.getProperty("property").getReadMethod());
+        assertEquals( "getProperty", analyzer.getProperty("property").getReadMethod().getName() );
     }
 
     @Ignore("This test can fail because it tries to measure performance.")
@@ -103,5 +114,14 @@ public class BeanAnalyzerTest {
             if( descriptor.getReadMethod() != null ) System.out.print(descriptor.getReadMethod().getName() + "()");
             if( descriptor.getWriteMethod() != null ) System.out.println(descriptor.getWriteMethod().getName() + "( " + descriptor.getWriteMethod().getParameterTypes()[0].getName() + ")");
         }
+    }
+
+    public static class SuperInterfacePropertyMethodBean {
+        ArrayList<String> property;
+
+        public List<String> getProperty() {
+            return property;
+        }
+
     }
 }
