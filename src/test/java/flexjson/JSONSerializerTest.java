@@ -21,6 +21,8 @@ import flexjson.transformer.DateTransformer;
 import flexjson.transformer.HtmlEncoderTransformer;
 import flexjson.model.ListContainer;
 import org.junit.*;
+import org.junit.Assert;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -690,6 +692,28 @@ public class JSONSerializerTest {
         String json = new JSONSerializer().serialize( target );
 
         Assert.assertEquals("{\"epoch\":0}", json );
+    }
+
+    @Test
+    public void testInfinity() {
+        List<Number> numbers = new ArrayList<Number>();
+        numbers.add( Double.POSITIVE_INFINITY );
+        numbers.add( Double.NEGATIVE_INFINITY );
+        numbers.add( Double.NaN );
+        numbers.add( 44.0 );
+        numbers.add( Float.POSITIVE_INFINITY );
+        numbers.add( Float.NEGATIVE_INFINITY );
+        numbers.add( Float.NaN );
+        numbers.add( 45.0f );
+
+        JSONSerializer serializer = new JSONSerializer();
+        String json = serializer.deepSerialize( numbers );
+
+        Assert.assertEquals(0, occurs("Infinity", json) );
+        Assert.assertEquals(0, occurs("NaN", json) );
+        Assert.assertEquals(1, occurs("44", json) );
+        Assert.assertEquals(1, occurs("45", json) );
+        Assert.assertEquals(6, occurs("null", json) );
     }
 
     private int occurs(String str, String json) {
